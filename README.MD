@@ -1,8 +1,8 @@
-# Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/sslcontext-kickstart)
+# Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
 ```xml
 <dependency>
     <groupId>io.github.hakky54</groupId>
-    <artifactId>log-captor</artifactId>
+    <artifactId>logcaptor</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
