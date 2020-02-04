@@ -1,7 +1,7 @@
 [![Actions Status](https://github.com/Hakky54/log-captor/workflows/Build/badge.svg)](https://github.com/Hakky54/log-captor/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b846d86b14658d39f104/maintainability)](https://codeclimate.com/github/Hakky54/log-captor/maintainability)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7493e0fbb2da4288816ebe524420a928)](https://www.codacy.com/manual/Hakky54/log-captor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Hakky54/log-captor&amp;utm_campaign=Badge_Grade)
-### [![codecov](https://codecov.io/gh/Hakky54/sslcontext-kickstart/branch/master/graph/badge.svg)](https://codecov.io/gh/Hakky54/sslcontext-kickstart)
+## [![codecov](https://codecov.io/gh/Hakky54/sslcontext-kickstart/branch/master/graph/badge.svg)](https://codecov.io/gh/Hakky54/sslcontext-kickstart)
 [![Apache2 license](https://img.shields.io/badge/license-Aache2.0-blue.svg)](https://github.com/Hakky54/log-captor/blob/master/LICENSE)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.hakky54/logcaptor/badge.svg)](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_shield)
