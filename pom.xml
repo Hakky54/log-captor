@@ -21,9 +21,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/Hakky54/log-captort</url>
-        <connection>scm:git:git@github.com:Hakky54/log-captort.git</connection>
-        <developerConnection>scm:git:git@github.com:Hakky54/log-captort.git</developerConnection>
+        <url>https://github.com/Hakky54/log-captor</url>
+        <connection>scm:git:git@github.com:Hakky54/log-captor.git</connection>
+        <developerConnection>scm:git:git@github.com:Hakky54/log-captor.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
