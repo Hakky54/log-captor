@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/Hakky54/log-captor/branch/master/graph/badge.svg)](https://codecov.io/gh/Hakky54/log-captor)
 [![Apache2 license](https://img.shields.io/badge/license-Aache2.0-blue.svg)](https://github.com/Hakky54/log-captor/blob/master/LICENSE)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.hakky54/logcaptor/badge.svg)](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_shield)
 
 # Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
 ```xml
@@ -84,4 +84,4 @@ public class FooServiceShould {
 
 
 ## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
