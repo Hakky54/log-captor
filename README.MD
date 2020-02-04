@@ -12,6 +12,7 @@
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
     <version>1.0.0</version>
+    <scope>test</scope>
 </dependency>
 ```
 
