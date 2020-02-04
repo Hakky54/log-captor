@@ -1,4 +1,6 @@
 # Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_shield)
+
 ```xml
 <dependency>
     <groupId>io.github.hakky54</groupId>
@@ -74,3 +76,7 @@ public class FooServiceShould {
 }
 ```
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
