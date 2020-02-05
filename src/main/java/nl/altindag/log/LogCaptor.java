@@ -14,12 +14,11 @@ import ch.qos.logback.core.read.ListAppender;
 @SuppressWarnings("rawtypes")
 public class LogCaptor {
 
-    private ListAppender<ILoggingEvent> listAppender;
+    private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
     private LogCaptor(Class clazz) {
         Logger logger = (Logger) LoggerFactory.getLogger(clazz);
 
-        listAppender = new ListAppender<>();
         listAppender.start();
         logger.addAppender(listAppender);
     }
