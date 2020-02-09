@@ -11,20 +11,19 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
-@SuppressWarnings("rawtypes")
-public class LogCaptor {
+public class LogCaptor<T> {
 
     private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
-    private LogCaptor(Class clazz) {
+    private LogCaptor(Class<T> clazz) {
         Logger logger = (Logger) LoggerFactory.getLogger(clazz);
 
         listAppender.start();
         logger.addAppender(listAppender);
     }
 
-    public static LogCaptor forClass(Class clazz) {
-        return new LogCaptor(clazz);
+    public static <T> LogCaptor<T> forClass(Class<T> clazz) {
+        return new LogCaptor<>(clazz);
     }
 
     public List<String> getLogs(Level level) {

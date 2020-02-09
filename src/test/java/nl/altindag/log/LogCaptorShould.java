@@ -19,7 +19,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereWithLogLevel() {
-        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
 
         Service service = new FooService();
         service.sayHello();
@@ -35,7 +35,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereApacheLogManagerIsUsed() {
-        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
 
         Service service = new FooService();
         service.sayHello();
@@ -45,7 +45,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereLombokLog4j2IsUsed() {
-        LogCaptor logCaptor = LogCaptor.forClass(BooService.class);
+        LogCaptor<BooService> logCaptor = LogCaptor.forClass(BooService.class);
 
         Service service = new BooService();
         service.sayHello();
@@ -55,7 +55,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereLombokSlf4jIsUsed() {
-        LogCaptor logCaptor = LogCaptor.forClass(QooService.class);
+        LogCaptor<QooService> logCaptor = LogCaptor.forClass(QooService.class);
 
         Service service = new QooService();
         service.sayHello();
@@ -65,7 +65,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereLombokLog4jIsUsed() {
-        LogCaptor logCaptor = LogCaptor.forClass(WooService.class);
+        LogCaptor<WooService> logCaptor = LogCaptor.forClass(WooService.class);
 
         Service service = new WooService();
         service.sayHello();
@@ -75,7 +75,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereLombokJavaUtilLoggingIsUsed() {
-        LogCaptor logCaptor = LogCaptor.forClass(RooService.class);
+        LogCaptor<RooService> logCaptor = LogCaptor.forClass(RooService.class);
 
         Service service = new RooService();
         service.sayHello();
@@ -83,7 +83,7 @@ public class LogCaptorShould {
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
     }
 
-    private void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
+    private void assertLogMessages(LogCaptor<?> logCaptor, LogMessage... logMessages) {
         for (LogMessage logMessage : logMessages) {
             assertThat(logCaptor.getLogs(logMessage.getLogLevel())).containsExactly(logMessage.getMessage());
         }

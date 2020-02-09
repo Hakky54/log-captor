@@ -64,7 +64,7 @@ public class FooServiceShould {
         String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
         String expectedWarnMessage = "Congratulations, you are pregnant!";
 
-        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
 
         FooService fooService = new FooService();
         fooService.sayHello();
