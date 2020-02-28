@@ -1,11 +1,5 @@
 package nl.altindag.log;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import ch.qos.logback.classic.Level;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
@@ -14,11 +8,16 @@ import nl.altindag.log.service.lombok.BooService;
 import nl.altindag.log.service.lombok.QooService;
 import nl.altindag.log.service.lombok.RooService;
 import nl.altindag.log.service.lombok.WooService;
+import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LogCaptorShould {
 
     @Test
-    public void captureLoggingEventsWhereWithLogLevel() {
+    public void captureLoggingEventsWithLogLevelEnum() {
         LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
 
         Service service = new FooService();
