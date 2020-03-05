@@ -54,8 +54,10 @@ public class FooService {
 Unit test:
 ```java
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
+
 import ch.qos.logback.classic.Level;
+import nl.altindag.log.LogCaptor;
+import org.junit.Test;
 
 public class FooServiceShould {
 
