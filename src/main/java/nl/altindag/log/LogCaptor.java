@@ -1,22 +1,22 @@
 package nl.altindag.log;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-
-import org.slf4j.LoggerFactory;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class LogCaptor<T> {
 
+    private Logger logger;
     private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
     private LogCaptor(Class<T> clazz) {
-        Logger logger = (Logger) LoggerFactory.getLogger(clazz);
+        logger = (Logger) LoggerFactory.getLogger(clazz);
 
         listAppender.start();
         logger.addAppender(listAppender);
@@ -44,6 +44,14 @@ public class LogCaptor<T> {
         return listAppender.list.stream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .collect(toList());
+    }
+
+    public void setLogLevel(Level newLevel) {
+        logger.setLevel(newLevel);
+    }
+
+    public void resetLogLevel() {
+        logger.setLevel(null);
     }
 
 }

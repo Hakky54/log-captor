@@ -1,10 +1,9 @@
 package nl.altindag.log.service.apache;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FooService implements Service {
 
@@ -14,7 +13,9 @@ public class FooService implements Service {
     public void sayHello() {
         LOGGER.info(LogMessage.INFO.getMessage());
         LOGGER.warn(LogMessage.WARN.getMessage());
-        LOGGER.debug(LogMessage.DEBUG.getMessage());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(LogMessage.DEBUG.getMessage());
+        }
     }
 
 }

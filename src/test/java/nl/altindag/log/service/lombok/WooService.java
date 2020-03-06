@@ -11,7 +11,9 @@ public class WooService implements Service {
     public void sayHello() {
         log.info(LogMessage.INFO.getMessage());
         log.warn(LogMessage.WARN.getMessage());
-        log.debug(LogMessage.DEBUG.getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug(LogMessage.DEBUG.getMessage());
+        }
     }
 
 }
