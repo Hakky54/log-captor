@@ -35,9 +35,9 @@ public class LogCaptor<T> {
 
     public List<String> getLogs(String level) {
         return listAppender.list.stream()
-                                .filter(logEvent -> logEvent.getLevel().toString().equalsIgnoreCase(level))
-                                .map(ILoggingEvent::getFormattedMessage)
-                                .collect(toList());
+                .filter(logEvent -> logEvent.getLevel().toString().equalsIgnoreCase(level))
+                .map(ILoggingEvent::getFormattedMessage)
+                .collect(toList());
     }
 
     public List<String> getLogs() {
