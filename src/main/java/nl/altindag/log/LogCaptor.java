@@ -6,17 +6,24 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
 public class LogCaptor<T> {
+
+    private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
     private Logger logger;
     private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
     private LogCaptor(Class<T> clazz) {
         logger = (Logger) LoggerFactory.getLogger(clazz);
+        if (!LOG_LEVEL_CONTAINER.containsKey(clazz.getName())) {
+            LOG_LEVEL_CONTAINER.put(clazz.getName(), logger.getEffectiveLevel());
+        }
 
         listAppender.start();
         logger.addAppender(listAppender);
@@ -51,7 +58,8 @@ public class LogCaptor<T> {
     }
 
     public void resetLogLevel() {
-        logger.setLevel(null);
+        Level initialLogLevelOfTargetClazz = LOG_LEVEL_CONTAINER.get(logger.getName());
+        logger.setLevel(initialLogLevelOfTargetClazz);
     }
 
 }
