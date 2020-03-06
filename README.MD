@@ -87,6 +87,52 @@ public class FooServiceShould {
 }
 ```
 
+Class which will log events if specific log level has been set
+```java
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class FooService {
+
+    private static final Logger LOGGER = LogManager.getLogger(FooService.class);
+
+    public void sayHello() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Keyboard not responding. Press any key to continue...");
+        }
+        LOGGER.info("Congratulations, you are pregnant!");
+    }
+
+}
+```
+Unit test:
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import ch.qos.logback.classic.Level;
+import nl.altindag.log.LogCaptor;
+import org.junit.Test;
+
+public class FooServiceShould {
+
+    @Test
+    public void logInfoAndWarnMessages() {
+        String expectedInfoMessage = "Congratulations, you are pregnant!";
+        String expectedDebugMessage = "Keyboard not responding. Press any key to continue...";
+
+        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor.setLogLevel(Level.INFO);
+
+        FooService fooService = new FooService();
+        fooService.sayHello();
+
+        assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(expectedInfoMessage);
+        assertThat(logCaptor.getLogs(Level.DEBUG))
+            .doesNotContain(expectedDebugMessage)
+            .isEmpty();
+    }
+}
+```
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
