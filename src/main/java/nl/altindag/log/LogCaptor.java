@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -53,13 +54,24 @@ public class LogCaptor<T> {
                 .collect(toList());
     }
 
+    /**
+     * Overrides the log level property of the target class. This may result that the overridden property
+     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
+     *
+     * @param newLevel {@link Level}
+     */
     public void setLogLevel(Level newLevel) {
         logger.setLevel(newLevel);
     }
 
+    /**
+     * Resets the log level of the target class to the initial value which was available before
+     * changing it with {@link LogCaptor#setLogLevel(Level newLevel)}
+     */
     public void resetLogLevel() {
-        Level initialLogLevelOfTargetClazz = LOG_LEVEL_CONTAINER.get(logger.getName());
-        logger.setLevel(initialLogLevelOfTargetClazz);
+        Optional.ofNullable(LOG_LEVEL_CONTAINER.get(logger.getName()))
+                .ifPresent(logger::setLevel);
     }
 
 }
