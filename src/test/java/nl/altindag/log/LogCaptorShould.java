@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LogCaptorShould {
 
-    private LogCaptor<?> logCaptor = null;
+    private LogCaptor<?> logCaptor;
 
     @After
     public void resetProperties() {
@@ -128,7 +128,7 @@ public class LogCaptorShould {
 
     @Test
     public void captureLoggingEventsWhereLombokJavaUtilLoggingIsUsed() {
-        LogCaptor<RooService> logCaptor = LogCaptor.forClass(RooService.class);
+        logCaptor = LogCaptor.forClass(RooService.class);
 
         Service service = new RooService();
         service.sayHello();

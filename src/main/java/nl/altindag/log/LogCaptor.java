@@ -22,7 +22,7 @@ public class LogCaptor<T> {
     private LogCaptor(Class<T> clazz) {
         logger = (Logger) LoggerFactory.getLogger(clazz);
         if (!LOG_LEVEL_CONTAINER.containsKey(clazz.getName())) {
-            LOG_LEVEL_CONTAINER.put(clazz.getName(), logger.getEffectiveLevel());
+            LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
         }
 
         listAppender.start();
