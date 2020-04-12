@@ -22,10 +22,11 @@
 LogCaptor is a library which will enable you to easily capture logging entries for unit testing purposes.
 
 ### Tested Logging libraries
+ - SLFJ4
  - Log4j with Apache
  - Log4j with Lombok
  - Log4j2 with Lombok
- - Slf4j with Lombok
+ - SLFJ4 with Lombok
  - Java Util Logging with Lombok
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's 
