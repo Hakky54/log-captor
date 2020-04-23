@@ -8,8 +8,9 @@ import nl.altindag.log.service.lombok.BooService;
 import nl.altindag.log.service.lombok.QooService;
 import nl.altindag.log.service.lombok.RooService;
 import nl.altindag.log.service.lombok.WooService;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class LogCaptorShould {
 
     private LogCaptor<?> logCaptor;
 
-    @After
+    @AfterEach
     public void resetProperties() {
         Optional.ofNullable(logCaptor)
                 .ifPresent(LogCaptor::resetLogLevel);
@@ -136,18 +137,52 @@ public class LogCaptorShould {
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
     }
 
-    private void assertLogMessages(LogCaptor<?> logCaptor, LogMessage... logMessages) {
+    private static void assertLogMessages(LogCaptor<?> logCaptor, LogMessage... logMessages) {
         for (LogMessage logMessage : logMessages) {
             assertThat(logCaptor.getLogs(logMessage.getLogLevel())).containsExactly(logMessage.getMessage());
         }
 
         String[] expectedLogMessages = Arrays.stream(logMessages)
-                                             .map(LogMessage::getMessage)
-                                             .toArray(String[]::new);
+                .map(LogMessage::getMessage)
+                .toArray(String[]::new);
 
         assertThat(logCaptor.getLogs())
                 .hasSize(expectedLogMessages.length)
                 .containsExactly(expectedLogMessages);
+    }
+
+    @Nested
+    public class ClearLogsShould {
+
+        private LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+
+        @AfterEach
+        public void clearLogs() {
+            logCaptor.clearLogs();
+        }
+
+        @Test
+        public void captureLoggingEventsWithLogLevelEnum() {
+            Service service = new FooService();
+            service.sayHello();
+
+            assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(LogMessage.INFO.getMessage());
+            assertThat(logCaptor.getLogs(Level.DEBUG)).containsExactly(LogMessage.DEBUG.getMessage());
+            assertThat(logCaptor.getLogs(Level.WARN)).containsExactly(LogMessage.WARN.getMessage());
+
+            assertThat(logCaptor.getLogs())
+                    .hasSize(3)
+                    .containsExactly(LogMessage.INFO.getMessage(), LogMessage.WARN.getMessage(), LogMessage.DEBUG.getMessage());
+        }
+
+        @Test
+        public void captureLoggingEventsWhereApacheLogManagerIsUsed() {
+            Service service = new FooService();
+            service.sayHello();
+
+            assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.DEBUG);
+        }
+
     }
 
 }

@@ -74,4 +74,8 @@ public class LogCaptor<T> {
                 .ifPresent(logger::setLevel);
     }
 
+    public void clearLogs() {
+        listAppender.list.clear();
+    }
+
 }

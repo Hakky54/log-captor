@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -58,7 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ch.qos.logback.classic.Level;
 import nl.altindag.log.LogCaptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FooServiceShould {
 
@@ -88,6 +88,50 @@ public class FooServiceShould {
 }
 ```
 
+Initialize LogCaptor once and reuse it during multiple tests with clearLogs method within the afterEach method:
+```java
+import ch.qos.logback.classic.Level;
+import nl.altindag.log.LogCaptor;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+
+
+public class FooServiceShould {
+
+    private LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+    private static final String EXPECTED_INFO_MESSAGE = "Keyboard not responding. Press any key to continue...";
+    private static final String EXPECTED_WARN_MESSAGE = "Congratulations, you are pregnant!";
+
+    @AfterEach
+    public void clearLogs() {
+        logCaptor.clearLogs();
+    }
+
+    @Test
+    public void logInfoAndWarnMessagesAndGetWithEnum() {
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(EXPECTED_INFO_MESSAGE);
+        assertThat(logCaptor.getLogs(Level.WARN)).containsExactly(EXPECTED_WARN_MESSAGE);
+
+        assertThat(logCaptor.getLogs()).hasSize(2);
+    }
+
+    @Test
+    public void logInfoAndWarnMessagesAndGetWithString() {
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getLogs("INFO")).containsExactly(EXPECTED_INFO_MESSAGE);
+        assertThat(logCaptor.getLogs("WARN")).containsExactly(EXPECTED_WARN_MESSAGE);
+
+        assertThat(logCaptor.getLogs()).hasSize(2);
+    }
+
+}
+```
+
 Class which will log events if specific log level has been set
 ```java
 import org.apache.logging.log4j.LogManager;
@@ -112,7 +156,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ch.qos.logback.classic.Level;
 import nl.altindag.log.LogCaptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FooServiceShould {
 
