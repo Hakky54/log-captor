@@ -56,7 +56,6 @@ Unit test:
 ```java
 import static org.assertj.core.api.Assertions.assertThat;
 
-import ch.qos.logback.classic.Level;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Test;
 
@@ -86,11 +85,9 @@ public class FooServiceShould {
 
 Initialize LogCaptor once and reuse it during multiple tests with clearLogs method within the afterEach method:
 ```java
-import ch.qos.logback.classic.Level;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
-
 
 public class FooServiceShould {
 
@@ -150,7 +147,6 @@ Unit test:
 ```java
 import static org.assertj.core.api.Assertions.assertThat;
 
-import ch.qos.logback.classic.Level;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Test;
 
