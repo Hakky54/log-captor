@@ -4,7 +4,9 @@ public enum LogMessage {
 
     INFO("Hi there friend!"),
     WARN("Congratulations, you are pregnant!"),
-    DEBUG("Keyboard not responding. Press any key to continue...");
+    DEBUG("Keyboard not responding. Press any key to continue..."),
+    ERROR("An error occurred while displaying the previous error"),
+    TRACE("Something happened");
 
     private String message;
 

@@ -13,6 +13,9 @@ public class FooService implements Service {
     public void sayHello() {
         LOGGER.info(LogMessage.INFO.getMessage());
         LOGGER.warn(LogMessage.WARN.getMessage());
+        LOGGER.error(LogMessage.ERROR.getMessage());
+        LOGGER.trace(LogMessage.TRACE.getMessage());
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(LogMessage.DEBUG.getMessage());
         }

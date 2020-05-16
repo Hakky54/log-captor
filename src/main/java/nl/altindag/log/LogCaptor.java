@@ -17,8 +17,8 @@ public class LogCaptor<T> {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
-    private Logger logger;
-    private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    private final Logger logger;
+    private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
     private LogCaptor(Class<T> clazz) {
         logger = (Logger) LoggerFactory.getLogger(clazz);
@@ -34,6 +34,33 @@ public class LogCaptor<T> {
         return new LogCaptor<>(clazz);
     }
 
+    public List<String> getLogs() {
+        return listAppender.list.stream()
+                .map(ILoggingEvent::getFormattedMessage)
+                .collect(toList());
+    }
+
+    public List<String> getInfoLogs() {
+        return getLogs(Level.INFO);
+    }
+
+    public List<String> getDebugLogs() {
+        return getLogs(Level.DEBUG);
+    }
+
+    public List<String> getWarnLogs() {
+        return getLogs(Level.WARN);
+    }
+
+    public List<String> getErrorLogs() {
+        return getLogs(Level.ERROR);
+    }
+
+    public List<String> getTraceLogs() {
+        return getLogs(Level.TRACE);
+    }
+
+    @Deprecated
     public List<String> getLogs(Level level) {
         return listAppender.list.stream()
                 .filter(logEvent -> logEvent.getLevel() == level)
@@ -41,15 +68,10 @@ public class LogCaptor<T> {
                 .collect(toList());
     }
 
+    @Deprecated
     public List<String> getLogs(String level) {
         return listAppender.list.stream()
                 .filter(logEvent -> logEvent.getLevel().toString().equalsIgnoreCase(level))
-                .map(ILoggingEvent::getFormattedMessage)
-                .collect(toList());
-    }
-
-    public List<String> getLogs() {
-        return listAppender.list.stream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .collect(toList());
     }
@@ -59,8 +81,42 @@ public class LogCaptor<T> {
      * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
      * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
      *
+     * This option will implicitly include the following log levels: WARN and ERROR
+     */
+    public void setLogLevelToInfo() {
+        logger.setLevel(Level.INFO);
+    }
+
+    /**
+     * Overrides the log level property of the target class. This may result that the overridden property
+     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
+     *
+     * This option will implicitly include the following log levels: INFO, WARN and ERROR
+     */
+    public void setLogLevelToDebug() {
+        logger.setLevel(Level.DEBUG);
+    }
+
+    /**
+     * Overrides the log level property of the target class. This may result that the overridden property
+     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
+     *
+     * This option will implicitly include the following log levels: INFO, DEBUG, WARN and ERROR
+     */
+    public void setLogLevelToTrace() {
+        logger.setLevel(Level.TRACE);
+    }
+
+    /**
+     * Overrides the log level property of the target class. This may result that the overridden property
+     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
+     *
      * @param newLevel {@link Level}
      */
+    @Deprecated
     public void setLogLevel(Level newLevel) {
         logger.setLevel(newLevel);
     }

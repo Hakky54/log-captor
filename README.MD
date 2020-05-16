@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -73,14 +73,10 @@ public class FooServiceShould {
         fooService.sayHello();
 
         // Option 1 to assert logging entries
-        assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(expectedInfoMessage);
-        assertThat(logCaptor.getLogs(Level.WARN)).containsExactly(expectedWarnMessage);
+        assertThat(logCaptor.getInfoLogs()).containsExactly(expectedInfoMessage);
+        assertThat(logCaptor.getWarnLogs()).containsExactly(expectedWarnMessage);
 
         // Option 2 to assert logging entries
-        assertThat(logCaptor.getLogs("INFO").containsExactly(expectedInfoMessage);
-        assertThat(logCaptor.getLogs("WARN").containsExactly(expectedWarnMessage);
-
-        // Option 3 to assert logging entries
         assertThat(logCaptor.getLogs())
                 .hasSize(2)
                 .containsExactly(expectedInfoMessage, expectedWarnMessage);
@@ -112,8 +108,8 @@ public class FooServiceShould {
         Service service = new FooService();
         service.sayHello();
 
-        assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(EXPECTED_INFO_MESSAGE);
-        assertThat(logCaptor.getLogs(Level.WARN)).containsExactly(EXPECTED_WARN_MESSAGE);
+        assertThat(logCaptor.getInfoLogs()).containsExactly(EXPECTED_INFO_MESSAGE);
+        assertThat(logCaptor.getWarnLogs()).containsExactly(EXPECTED_WARN_MESSAGE);
 
         assertThat(logCaptor.getLogs()).hasSize(2);
     }
@@ -123,8 +119,8 @@ public class FooServiceShould {
         Service service = new FooService();
         service.sayHello();
 
-        assertThat(logCaptor.getLogs("INFO")).containsExactly(EXPECTED_INFO_MESSAGE);
-        assertThat(logCaptor.getLogs("WARN")).containsExactly(EXPECTED_WARN_MESSAGE);
+        assertThat(logCaptor.getInfoLogs()).containsExactly(EXPECTED_INFO_MESSAGE);
+        assertThat(logCaptor.getWarnLogs()).containsExactly(EXPECTED_WARN_MESSAGE);
 
         assertThat(logCaptor.getLogs()).hasSize(2);
     }
@@ -166,13 +162,13 @@ public class FooServiceShould {
         String expectedDebugMessage = "Keyboard not responding. Press any key to continue...";
 
         LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
-        logCaptor.setLogLevel(Level.INFO);
+        logCaptor.setLogLevelToInfo();
 
         FooService fooService = new FooService();
         fooService.sayHello();
 
-        assertThat(logCaptor.getLogs(Level.INFO)).containsExactly(expectedInfoMessage);
-        assertThat(logCaptor.getLogs(Level.DEBUG))
+        assertThat(logCaptor.getInfoLogs()).containsExactly(expectedInfoMessage);
+        assertThat(logCaptor.getDebugLogs())
             .doesNotContain(expectedDebugMessage)
             .isEmpty();
     }
