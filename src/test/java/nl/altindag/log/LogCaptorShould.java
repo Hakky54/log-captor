@@ -16,18 +16,18 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LogCaptorShould {
+class LogCaptorShould {
 
     private LogCaptor<?> logCaptor;
 
     @AfterEach
-    public void resetProperties() {
+    void resetProperties() {
         Optional.ofNullable(logCaptor)
                 .ifPresent(LogCaptor::resetLogLevel);
     }
 
     @Test
-    public void captureLoggingEventsWhereApacheLogManagerIsUsed() {
+    void captureLoggingEventsWhereApacheLogManagerIsUsed() {
         logCaptor = LogCaptor.forClass(FooService.class);
         logCaptor.setLogLevelToTrace();
 
@@ -52,7 +52,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWithDebugEnabled() {
+    void captureLoggingEventsWithDebugEnabled() {
         logCaptor = LogCaptor.forClass(FooService.class);
         logCaptor.setLogLevelToInfo();
 
@@ -83,7 +83,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWhereLombokLog4j2IsUsed() {
+    void captureLoggingEventsWhereLombokLog4j2IsUsed() {
         logCaptor = LogCaptor.forClass(BooService.class);
 
         Service service = new BooService();
@@ -93,7 +93,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWithLogLevelInfoWhereLombokLog4j2IsUsed() {
+    void captureLoggingEventsWithLogLevelInfoWhereLombokLog4j2IsUsed() {
         logCaptor = LogCaptor.forClass(BooService.class);
         logCaptor.setLogLevelToInfo();
 
@@ -104,7 +104,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWhereLombokSlf4jIsUsed() {
+    void captureLoggingEventsWhereLombokSlf4jIsUsed() {
         logCaptor = LogCaptor.forClass(QooService.class);
 
         Service service = new QooService();
@@ -114,7 +114,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWithLogLevelInfoWhereLombokSlf4jIsUsed() {
+    void captureLoggingEventsWithLogLevelInfoWhereLombokSlf4jIsUsed() {
         logCaptor = LogCaptor.forClass(QooService.class);
         logCaptor.setLogLevelToInfo();
 
@@ -125,7 +125,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWhereLombokLog4jIsUsed() {
+    void captureLoggingEventsWhereLombokLog4jIsUsed() {
         logCaptor = LogCaptor.forClass(WooService.class);
 
         Service service = new WooService();
@@ -135,7 +135,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWithLogLevelInfoWhereLombokLog4jIsUsed() {
+    void captureLoggingEventsWithLogLevelInfoWhereLombokLog4jIsUsed() {
         logCaptor = LogCaptor.forClass(WooService.class);
         logCaptor.setLogLevelToInfo();
 
@@ -146,7 +146,7 @@ public class LogCaptorShould {
     }
 
     @Test
-    public void captureLoggingEventsWhereLombokJavaUtilLoggingIsUsed() {
+    void captureLoggingEventsWhereLombokJavaUtilLoggingIsUsed() {
         logCaptor = LogCaptor.forClass(RooService.class);
 
         Service service = new RooService();
@@ -188,17 +188,17 @@ public class LogCaptorShould {
     }
 
     @Nested
-    public class ClearLogsShould {
+    class ClearLogsShould {
 
         private final LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
 
         @AfterEach
-        public void clearLogs() {
+        void clearLogs() {
             logCaptor.clearLogs();
         }
 
         @Test
-        public void captureLogging() {
+        void captureLogging() {
             Service service = new FooService();
             service.sayHello();
 
@@ -218,7 +218,7 @@ public class LogCaptorShould {
         }
 
         @Test
-        public void captureLoggingWithTheSameLogCaptureInstance() {
+        void captureLoggingWithTheSameLogCaptureInstance() {
             Service service = new FooService();
             service.sayHello();
 
