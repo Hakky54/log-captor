@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public class LogCaptor<T> {
+public final class LogCaptor<T> {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
