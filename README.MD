@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.0.1</version>
+    <version>2.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -66,7 +66,7 @@ public class FooServiceShould {
         String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
         String expectedWarnMessage = "Congratulations, you are pregnant!";
 
-        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
         FooService fooService = new FooService();
         fooService.sayHello();
@@ -91,7 +91,7 @@ import org.junit.jupiter.api.AfterEach;
 
 public class FooServiceShould {
 
-    private LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+    private LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
     private static final String EXPECTED_INFO_MESSAGE = "Keyboard not responding. Press any key to continue...";
     private static final String EXPECTED_WARN_MESSAGE = "Congratulations, you are pregnant!";
 
@@ -157,7 +157,7 @@ public class FooServiceShould {
         String expectedInfoMessage = "Congratulations, you are pregnant!";
         String expectedDebugMessage = "Keyboard not responding. Press any key to continue...";
 
-        LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
         logCaptor.setLogLevelToInfo();
 
         FooService fooService = new FooService();

@@ -13,15 +13,19 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public final class LogCaptor<T> {
+public final class LogCaptor {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
     private final Logger logger;
     private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
-    private LogCaptor(Class<T> clazz) {
-        logger = (Logger) LoggerFactory.getLogger(clazz);
+    private LogCaptor(Class<?> clazz) {
+        this(clazz.getName());
+    }
+
+    private LogCaptor(String name) {
+        logger = (Logger) LoggerFactory.getLogger(name);
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
             LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
         }
@@ -30,8 +34,12 @@ public final class LogCaptor<T> {
         logger.addAppender(listAppender);
     }
 
-    public static <T> LogCaptor<T> forClass(Class<T> clazz) {
-        return new LogCaptor<>(clazz);
+    public static <T> LogCaptor forClass(Class<T> clazz) {
+        return new LogCaptor(clazz);
+    }
+
+    public static LogCaptor forName(String name) {
+        return new LogCaptor(name);
     }
 
     public List<String> getLogs() {

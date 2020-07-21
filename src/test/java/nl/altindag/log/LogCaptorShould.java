@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LogCaptorShould {
 
-    private LogCaptor<?> logCaptor;
+    private LogCaptor logCaptor;
 
     @AfterEach
     void resetProperties() {
@@ -29,6 +29,31 @@ class LogCaptorShould {
     @Test
     void captureLoggingEventsWhereApacheLogManagerIsUsed() {
         logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
+        assertThat(logCaptor.getDebugLogs()).containsExactly(LogMessage.DEBUG.getMessage());
+        assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
+        assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
+        assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
+
+        assertThat(logCaptor.getLogs())
+                .hasSize(5)
+                .containsExactly(
+                        LogMessage.INFO.getMessage(),
+                        LogMessage.WARN.getMessage(),
+                        LogMessage.ERROR.getMessage(),
+                        LogMessage.TRACE.getMessage(),
+                        LogMessage.DEBUG.getMessage()
+                );
+    }
+
+    @Test
+    void captureLoggingEventsByUsingForNameMethodWithLogCaptor() {
+        logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.FooService");
         logCaptor.setLogLevelToTrace();
 
         Service service = new FooService();
@@ -155,7 +180,7 @@ class LogCaptorShould {
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
     }
 
-    private static void assertLogMessages(LogCaptor<?> logCaptor, LogMessage... logMessages) {
+    private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
         for (LogMessage logMessage : logMessages) {
             switch (logMessage) {
                 case INFO:
@@ -190,7 +215,7 @@ class LogCaptorShould {
     @Nested
     class ClearLogsShould {
 
-        private final LogCaptor<FooService> logCaptor = LogCaptor.forClass(FooService.class);
+        private final LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
         @AfterEach
         void clearLogs() {
