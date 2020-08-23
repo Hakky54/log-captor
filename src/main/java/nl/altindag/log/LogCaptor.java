@@ -20,10 +20,6 @@ public final class LogCaptor {
     private final Logger logger;
     private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
-    private LogCaptor(Class<?> clazz) {
-        this(clazz.getName());
-    }
-
     private LogCaptor(String name) {
         logger = (Logger) LoggerFactory.getLogger(name);
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
@@ -35,7 +31,7 @@ public final class LogCaptor {
     }
 
     public static <T> LogCaptor forClass(Class<T> clazz) {
-        return new LogCaptor(clazz);
+        return new LogCaptor(clazz.getName());
     }
 
     public static LogCaptor forName(String name) {
