@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+
+import java.util.Collections;
 
 public final class LogCaptor {
 
@@ -41,7 +44,7 @@ public final class LogCaptor {
     public List<String> getLogs() {
         return listAppender.list.stream()
                 .map(ILoggingEvent::getFormattedMessage)
-                .collect(toList());
+                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
     public List<String> getInfoLogs() {
@@ -68,7 +71,7 @@ public final class LogCaptor {
         return listAppender.list.stream()
                 .filter(logEvent -> logEvent.getLevel() == level)
                 .map(ILoggingEvent::getFormattedMessage)
-                .collect(toList());
+                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
     /**
