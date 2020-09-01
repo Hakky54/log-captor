@@ -52,6 +52,21 @@ class LogCaptorShould {
     }
 
     @Test
+    void captureLoggingEventsWithoutSpecifyingClass() {
+        logCaptor = LogCaptor.forRoot();
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
+        assertThat(logCaptor.getDebugLogs()).containsExactly(LogMessage.DEBUG.getMessage());
+        assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
+        assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
+        assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
+    }
+
+    @Test
     void captureLoggingEventsByUsingForNameMethodWithLogCaptor() {
         logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.FooService");
         logCaptor.setLogLevelToTrace();

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 import java.util.Collections;
 
@@ -33,10 +34,23 @@ public final class LogCaptor {
         logger.addAppender(listAppender);
     }
 
+    /**
+     * Captures all log messages
+     */
+    public static LogCaptor forRoot() {
+        return new LogCaptor(ROOT_LOGGER_NAME);
+    }
+
+    /**
+     * Captures log messages for the provided class
+     */
     public static <T> LogCaptor forClass(Class<T> clazz) {
         return new LogCaptor(clazz.getName());
     }
 
+    /**
+     * Captures log messages for the provided fully qualified class name
+     */
     public static LogCaptor forName(String name) {
         return new LogCaptor(name);
     }
