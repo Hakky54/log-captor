@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <scope>test</scope>
 </dependency>
 ```
