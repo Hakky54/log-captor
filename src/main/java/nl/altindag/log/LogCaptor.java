@@ -6,16 +6,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-
-import java.util.Collections;
 
 public final class LogCaptor {
 
@@ -49,7 +44,7 @@ public final class LogCaptor {
     }
 
     /**
-     * Captures log messages for the provided fully qualified class name
+     * Captures log messages for the provided logger name
      */
     public static LogCaptor forName(String name) {
         return new LogCaptor(name);
