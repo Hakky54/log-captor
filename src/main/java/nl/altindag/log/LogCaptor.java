@@ -6,7 +6,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -84,8 +88,8 @@ public final class LogCaptor {
     }
 
     /**
-     * Overrides the log level property of the target class. This may result that the overridden property
-     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * Overrides the log level property of the target logger. This may result that the overridden property
+     * of the target logger is still active even though a new instance of {@link LogCaptor} has been created.
      * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
      *
      * This option will implicitly include the following log levels: WARN and ERROR
@@ -95,8 +99,8 @@ public final class LogCaptor {
     }
 
     /**
-     * Overrides the log level property of the target class. This may result that the overridden property
-     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * Overrides the log level property of the target logger. This may result that the overridden property
+     * of the target logger is still active even though a new instance of {@link LogCaptor} has been created.
      * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
      *
      * This option will implicitly include the following log levels: INFO, WARN and ERROR
@@ -106,8 +110,8 @@ public final class LogCaptor {
     }
 
     /**
-     * Overrides the log level property of the target class. This may result that the overridden property
-     * of the target class is still active even though a new instance of {@link LogCaptor} has been created.
+     * Overrides the log level property of the target logger. This may result that the overridden property
+     * of the target logger is still active even though a new instance of {@link LogCaptor} has been created.
      * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
      *
      * This option will implicitly include the following log levels: INFO, DEBUG, WARN and ERROR
@@ -117,7 +121,7 @@ public final class LogCaptor {
     }
 
     /**
-     * Resets the log level of the target class to the initial value which was available before
+     * Resets the log level of the target logger to the initial value which was available before
      * changing it with {@link LogCaptor#setLogLevelToInfo()}, {@link LogCaptor#setLogLevelToDebug()} or with {@link LogCaptor#setLogLevelToTrace()}
      */
     public void resetLogLevel() {
