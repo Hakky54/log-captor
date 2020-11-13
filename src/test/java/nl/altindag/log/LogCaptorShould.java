@@ -1,5 +1,6 @@
 package nl.altindag.log;
 
+import nl.altindag.log.model.CapturedLogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
@@ -12,7 +13,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,9 +77,17 @@ class LogCaptorShould {
         Service service = new ZooService();
         service.sayHello();
 
-        assertThat(logCaptor.getErrorLogs())
-                .containsExactly("Caught unexpected exception\n" +
-                        "java.io.IOException: KABOOM!");
+        List<CapturedLogEvent> capturedLogEvents = logCaptor.getCapturedLogEvents();
+        assertThat(capturedLogEvents).hasSize(1);
+
+        CapturedLogEvent capturedLogEvent = capturedLogEvents.get(0);
+        assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
+        assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
+        assertThat(capturedLogEvent.getThrowable()).isPresent();
+
+        assertThat(capturedLogEvent.getThrowable().get())
+                .hasMessage("KABOOM!")
+                .isInstanceOf(IOException.class);
     }
 
     @Test

@@ -3,13 +3,17 @@ package nl.altindag.log;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.read.ListAppender;
+import nl.altindag.log.model.CapturedLogEvent;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
@@ -54,7 +58,7 @@ public final class LogCaptor {
 
     public List<String> getLogs() {
         return listAppender.list.stream()
-                .map(this::getMessage)
+                .map(ILoggingEvent::getFormattedMessage)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
@@ -81,28 +85,26 @@ public final class LogCaptor {
     private List<String> getLogs(Level level) {
         return listAppender.list.stream()
                 .filter(logEvent -> logEvent.getLevel() == level)
-                .map(this::getMessage)
+                .map(ILoggingEvent::getFormattedMessage)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
-    private String getMessage(ILoggingEvent loggingEvent) {
-        String formattedMessage = loggingEvent.getFormattedMessage();
-        Optional<String> formattedExceptionMessage = getFormattedExceptionMessage(loggingEvent.getThrowableProxy());
-
-        return formattedExceptionMessage
-                .map(exceptionMessage -> String.format("%s%n%s", formattedMessage, exceptionMessage))
-                .orElse(formattedMessage);
+    public List<CapturedLogEvent> getCapturedLogEvents() {
+        return listAppender.list.stream()
+                .map(this::toCapturedLogEvent)
+                .collect(toList());
     }
 
-    private Optional<String> getFormattedExceptionMessage(IThrowableProxy loggingEvent) {
-        if (isNull(loggingEvent)) {
-            return Optional.empty();
-        }
+    private CapturedLogEvent toCapturedLogEvent(ILoggingEvent loggingEvent) {
+        String message = loggingEvent.getMessage();
+        String level = loggingEvent.getLevel().toString();
+        Throwable throwable = Optional.ofNullable(loggingEvent.getThrowableProxy())
+                .filter(iThrowableProxy -> iThrowableProxy instanceof ThrowableProxy)
+                .map(throwableProxy -> (ThrowableProxy) throwableProxy)
+                .map(ThrowableProxy::getThrowable)
+                .orElse(null);
 
-        String exceptionClassName = loggingEvent.getClassName();
-        String exceptionMessage = loggingEvent.getMessage();
-        String formattedExceptionLogMessage = String.format("%s: %s", exceptionClassName, exceptionMessage);
-        return Optional.of(formattedExceptionLogMessage);
+        return new CapturedLogEvent(message, level, throwable);
     }
 
     /**
