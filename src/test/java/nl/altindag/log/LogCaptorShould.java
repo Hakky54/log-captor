@@ -3,6 +3,7 @@ package nl.altindag.log;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
+import nl.altindag.log.service.exception.ZooService;
 import nl.altindag.log.service.lombok.BooService;
 import nl.altindag.log.service.lombok.QooService;
 import nl.altindag.log.service.lombok.RooService;
@@ -64,6 +65,17 @@ class LogCaptorShould {
         assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
         assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
         assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
+    }
+
+    @Test
+    void captureLoggingEventsContainingException() {
+        logCaptor = LogCaptor.forClass(ZooService.class);
+
+        Service service = new ZooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getErrorLogs())
+                .containsExactly("Caught unexpected exception\njava.io.IOException: KABOOM!");
     }
 
     @Test
