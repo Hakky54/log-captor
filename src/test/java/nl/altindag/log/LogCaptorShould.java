@@ -75,7 +75,8 @@ class LogCaptorShould {
         service.sayHello();
 
         assertThat(logCaptor.getErrorLogs())
-                .containsExactly("Caught unexpected exception\njava.io.IOException: KABOOM!");
+                .containsExactly("Caught unexpected exception\n" +
+                        "java.io.IOException: KABOOM!");
     }
 
     @Test
