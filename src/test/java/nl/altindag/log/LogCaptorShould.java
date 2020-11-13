@@ -1,6 +1,6 @@
 package nl.altindag.log;
 
-import nl.altindag.log.model.CapturedLogEvent;
+import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
@@ -77,10 +77,10 @@ class LogCaptorShould {
         Service service = new ZooService();
         service.sayHello();
 
-        List<CapturedLogEvent> capturedLogEvents = logCaptor.getCapturedLogEvents();
-        assertThat(capturedLogEvents).hasSize(1);
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
 
-        CapturedLogEvent capturedLogEvent = capturedLogEvents.get(0);
+        LogEvent capturedLogEvent = logEvents.get(0);
         assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
         assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
         assertThat(capturedLogEvent.getThrowable()).isPresent();

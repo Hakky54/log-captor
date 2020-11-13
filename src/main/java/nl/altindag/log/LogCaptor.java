@@ -5,7 +5,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.read.ListAppender;
-import nl.altindag.log.model.CapturedLogEvent;
+import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
@@ -89,22 +89,22 @@ public final class LogCaptor {
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
-    public List<CapturedLogEvent> getCapturedLogEvents() {
+    public List<LogEvent> getLogEvents() {
         return listAppender.list.stream()
-                .map(this::toCapturedLogEvent)
+                .map(this::toLogEvent)
                 .collect(toList());
     }
 
-    private CapturedLogEvent toCapturedLogEvent(ILoggingEvent loggingEvent) {
-        String message = loggingEvent.getMessage();
-        String level = loggingEvent.getLevel().toString();
-        Throwable throwable = Optional.ofNullable(loggingEvent.getThrowableProxy())
+    private LogEvent toLogEvent(ILoggingEvent iLoggingEvent) {
+        String message = iLoggingEvent.getMessage();
+        String level = iLoggingEvent.getLevel().toString();
+        Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
                 .filter(iThrowableProxy -> iThrowableProxy instanceof ThrowableProxy)
                 .map(throwableProxy -> (ThrowableProxy) throwableProxy)
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
-        return new CapturedLogEvent(message, level, throwable);
+        return new LogEvent(message, level, throwable);
     }
 
     /**

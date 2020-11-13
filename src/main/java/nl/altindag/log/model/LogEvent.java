@@ -3,13 +3,13 @@ package nl.altindag.log.model;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class CapturedLogEvent {
+public final class LogEvent {
 
     private final String message;
     private final String level;
     private final Throwable throwable;
 
-    public CapturedLogEvent(String message, String level, Throwable throwable) {
+    public LogEvent(String message, String level, Throwable throwable) {
         this.message = Objects.requireNonNull(message);
         this.level = Objects.requireNonNull(level);
         this.throwable = throwable;
