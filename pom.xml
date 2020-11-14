@@ -4,7 +4,7 @@
 
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1-SNAPSHOT</version>
 
     <name>log-captor</name>
     <description>LogCaptor will enable you to easily capture logging entries for unit testing purposes</description>
@@ -22,7 +22,7 @@
         <url>https://github.com/Hakky54/log-captor</url>
         <connection>scm:git:git@github.com:Hakky54/log-captor.git</connection>
         <developerConnection>scm:git:git@github.com:Hakky54/log-captor.git</developerConnection>
-        <tag>v2.2.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
