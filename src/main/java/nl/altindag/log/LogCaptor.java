@@ -3,7 +3,9 @@ package nl.altindag.log;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.read.ListAppender;
+import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
@@ -85,6 +87,24 @@ public final class LogCaptor {
                 .filter(logEvent -> logEvent.getLevel() == level)
                 .map(ILoggingEvent::getFormattedMessage)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+    }
+
+    public List<LogEvent> getLogEvents() {
+        return listAppender.list.stream()
+                .map(this::toLogEvent)
+                .collect(toList());
+    }
+
+    private LogEvent toLogEvent(ILoggingEvent iLoggingEvent) {
+        String message = iLoggingEvent.getMessage();
+        String level = iLoggingEvent.getLevel().toString();
+        Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
+                .filter(iThrowableProxy -> iThrowableProxy instanceof ThrowableProxy)
+                .map(throwableProxy -> (ThrowableProxy) throwableProxy)
+                .map(ThrowableProxy::getThrowable)
+                .orElse(null);
+
+        return new LogEvent(message, level, throwable);
     }
 
     /**

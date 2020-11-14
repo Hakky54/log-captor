@@ -1,8 +1,10 @@
 package nl.altindag.log;
 
+import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
+import nl.altindag.log.service.exception.ZooService;
 import nl.altindag.log.service.lombok.BooService;
 import nl.altindag.log.service.lombok.QooService;
 import nl.altindag.log.service.lombok.RooService;
@@ -11,7 +13,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,6 +68,26 @@ class LogCaptorShould {
         assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
         assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
         assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
+    }
+
+    @Test
+    void captureLoggingEventsContainingException() {
+        logCaptor = LogCaptor.forClass(ZooService.class);
+
+        Service service = new ZooService();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent capturedLogEvent = logEvents.get(0);
+        assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
+        assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
+        assertThat(capturedLogEvent.getThrowable()).isPresent();
+
+        assertThat(capturedLogEvent.getThrowable().get())
+                .hasMessage("KABOOM!")
+                .isInstanceOf(IOException.class);
     }
 
     @Test
