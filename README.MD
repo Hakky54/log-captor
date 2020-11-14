@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -36,7 +36,7 @@ See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShoul
  - Java 11+ 
  
 # Usage
-To be tested class
+##### Basic example class
 ```java
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,7 +83,7 @@ public class FooServiceShould {
 }
 ```
 
-Initialize LogCaptor once and reuse it during multiple tests with clearLogs method within the afterEach method:
+##### Initialize LogCaptor once and reuse it during multiple tests with clearLogs method within the afterEach method:
 ```java
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Test;
@@ -125,7 +125,7 @@ public class FooServiceShould {
 }
 ```
 
-Class which will log events if specific log level has been set
+##### Class which will log events if specific log level has been set
 ```java
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -167,6 +167,64 @@ public class FooServiceShould {
         assertThat(logCaptor.getDebugLogs())
             .doesNotContain(expectedDebugMessage)
             .isEmpty();
+    }
+}
+```
+
+##### Class which will also log an exception
+```java
+import nl.altindag.log.service.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+public class FooService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZooService.class);
+
+    @Override
+    public void sayHello() {
+        try {
+            tryToSpeak();
+        } catch (IOException e) {
+            LOGGER.error("Caught unexpected exception", e);
+        }
+    }
+
+    private void tryToSpeak() throws IOException {
+        throw new IOException("KABOOM!");
+    }
+}
+```
+Unit test:
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import nl.altindag.log.LogCaptor;
+import nl.altindag.log.model.LogEvent;
+import org.junit.jupiter.api.Test;
+
+public class FooServiceShould {
+
+    @Test
+    void captureLoggingEventsContainingException() {
+        LogCaptor logCaptor = LogCaptor.forClass(ZooService.class);
+
+        Fervice service = new FooService();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent capturedLogEvent = logEvents.get(0);
+        assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
+        assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
+        assertThat(capturedLogEvent.getThrowable()).isPresent();
+
+        assertThat(capturedLogEvent.getThrowable().get())
+                .hasMessage("KABOOM!")
+                .isInstanceOf(IOException.class);
     }
 }
 ```
