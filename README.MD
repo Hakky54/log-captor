@@ -217,12 +217,12 @@ public class FooServiceShould {
         List<LogEvent> logEvents = logCaptor.getLogEvents();
         assertThat(logEvents).hasSize(1);
 
-        LogEvent capturedLogEvent = logEvents.get(0);
-        assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
-        assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
-        assertThat(capturedLogEvent.getThrowable()).isPresent();
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getMessage()).isEqualTo("Caught unexpected exception");
+        assertThat(logEvent.getLevel()).isEqualTo("ERROR");
+        assertThat(logEvent.getThrowable()).isPresent();
 
-        assertThat(capturedLogEvent.getThrowable().get())
+        assertThat(logEvent.getThrowable().get())
                 .hasMessage("KABOOM!")
                 .isInstanceOf(IOException.class);
     }
