@@ -4,7 +4,8 @@ import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
-import nl.altindag.log.service.exception.ZooService;
+import nl.altindag.log.service.slfj4.PooService;
+import nl.altindag.log.service.slfj4.ZooService;
 import nl.altindag.log.service.lombok.BooService;
 import nl.altindag.log.service.lombok.QooService;
 import nl.altindag.log.service.lombok.RooService;
@@ -80,14 +81,30 @@ class LogCaptorShould {
         List<LogEvent> logEvents = logCaptor.getLogEvents();
         assertThat(logEvents).hasSize(1);
 
-        LogEvent capturedLogEvent = logEvents.get(0);
-        assertThat(capturedLogEvent.getMessage()).isEqualTo("Caught unexpected exception");
-        assertThat(capturedLogEvent.getLevel()).isEqualTo("ERROR");
-        assertThat(capturedLogEvent.getThrowable()).isPresent();
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getFormattedMessage()).isEqualTo("Caught unexpected exception");
+        assertThat(logEvent.getLevel()).isEqualTo("ERROR");
+        assertThat(logEvent.getThrowable()).isPresent();
 
-        assertThat(capturedLogEvent.getThrowable().get())
+        assertThat(logEvent.getThrowable().get())
                 .hasMessage("KABOOM!")
                 .isInstanceOf(IOException.class);
+    }
+
+    @Test
+    void captureLoggingEventsContainingArguments() {
+        logCaptor = LogCaptor.forClass(PooService.class);
+
+        Service service = new PooService();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getArguments()).contains("Enter");
+        assertThat(logEvent.getMessage()).isEqualTo("Keyboard not responding. Press {} key to continue...");
+        assertThat(logEvent.getFormattedMessage()).isEqualTo("Keyboard not responding. Press Enter key to continue...");
     }
 
     @Test

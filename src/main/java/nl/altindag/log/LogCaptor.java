@@ -8,6 +8,7 @@ import ch.qos.logback.core.read.ListAppender;
 import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,20 +92,27 @@ public final class LogCaptor {
 
     public List<LogEvent> getLogEvents() {
         return listAppender.list.stream()
-                .map(this::toLogEvent)
+                .map(LogCaptor::toLogEvent)
                 .collect(toList());
     }
 
-    private LogEvent toLogEvent(ILoggingEvent iLoggingEvent) {
+    private static LogEvent toLogEvent(ILoggingEvent iLoggingEvent) {
         String message = iLoggingEvent.getMessage();
+        String formattedMessage = iLoggingEvent.getFormattedMessage();
         String level = iLoggingEvent.getLevel().toString();
+
+        List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
+                .map(Arrays::asList)
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+
         Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
                 .filter(iThrowableProxy -> iThrowableProxy instanceof ThrowableProxy)
                 .map(throwableProxy -> (ThrowableProxy) throwableProxy)
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
-        return new LogEvent(message, level, throwable);
+        return new LogEvent(message, formattedMessage, level, arguments, throwable);
     }
 
     /**

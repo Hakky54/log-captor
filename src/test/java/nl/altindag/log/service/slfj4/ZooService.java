@@ -1,4 +1,4 @@
-package nl.altindag.log.service.exception;
+package nl.altindag.log.service.slfj4;
 
 import nl.altindag.log.service.Service;
 import org.slf4j.Logger;
