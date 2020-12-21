@@ -3,6 +3,10 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.3.1
+- Added license header
+- Added author
+- Added an adapter for Apache Log4j logger
 ### v2.3.0
 - Added option to capture formatted messages and arguments for un-formatted messages
 ### v2.2.0
