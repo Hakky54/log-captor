@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 
+/**
+ * @author Hakan Altindag
+ */
 @Slf4j
 public class QooService implements Service {
 

@@ -25,6 +25,9 @@ import lombok.extern.java.Log;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 
+/**
+ * @author Hakan Altindag
+ */
 @Log
 public class RooService implements Service {
 

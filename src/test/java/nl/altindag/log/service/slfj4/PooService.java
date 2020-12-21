@@ -20,6 +20,9 @@ import nl.altindag.log.service.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Hakan Altindag
+ */
 public class PooService implements Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PooService.class);

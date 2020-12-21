@@ -22,6 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * @author Hakan Altindag
+ */
 public class ZooService implements Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZooService.class);

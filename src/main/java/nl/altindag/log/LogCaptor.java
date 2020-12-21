@@ -35,6 +35,9 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
+/**
+ * @author Hakan Altindag
+ */
 public final class LogCaptor {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();

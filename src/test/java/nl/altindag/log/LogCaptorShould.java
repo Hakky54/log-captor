@@ -37,6 +37,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @author Hakan Altindag
+ */
 class LogCaptorShould {
 
     private LogCaptor logCaptor;

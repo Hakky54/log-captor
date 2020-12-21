@@ -21,6 +21,9 @@ import nl.altindag.log.service.Service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author Hakan Altindag
+ */
 public class FooService implements Service {
 
     private static final Logger LOGGER = LogManager.getLogger(FooService.class);

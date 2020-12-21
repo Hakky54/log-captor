@@ -16,6 +16,9 @@
 
 package nl.altindag.log.service;
 
+/**
+ * @author Hakan Altindag
+ */
 public interface Service {
 
     void sayHello();

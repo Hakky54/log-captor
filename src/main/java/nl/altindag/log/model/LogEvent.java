@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * @author Hakan Altindag
+ */
 public final class LogEvent {
 
     private final String message;
