@@ -127,7 +127,7 @@ public final class LogCaptor {
 
         Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
                 .filter(iThrowableProxy -> iThrowableProxy instanceof ThrowableProxy)
-                .map(throwableProxy -> (ThrowableProxy) throwableProxy)
+                .map(ThrowableProxy.class::cast)
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
