@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.3.2
+- Added option to disable logs
 ### v2.3.1
 - Added license header
 - Added author
