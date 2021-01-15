@@ -234,6 +234,47 @@ public class FooServiceShould {
     }
 }
 ```
+###### Disable logging of any messages
+In some use cases a unit test can generate too many logs by another class. This could be annoying as it will cause noise in your build logs. LogCaptor can disable those log messages with the following snippet:
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import nl.altindag.log.LogCaptor;
+import nl.altindag.log.model.LogEvent;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+public class FooServiceShould {
+
+    private static LogCaptor logCaptorForSomeOtherService = LogCaptor.forClass(SomeService.class);
+
+    @BeforeAll
+    static void disableLogging() {
+        logCaptorForSomeOtherService.disableLogging();
+    }
+
+    @AfterAll
+    static void resetLogLevel() {
+        logCaptorForSomeOtherService.resetLogLevel();
+    }
+
+    @Test
+    void captureLoggingEventsContainingException() {
+        String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
+        String expectedWarnMessage = "Congratulations, you are pregnant!";
+        
+        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+
+        Fervice service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getLogs())
+                .hasSize(2)
+                .containsExactly(expectedInfoMessage, expectedWarnMessage);
+    }
+}
+```
 
 ## Using Log Captor alongside with other logging libraries
 When building your maven or gradle project it can complain that you are using multiple SLF4J implementations. Log Captor is using logback as SLF4J implementation and SLF4J doesn't allow you to use multiple implementations, therefor you need to explicitly specify which to use during which build phase.

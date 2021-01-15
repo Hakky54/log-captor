@@ -255,6 +255,17 @@ class LogCaptorShould {
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
     }
 
+    @Test
+    void doNotCaptureLogMessagesWhenItIsDisabled() {
+        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor.disableLogging();
+
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getLogs()).isEmpty();
+    }
+
     private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
         for (LogMessage logMessage : logMessages) {
             switch (logMessage) {

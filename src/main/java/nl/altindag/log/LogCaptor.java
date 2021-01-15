@@ -168,6 +168,15 @@ public final class LogCaptor {
     }
 
     /**
+     * Overrides the log level property of the target logger. This may result that the overridden property
+     * of the target logger is still active even though a new instance of {@link LogCaptor} has been created.
+     * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
+     */
+    public void disableLogging() {
+        logger.setLevel(Level.OFF);
+    }
+
+    /**
      * Resets the log level of the target logger to the initial value which was available before
      * changing it with {@link LogCaptor#setLogLevelToInfo()}, {@link LogCaptor#setLogLevelToDebug()} or with {@link LogCaptor#setLogLevelToTrace()}
      */
