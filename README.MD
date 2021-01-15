@@ -234,7 +234,7 @@ public class FooServiceShould {
     }
 }
 ```
-###### Disable any logs for a specific class
+##### Disable any logs for a specific class
 In some use cases a unit test can generate too many logs by another class. This could be annoying as it will cause noise in your build logs. LogCaptor can disable those log messages with the following snippet:
 
 ```java
