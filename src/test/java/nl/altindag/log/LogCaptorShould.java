@@ -258,7 +258,7 @@ class LogCaptorShould {
     @Test
     void doNotCaptureLogMessagesWhenItIsDisabled() {
         logCaptor = LogCaptor.forClass(FooService.class);
-        logCaptor.disableLogging();
+        logCaptor.disableLogs();
 
         Service service = new FooService();
         service.sayHello();

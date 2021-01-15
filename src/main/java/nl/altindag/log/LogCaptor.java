@@ -172,7 +172,7 @@ public final class LogCaptor {
      * of the target logger is still active even though a new instance of {@link LogCaptor} has been created.
      * To roll-back to the initial state use: {@link LogCaptor#resetLogLevel()}
      */
-    public void disableLogging() {
+    public void disableLogs() {
         logger.setLevel(Level.OFF);
     }
 

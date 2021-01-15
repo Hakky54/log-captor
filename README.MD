@@ -234,13 +234,13 @@ public class FooServiceShould {
     }
 }
 ```
-###### Disable logging of any messages
+###### Disable any logs for a specific class
 In some use cases a unit test can generate too many logs by another class. This could be annoying as it will cause noise in your build logs. LogCaptor can disable those log messages with the following snippet:
+
 ```java
 import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.altindag.log.LogCaptor;
-import nl.altindag.log.model.LogEvent;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -250,8 +250,8 @@ public class FooServiceShould {
     private static LogCaptor logCaptorForSomeOtherService = LogCaptor.forClass(SomeService.class);
 
     @BeforeAll
-    static void disableLogging() {
-        logCaptorForSomeOtherService.disableLogging();
+    static void disableLogs() {
+        logCaptorForSomeOtherService.disableLogs();
     }
 
     @AfterAll
@@ -263,7 +263,7 @@ public class FooServiceShould {
     void captureLoggingEventsContainingException() {
         String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
         String expectedWarnMessage = "Congratulations, you are pregnant!";
-        
+
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
         Fervice service = new FooService();
