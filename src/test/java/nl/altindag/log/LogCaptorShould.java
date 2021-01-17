@@ -266,6 +266,25 @@ class LogCaptorShould {
         assertThat(logCaptor.getLogs()).isEmpty();
     }
 
+    @Test
+    void captureTimeStampOfLogsAndRetainOrderOfOccurrence() {
+        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new FooService();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+
+        Optional<LogEvent> infoLog = logEvents.stream().filter(logEvent -> logEvent.getLevel().equalsIgnoreCase("info")).findFirst();
+        Optional<LogEvent> traceLog = logEvents.stream().filter(logEvent -> logEvent.getLevel().equalsIgnoreCase("trace")).findFirst();
+
+        assertThat(infoLog).isPresent();
+        assertThat(traceLog).isPresent();
+
+        assertThat(infoLog.get().getTimeStamp()).isBefore(traceLog.get().getTimeStamp());
+    }
+
     private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
         for (LogMessage logMessage : logMessages) {
             switch (logMessage) {

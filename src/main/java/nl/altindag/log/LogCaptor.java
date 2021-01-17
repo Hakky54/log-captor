@@ -24,6 +24,9 @@ import ch.qos.logback.core.read.ListAppender;
 import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -119,6 +122,7 @@ public final class LogCaptor {
         String message = iLoggingEvent.getMessage();
         String formattedMessage = iLoggingEvent.getFormattedMessage();
         String level = iLoggingEvent.getLevel().toString();
+        ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
 
         List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
                 .map(Arrays::asList)
@@ -131,7 +135,7 @@ public final class LogCaptor {
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
-        return new LogEvent(message, formattedMessage, level, arguments, throwable);
+        return new LogEvent(message, formattedMessage, level, timeStamp, arguments, throwable);
     }
 
     /**
