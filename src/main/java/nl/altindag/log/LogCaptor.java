@@ -23,6 +23,7 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.read.ListAppender;
 import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -56,6 +57,12 @@ public final class LogCaptor {
 
         listAppender.start();
         logger.addAppender(listAppender);
+
+        if (!SLF4JBridgeHandler.isInstalled()) {
+            SLF4JBridgeHandler.removeHandlersForRootLogger();
+            SLF4JBridgeHandler.install();
+            java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
+        }
     }
 
     /**

@@ -82,6 +82,11 @@
             <artifactId>log4j-to-slf4j</artifactId>
             <version>${version.apache.log4j-to-slf4j}</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${version.jul-to-slf4j}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -106,12 +111,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${version.log4j-over-slf4j}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>${version.jul-to-slf4j}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -20,6 +20,7 @@ import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.FooService;
+import nl.altindag.log.service.jdk.DooService;
 import nl.altindag.log.service.slfj4.PooService;
 import nl.altindag.log.service.slfj4.ZooService;
 import nl.altindag.log.service.lombok.BooService;
@@ -29,6 +30,7 @@ import nl.altindag.log.service.lombok.WooService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -256,6 +258,17 @@ class LogCaptorShould {
     }
 
     @Test
+    void captureLoggingEventsWhereJavaUtilLoggingIsUsed() {
+        logCaptor = LogCaptor.forClass(DooService.class);
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new DooService();
+        service.sayHello();
+
+        assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.ERROR, LogMessage.DEBUG, LogMessage.TRACE);
+    }
+
+    @Test
     void doNotCaptureLogMessagesWhenItIsDisabled() {
         logCaptor = LogCaptor.forClass(FooService.class);
         logCaptor.disableLogs();
@@ -282,7 +295,7 @@ class LogCaptorShould {
         assertThat(infoLog).isPresent();
         assertThat(traceLog).isPresent();
 
-        assertThat(infoLog.get().getTimeStamp()).isBefore(traceLog.get().getTimeStamp());
+        assertThat(infoLog.get().getTimeStamp()).isBeforeOrEqualTo(traceLog.get().getTimeStamp());
     }
 
     private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
