@@ -64,7 +64,7 @@ public final class LogCaptor {
         }
 
         String loggerNameForJul = ROOT_LOGGER_NAME.equals(name) ? "" : name;
-        java.util.logging.Logger.getLogger(loggerNameForJul).setLevel(java.util.logging.Level.FINEST);
+        java.util.logging.Logger.getLogger(loggerNameForJul).setLevel(java.util.logging.Level.ALL);
     }
 
     /**
