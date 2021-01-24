@@ -63,12 +63,7 @@ public final class LogCaptor {
             SLF4JBridgeHandler.install();
         }
 
-        String loggerNameForJul;
-        if (ROOT_LOGGER_NAME.equals(name)) {
-            loggerNameForJul = "";
-        } else {
-            loggerNameForJul = name;
-        }
+        String loggerNameForJul = ROOT_LOGGER_NAME.equals(name) ? "" : name;
         java.util.logging.Logger.getLogger(loggerNameForJul).setLevel(java.util.logging.Level.FINEST);
     }
 
