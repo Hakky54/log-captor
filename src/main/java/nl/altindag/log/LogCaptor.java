@@ -61,8 +61,15 @@ public final class LogCaptor {
         if (!SLF4JBridgeHandler.isInstalled()) {
             SLF4JBridgeHandler.removeHandlersForRootLogger();
             SLF4JBridgeHandler.install();
-            java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
         }
+
+        String loggerNameForJul;
+        if (ROOT_LOGGER_NAME.equals(name)) {
+            loggerNameForJul = "";
+        } else {
+            loggerNameForJul = name;
+        }
+        java.util.logging.Logger.getLogger(loggerNameForJul).setLevel(java.util.logging.Level.FINEST);
     }
 
     /**
