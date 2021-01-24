@@ -29,7 +29,9 @@ LogCaptor is a library which will enable you to easily capture logging entries f
 
 ### Tested Logging libraries
  - SLFJ4
- - Log4j with Apache
+ - Logback
+ - Java Util Logging  
+ - Apache Log4j
  - Log4j with Lombok
  - Log4j2 with Lombok
  - SLFJ4 with Lombok
