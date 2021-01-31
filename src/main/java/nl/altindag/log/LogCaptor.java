@@ -47,10 +47,12 @@ public final class LogCaptor {
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
     private final Logger logger;
-    private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    private final ListAppender<ILoggingEvent> listAppender;
 
     private LogCaptor(String name) {
+        listAppender = new ListAppender<>();
         logger = (Logger) LoggerFactory.getLogger(name);
+
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
             LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
         }
