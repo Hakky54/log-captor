@@ -50,8 +50,19 @@ public final class LogCaptor {
     private final ListAppender<ILoggingEvent> listAppender;
 
     private LogCaptor(String name) {
+        org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(name);
+        if (!(slf4jLogger instanceof Logger)) {
+            throw new IllegalArgumentException(
+                    String.format("SLF4J Logger implementation should be of the type [%s] but found [%s]. " +
+                                  "Please remove any other SLF4J implementations during the test phase from your classpath of your project. " +
+                                  "See here for an example configurations: https://github.com/Hakky54/log-captor#using-log-captor-alongside-with-other-logging-libraries",
+                                  Logger.class.getName(), slf4jLogger.getClass().getName()
+                    )
+            );
+        }
+
+        logger = (Logger) slf4jLogger;
         listAppender = new ListAppender<>();
-        logger = (Logger) LoggerFactory.getLogger(name);
 
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
             LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());

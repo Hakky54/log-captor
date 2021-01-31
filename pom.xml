@@ -53,11 +53,13 @@
         <version.logback>1.2.3</version.logback>
         <version.junit>5.7.0</version.junit>
         <version.assertj>3.18.1</version.assertj>
+        <version.mockito>3.7.7</version.mockito>
         <version.lombok>1.18.16</version.lombok>
         <version.jul-to-slf4j>1.7.30</version.jul-to-slf4j>
         <version.apache.log4j-to-slf4j>2.14.0</version.apache.log4j-to-slf4j>
         <version.log4j>1.2.17</version.log4j>
         <version.log4j-over-slf4j>1.7.30</version.log4j-over-slf4j>
+        <version.log4j-slf4j-impl>2.14.0</version.log4j-slf4j-impl>
         <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
         <version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
@@ -106,11 +108,23 @@
             <version>${version.assertj}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${version.log4j-over-slf4j}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${version.log4j-slf4j-impl}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
