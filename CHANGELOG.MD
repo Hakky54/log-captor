@@ -3,6 +3,10 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.4.0
+- Preventing class cast exception when incorrect slf4j implementation is found
+- Added jul support out-of-the-box
+- Added timestamp option to LogEvent
 ### v2.3.2
 - Added option to disable logs
 ### v2.3.1
