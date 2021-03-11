@@ -37,7 +37,7 @@ LogCaptor is a library which will enable you to easily capture logging entries f
  - SLFJ4 with Lombok
  - Java Util Logging with Lombok
 
-See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project, [Java Tutorials](https://github.com/Hakky54/java-tutorials), which contains more isolated examples of the individual logging frameworks
+See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
  
 ### Supported Java versions
  - Java 8A
