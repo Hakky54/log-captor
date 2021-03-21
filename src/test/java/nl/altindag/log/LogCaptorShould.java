@@ -16,6 +16,9 @@
 
 package nl.altindag.log;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.filter.LevelFilter;
+import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
@@ -323,6 +326,25 @@ class LogCaptorShould {
                             "See here for an example configurations: https://github.com/Hakky54/log-captor#using-log-captor-alongside-with-other-logging-libraries"
                     );
         }
+    }
+
+    @Test
+    void filterInfoMessages() {
+        LevelFilter levelFilter = new LevelFilter();
+        levelFilter.setOnMismatch(FilterReply.DENY);
+        levelFilter.setLevel(Level.INFO);
+
+        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor.addFilter(levelFilter);
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new FooService();
+        service.sayHello();
+
+        assertThat(logCaptor.getLogEvents())
+                .extracting(LogEvent::getLevel)
+                .map(Level::toLevel)
+                .allMatch(Level.INFO::equals, "INFO");
     }
 
     private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {
