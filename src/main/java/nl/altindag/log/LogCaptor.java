@@ -20,6 +20,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.read.ListAppender;
 import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
@@ -158,6 +159,11 @@ public final class LogCaptor {
                 .orElse(null);
 
         return new LogEvent(message, formattedMessage, level, timeStamp, arguments, throwable);
+    }
+
+    public void addFilter(Filter<ILoggingEvent> filter) {
+        this.listAppender.addFilter(filter);
+        filter.start();
     }
 
     /**
