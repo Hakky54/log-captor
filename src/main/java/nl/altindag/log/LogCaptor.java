@@ -145,6 +145,7 @@ public final class LogCaptor {
         String message = iLoggingEvent.getMessage();
         String formattedMessage = iLoggingEvent.getFormattedMessage();
         String level = iLoggingEvent.getLevel().toString();
+        String loggerName = iLoggingEvent.getLoggerName();
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
 
         List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
@@ -158,7 +159,7 @@ public final class LogCaptor {
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
-        return new LogEvent(message, formattedMessage, level, timeStamp, arguments, throwable);
+        return new LogEvent(message, formattedMessage, level, loggerName, timeStamp, arguments, throwable);
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {

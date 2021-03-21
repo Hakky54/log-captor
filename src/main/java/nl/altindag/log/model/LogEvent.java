@@ -29,14 +29,23 @@ public final class LogEvent {
     private final String message;
     private final String formattedMessage;
     private final String level;
+    private final String loggerName;
     private final ZonedDateTime timeStamp;
     private final List<Object> arguments;
     private final Throwable throwable;
 
-    public LogEvent(String message, String formattedMessage, String level, ZonedDateTime timeStamp, List<Object> arguments, Throwable throwable) {
+    public LogEvent(String message,
+                    String formattedMessage,
+                    String level,
+                    String loggerName,
+                    ZonedDateTime timeStamp,
+                    List<Object> arguments,
+                    Throwable throwable) {
+
         this.message = Objects.requireNonNull(message);
         this.formattedMessage = Objects.requireNonNull(formattedMessage);
         this.level = Objects.requireNonNull(level);
+        this.loggerName = loggerName;
         this.timeStamp = Objects.requireNonNull(timeStamp);
         this.throwable = throwable;
         this.arguments = arguments;
@@ -52,6 +61,10 @@ public final class LogEvent {
 
     public String getLevel() {
         return level;
+    }
+
+    public String getLoggerName() {
+        return loggerName;
     }
 
     public ZonedDateTime getTimeStamp() {

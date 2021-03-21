@@ -312,6 +312,18 @@ class LogCaptorShould {
     }
 
     @Test
+    void captureLoggerName() {
+        logCaptor = LogCaptor.forRoot();
+
+        new FooService().sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+
+        assertThat(logEvents).hasSize(4);
+        assertThat(logEvents.get(0).getLoggerName()).isEqualTo(FooService.class.getName());
+    }
+
+    @Test
     void throwExceptionWhenLoggerImplementationIsNotLogback() {
         try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
 
