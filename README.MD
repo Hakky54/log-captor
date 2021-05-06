@@ -40,8 +40,13 @@ LogCaptor is a library which will enable you to easily capture logging entries f
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
  
 ### Supported Java versions
- - Java 8A
- - Java 11+ 
+ - Java 8
+ - Java 11+
+
+### Advantages
+ - No mocking required
+ - No custom Junit extension required
+ - Plug & play
  
 # Usage
 ##### Basic example class
