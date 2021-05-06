@@ -45,7 +45,7 @@ See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShoul
 
 ### Advantages
  - No mocking required
- - No custom Junit extension required
+ - No custom JUnit extension required
  - Plug & play
  
 # Usage
