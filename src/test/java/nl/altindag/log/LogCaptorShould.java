@@ -143,7 +143,7 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsByUsingForNameMethodWithLogCaptor() {
-        logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.FooService");
+        logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.ServiceWithApacheLog4j");
         logCaptor.setLogLevelToTrace();
 
         Service service = new ServiceWithApacheLog4j();
