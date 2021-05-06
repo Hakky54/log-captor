@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-package nl.altindag.log.service.slfj4;
+package nl.altindag.log.service.lombok;
 
+import lombok.extern.log4j.Log4j2;
+import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * @author Hakan Altindag
  */
-public class ZooService implements Service {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ZooService.class);
+@Log4j2
+public class ServiceWithLombokAndLog4j2 implements Service {
 
     @Override
     public void sayHello() {
-        try {
-            tryToSpeak();
-        } catch (IOException e) {
-            LOGGER.error("Caught unexpected exception", e);
+        log.info(LogMessage.INFO.getMessage());
+        log.warn(LogMessage.WARN.getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug(LogMessage.DEBUG.getMessage());
         }
-    }
-
-    private void tryToSpeak() throws IOException {
-        throw new IOException("KABOOM!");
     }
 
 }

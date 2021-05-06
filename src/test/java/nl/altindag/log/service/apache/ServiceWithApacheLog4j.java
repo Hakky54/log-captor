@@ -14,24 +14,29 @@
  * limitations under the License.
  */
 
-package nl.altindag.log.service.lombok;
+package nl.altindag.log.service.apache;
 
-import lombok.extern.slf4j.Slf4j;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Hakan Altindag
  */
-@Slf4j
-public class QooService implements Service {
+public class ServiceWithApacheLog4j implements Service {
+
+    private static final Logger LOGGER = LogManager.getLogger(ServiceWithApacheLog4j.class);
 
     @Override
     public void sayHello() {
-        log.info(LogMessage.INFO.getMessage());
-        log.warn(LogMessage.WARN.getMessage());
-        if (log.isDebugEnabled()) {
-            log.debug(LogMessage.DEBUG.getMessage());
+        LOGGER.info(LogMessage.INFO.getMessage());
+        LOGGER.warn(LogMessage.WARN.getMessage());
+        LOGGER.error(LogMessage.ERROR.getMessage());
+        LOGGER.trace(LogMessage.TRACE.getMessage());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(LogMessage.DEBUG.getMessage());
         }
     }
 

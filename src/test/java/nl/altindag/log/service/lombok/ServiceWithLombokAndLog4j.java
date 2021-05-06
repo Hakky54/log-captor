@@ -16,15 +16,15 @@
 
 package nl.altindag.log.service.lombok;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.log4j.Log4j;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 
 /**
  * @author Hakan Altindag
  */
-@Log4j2
-public class BooService implements Service {
+@Log4j
+public class ServiceWithLombokAndLog4j implements Service {
 
     @Override
     public void sayHello() {

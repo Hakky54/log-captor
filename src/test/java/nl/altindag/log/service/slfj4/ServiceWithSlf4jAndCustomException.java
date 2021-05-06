@@ -14,30 +14,32 @@
  * limitations under the License.
  */
 
-package nl.altindag.log.service.apache;
+package nl.altindag.log.service.slfj4;
 
-import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * @author Hakan Altindag
  */
-public class FooService implements Service {
+public class ServiceWithSlf4jAndCustomException implements Service {
 
-    private static final Logger LOGGER = LogManager.getLogger(FooService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceWithSlf4jAndCustomException.class);
 
     @Override
     public void sayHello() {
-        LOGGER.info(LogMessage.INFO.getMessage());
-        LOGGER.warn(LogMessage.WARN.getMessage());
-        LOGGER.error(LogMessage.ERROR.getMessage());
-        LOGGER.trace(LogMessage.TRACE.getMessage());
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(LogMessage.DEBUG.getMessage());
+        try {
+            tryToSpeak();
+        } catch (IOException e) {
+            LOGGER.error("Caught unexpected exception", e);
         }
+    }
+
+    private void tryToSpeak() throws IOException {
+        throw new IOException("KABOOM!");
     }
 
 }

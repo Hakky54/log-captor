@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package nl.altindag.log.service.slfj4;
+package nl.altindag.log.service.lombok;
 
+import lombok.extern.slf4j.Slf4j;
+import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Hakan Altindag
  */
-public class PooService implements Service {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PooService.class);
+@Slf4j
+public class ServiceWithLombokAndSlf4j implements Service {
 
     @Override
     public void sayHello() {
-        LOGGER.error("Keyboard not responding. Press {} key to continue...", "Enter");
+        log.info(LogMessage.INFO.getMessage());
+        log.warn(LogMessage.WARN.getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug(LogMessage.DEBUG.getMessage());
+        }
     }
 
 }

@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package nl.altindag.log.service.lombok;
+package nl.altindag.log.service.jdk;
 
-import java.util.logging.Level;
-
-import lombok.extern.java.Log;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
+import java.util.logging.Logger;
 
 /**
  * @author Hakan Altindag
  */
-@Log
-public class RooService implements Service {
+public class ServiceWithJavaUtilLogging implements Service {
+
+    private static final Logger LOGGER = Logger.getLogger(ServiceWithJavaUtilLogging.class.getName());
 
     @Override
     public void sayHello() {
-        log.log(Level.INFO, LogMessage.INFO.getMessage());
-        log.log(Level.WARNING, LogMessage.WARN.getMessage());
+        LOGGER.info(LogMessage.INFO.getMessage());
+        LOGGER.severe(LogMessage.ERROR.getMessage());
+        LOGGER.fine(LogMessage.DEBUG.getMessage());
+        LOGGER.finest(LogMessage.TRACE.getMessage());
     }
 
 }

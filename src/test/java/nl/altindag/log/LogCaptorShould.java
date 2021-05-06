@@ -22,14 +22,14 @@ import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
-import nl.altindag.log.service.apache.FooService;
-import nl.altindag.log.service.jdk.DooService;
-import nl.altindag.log.service.slfj4.PooService;
-import nl.altindag.log.service.slfj4.ZooService;
-import nl.altindag.log.service.lombok.BooService;
-import nl.altindag.log.service.lombok.QooService;
-import nl.altindag.log.service.lombok.RooService;
-import nl.altindag.log.service.lombok.WooService;
+import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
+import nl.altindag.log.service.jdk.ServiceWithJavaUtilLogging;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndLog4j2;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndJavaUtilLogging;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndLog4j;
 import org.apache.logging.slf4j.Log4jLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -67,10 +67,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereApacheLogManagerIsUsed() {
-        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.setLogLevelToTrace();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
@@ -95,7 +95,7 @@ class LogCaptorShould {
         logCaptor = LogCaptor.forRoot();
         logCaptor.setLogLevelToTrace();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
@@ -107,9 +107,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsContainingException() {
-        logCaptor = LogCaptor.forClass(ZooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndCustomException.class);
 
-        Service service = new ZooService();
+        Service service = new ServiceWithSlf4jAndCustomException();
         service.sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
@@ -127,9 +127,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsContainingArguments() {
-        logCaptor = LogCaptor.forClass(PooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4j.class);
 
-        Service service = new PooService();
+        Service service = new ServiceWithSlf4j();
         service.sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
@@ -146,7 +146,7 @@ class LogCaptorShould {
         logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.FooService");
         logCaptor.setLogLevelToTrace();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
@@ -168,10 +168,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWithDebugEnabled() {
-        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.setLogLevelToInfo();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getLogs())
@@ -199,9 +199,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereLombokLog4j2IsUsed() {
-        logCaptor = LogCaptor.forClass(BooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j2.class);
 
-        Service service = new BooService();
+        Service service = new ServiceWithLombokAndLog4j2();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.DEBUG);
@@ -209,10 +209,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWithLogLevelInfoWhereLombokLog4j2IsUsed() {
-        logCaptor = LogCaptor.forClass(BooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j2.class);
         logCaptor.setLogLevelToInfo();
 
-        Service service = new BooService();
+        Service service = new ServiceWithLombokAndLog4j2();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
@@ -220,9 +220,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereLombokSlf4jIsUsed() {
-        logCaptor = LogCaptor.forClass(QooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndSlf4j.class);
 
-        Service service = new QooService();
+        Service service = new ServiceWithLombokAndSlf4j();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.DEBUG);
@@ -230,10 +230,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWithLogLevelInfoWhereLombokSlf4jIsUsed() {
-        logCaptor = LogCaptor.forClass(QooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndSlf4j.class);
         logCaptor.setLogLevelToInfo();
 
-        Service service = new QooService();
+        Service service = new ServiceWithLombokAndSlf4j();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
@@ -241,9 +241,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereLombokLog4jIsUsed() {
-        logCaptor = LogCaptor.forClass(WooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j.class);
 
-        Service service = new WooService();
+        Service service = new ServiceWithLombokAndLog4j();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.DEBUG);
@@ -251,10 +251,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWithLogLevelInfoWhereLombokLog4jIsUsed() {
-        logCaptor = LogCaptor.forClass(WooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j.class);
         logCaptor.setLogLevelToInfo();
 
-        Service service = new WooService();
+        Service service = new ServiceWithLombokAndLog4j();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
@@ -262,9 +262,9 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereLombokJavaUtilLoggingIsUsed() {
-        logCaptor = LogCaptor.forClass(RooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithLombokAndJavaUtilLogging.class);
 
-        Service service = new RooService();
+        Service service = new ServiceWithLombokAndJavaUtilLogging();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN);
@@ -272,10 +272,10 @@ class LogCaptorShould {
 
     @Test
     void captureLoggingEventsWhereJavaUtilLoggingIsUsed() {
-        logCaptor = LogCaptor.forClass(DooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithJavaUtilLogging.class);
         logCaptor.setLogLevelToTrace();
 
-        Service service = new DooService();
+        Service service = new ServiceWithJavaUtilLogging();
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.ERROR, LogMessage.DEBUG, LogMessage.TRACE);
@@ -283,10 +283,10 @@ class LogCaptorShould {
 
     @Test
     void doNotCaptureLogMessagesWhenItIsDisabled() {
-        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.disableLogs();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getLogs()).isEmpty();
@@ -294,10 +294,10 @@ class LogCaptorShould {
 
     @Test
     void captureTimeStampOfLogsAndRetainOrderOfOccurrence() {
-        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.setLogLevelToTrace();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
@@ -315,12 +315,12 @@ class LogCaptorShould {
     void captureLoggerName() {
         logCaptor = LogCaptor.forRoot();
 
-        new FooService().sayHello();
+        new ServiceWithApacheLog4j().sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
 
         assertThat(logEvents).hasSize(4);
-        assertThat(logEvents.get(0).getLoggerName()).isEqualTo(FooService.class.getName());
+        assertThat(logEvents.get(0).getLoggerName()).isEqualTo(ServiceWithApacheLog4j.class.getName());
     }
 
     @Test
@@ -346,11 +346,11 @@ class LogCaptorShould {
         levelFilter.setOnMismatch(FilterReply.DENY);
         levelFilter.setLevel(Level.INFO);
 
-        logCaptor = LogCaptor.forClass(FooService.class);
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.addFilter(levelFilter);
         logCaptor.setLogLevelToTrace();
 
-        Service service = new FooService();
+        Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
         assertThat(logCaptor.getLogEvents())
@@ -394,7 +394,7 @@ class LogCaptorShould {
     @Nested
     class ClearLogsShould {
 
-        private final LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+        private final LogCaptor logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
 
         @AfterEach
         void clearLogs() {
@@ -403,7 +403,7 @@ class LogCaptorShould {
 
         @Test
         void captureLogging() {
-            Service service = new FooService();
+            Service service = new ServiceWithApacheLog4j();
             service.sayHello();
 
             assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
@@ -423,7 +423,7 @@ class LogCaptorShould {
 
         @Test
         void captureLoggingWithTheSameLogCaptureInstance() {
-            Service service = new FooService();
+            Service service = new ServiceWithApacheLog4j();
             service.sayHello();
 
             assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.ERROR, LogMessage.DEBUG);
