@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.6.0
+- Added MDC (Mapped Diagnostic Context) support
 ### v2.5.0
 - Added capturing logger name within LogEvents
 - Added filtering option
