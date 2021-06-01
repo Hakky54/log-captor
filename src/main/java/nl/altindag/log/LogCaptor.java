@@ -223,4 +223,11 @@ public final class LogCaptor {
         listAppender.list.clear();
     }
 
+    /**
+     * Disables printing logs to the console while keeping the ability of capturing it.
+     */
+    public void disableConsoleOutput() {
+        logger.detachAppender("console");
+    }
+
 }

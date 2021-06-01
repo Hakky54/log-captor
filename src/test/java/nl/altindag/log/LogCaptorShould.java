@@ -42,7 +42,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +107,49 @@ class LogCaptorShould {
         assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
         assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
         assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
+    }
+
+    @Test
+    void captureLoggingEventsWithoutConsoleOutput() throws IOException {
+        logCaptor = LogCaptor.forRoot();
+        logCaptor.disableConsoleOutput();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        System.setOut(printStream);
+
+        Service service = new ServiceWithApacheLog4j();
+        service.sayHello();
+
+        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
+
+        String consoleOutput = byteArrayOutputStream.toString();
+        assertThat(consoleOutput).isEmpty();
+
+        byteArrayOutputStream.close();
+        printStream.close();
+    }
+
+    @Test
+    void captureLoggingEventsWithConsoleOutput() throws IOException {
+        logCaptor = LogCaptor.forRoot();
+        logCaptor.setLogLevelToTrace();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        System.setOut(printStream);
+
+        Service service = new ServiceWithApacheLog4j();
+        service.sayHello();
+
+        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
+
+        String consoleOutput = byteArrayOutputStream.toString();
+        assertThat(consoleOutput).isNotEmpty()
+                .contains(LogMessage.INFO.getMessage());
+
+        byteArrayOutputStream.close();
+        printStream.close();
     }
 
     @Test
