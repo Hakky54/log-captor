@@ -317,7 +317,8 @@ class LogCaptorShould {
     void captureLoggerName() {
         logCaptor = LogCaptor.forRoot();
 
-        new ServiceWithApacheLog4j().sayHello();
+        Service service = new ServiceWithApacheLog4j();
+        service.sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
 
@@ -365,7 +366,7 @@ class LogCaptorShould {
     void captureMdcHeadersWhereLog4jIsUsed() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4jAndMdcHeaders.class);
 
-        ServiceWithApacheLog4jAndMdcHeaders service = new ServiceWithApacheLog4jAndMdcHeaders();
+        Service service = new ServiceWithApacheLog4jAndMdcHeaders();
         service.sayHello();
 
         assertMdcHeaders(logCaptor, "test-log4j-mdc", "hello-log4j");
@@ -375,7 +376,7 @@ class LogCaptorShould {
     void captureMdcHeadersWhereSlf4jIsUsed() {
         logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndMdcHeaders.class);
 
-        ServiceWithSlf4jAndMdcHeaders service = new ServiceWithSlf4jAndMdcHeaders();
+        Service service = new ServiceWithSlf4jAndMdcHeaders();
         service.sayHello();
 
         assertMdcHeaders(logCaptor, "test-slf4j-mdc", "hello-slf4j");
