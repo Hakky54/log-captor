@@ -284,7 +284,7 @@ public class FooServiceShould {
 ```
 
 ## Using Log Captor alongside with other logging libraries
-When building your maven or gradle project it can complain that you are using multiple SLF4J implementations. Log Captor is using logback as SLF4J implementation and SLF4J doesn't allow you to use multiple implementations, therefor you need to explicitly specify which to use during which build phase.
+When building your maven or gradle project it can complain that you are using multiple SLF4J implementations. Log Captor is using logback as SLF4J implementation and SLF4J doesn't allow you to use multiple implementations, therefore you need to explicitly specify which to use during which build phase.
 You can fix that by excluding your main logging framework during the unit/integration test phase. Below is an example for Maven Failsafe and Maven Surefire:
 ```xml
 <build>
