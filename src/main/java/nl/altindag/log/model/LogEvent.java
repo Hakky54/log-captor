@@ -18,6 +18,7 @@ package nl.altindag.log.model;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public final class LogEvent {
     private final ZonedDateTime timeStamp;
     private final List<Object> arguments;
     private final Throwable throwable;
+    private final Map<String, String> diagnosticContext;
 
     public LogEvent(String message,
                     String formattedMessage,
@@ -40,7 +42,8 @@ public final class LogEvent {
                     String loggerName,
                     ZonedDateTime timeStamp,
                     List<Object> arguments,
-                    Throwable throwable) {
+                    Throwable throwable,
+                    Map<String, String> diagnosticContext) {
 
         this.message = Objects.requireNonNull(message);
         this.formattedMessage = Objects.requireNonNull(formattedMessage);
@@ -49,6 +52,7 @@ public final class LogEvent {
         this.timeStamp = Objects.requireNonNull(timeStamp);
         this.throwable = throwable;
         this.arguments = arguments;
+        this.diagnosticContext = diagnosticContext;
     }
 
     public String getMessage() {
@@ -77,6 +81,10 @@ public final class LogEvent {
 
     public Optional<Throwable> getThrowable() {
         return Optional.ofNullable(throwable);
+    }
+
+    public Map<String, String> getDiagnosticContext() {
+        return diagnosticContext;
     }
 
 }

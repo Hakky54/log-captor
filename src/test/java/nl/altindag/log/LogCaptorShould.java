@@ -23,13 +23,15 @@ import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
+import nl.altindag.log.service.apache.ServiceWithApacheLog4jAndMdcHeaders;
 import nl.altindag.log.service.jdk.ServiceWithJavaUtilLogging;
-import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
-import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
-import nl.altindag.log.service.lombok.ServiceWithLombokAndLog4j2;
-import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
 import nl.altindag.log.service.lombok.ServiceWithLombokAndJavaUtilLogging;
 import nl.altindag.log.service.lombok.ServiceWithLombokAndLog4j;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndLog4j2;
+import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import org.apache.logging.slf4j.Log4jLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -357,6 +359,39 @@ class LogCaptorShould {
                 .extracting(LogEvent::getLevel)
                 .map(Level::toLevel)
                 .allMatch(Level.INFO::equals, "INFO");
+    }
+
+    @Test
+    void captureMdcHeadersWhereLog4jIsUsed() {
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4jAndMdcHeaders.class);
+
+        ServiceWithApacheLog4jAndMdcHeaders service = new ServiceWithApacheLog4jAndMdcHeaders();
+        service.sayHello();
+
+        assertMdcHeaders(logCaptor, "test-log4j-mdc", "hello-log4j");
+    }
+
+    @Test
+    void captureMdcHeadersWhereSlf4jIsUsed() {
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndMdcHeaders.class);
+
+        ServiceWithSlf4jAndMdcHeaders service = new ServiceWithSlf4jAndMdcHeaders();
+        service.sayHello();
+
+        assertMdcHeaders(logCaptor, "test-slf4j-mdc", "hello-slf4j");
+    }
+
+    private static void assertMdcHeaders(LogCaptor logCaptor, String mdcKey, String mdcValue) {
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+
+        assertThat(logEvents).hasSize(2);
+
+        assertThat(logEvents.get(0).getDiagnosticContext())
+                .hasSize(1)
+                .extractingByKey(mdcKey)
+                .isEqualTo(mdcValue);
+
+        assertThat(logEvents.get(1).getDiagnosticContext()).isEmpty();
     }
 
     private static void assertLogMessages(LogCaptor logCaptor, LogMessage... logMessages) {

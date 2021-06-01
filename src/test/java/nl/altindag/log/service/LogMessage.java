@@ -27,7 +27,7 @@ public enum LogMessage {
     ERROR("An error occurred while displaying the previous error"),
     TRACE("Something happened");
 
-    private String message;
+    private final String message;
 
     LogMessage(String message) {
         this.message = message;
