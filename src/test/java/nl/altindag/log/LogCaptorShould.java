@@ -110,49 +110,6 @@ class LogCaptorShould {
     }
 
     @Test
-    void captureLoggingEventsWithoutConsoleOutput() throws IOException {
-        logCaptor = LogCaptor.forRoot();
-        logCaptor.disableConsoleOutput();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayOutputStream);
-        System.setOut(printStream);
-
-        Service service = new ServiceWithApacheLog4j();
-        service.sayHello();
-
-        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
-
-        String consoleOutput = byteArrayOutputStream.toString();
-        assertThat(consoleOutput).isEmpty();
-
-        byteArrayOutputStream.close();
-        printStream.close();
-    }
-
-    @Test
-    void captureLoggingEventsWithConsoleOutput() throws IOException {
-        logCaptor = LogCaptor.forRoot();
-        logCaptor.setLogLevelToTrace();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayOutputStream);
-        System.setOut(printStream);
-
-        Service service = new ServiceWithApacheLog4j();
-        service.sayHello();
-
-        assertThat(logCaptor.getInfoLogs()).containsExactly(LogMessage.INFO.getMessage());
-
-        String consoleOutput = byteArrayOutputStream.toString();
-        assertThat(consoleOutput).isNotEmpty()
-                .contains(LogMessage.INFO.getMessage());
-
-        byteArrayOutputStream.close();
-        printStream.close();
-    }
-
-    @Test
     void captureLoggingEventsContainingException() {
         logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndCustomException.class);
 

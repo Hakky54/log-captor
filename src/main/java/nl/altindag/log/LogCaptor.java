@@ -26,6 +26,11 @@ import nl.altindag.log.model.LogEvent;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -35,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -44,6 +52,12 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
  * @author Hakan Altindag
  */
 public final class LogCaptor {
+
+    static {
+        if (LogCaptorUtils.shouldConsoleOutputBeDisabled()) {
+            ConsoleOutputConfigurer.disable();
+        }
+    }
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
@@ -223,11 +237,57 @@ public final class LogCaptor {
         listAppender.list.clear();
     }
 
-    /**
-     * Disables printing logs to the console while keeping the ability of capturing it.
-     */
-    public void disableConsoleOutput() {
-        logger.detachAppender("console");
+    private static final class LogCaptorUtils {
+        private static boolean shouldConsoleOutputBeDisabled() {
+            return "true".equalsIgnoreCase(System.getProperty("disableConsoleOutput"));
+        }
+    }
+
+    private static class ConsoleOutputConfigurer {
+
+        static {
+            Runtime.getRuntime().addShutdownHook(new Thread(ConsoleOutputConfigurer::destroy));
+        }
+
+        private static OutputStream outputStream;
+        private static PrintStream printStream;
+        private static ScheduledExecutorService executorService;
+
+        private static void disable() {
+            outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            System.setOut(printStream);
+            System.setErr(printStream);
+
+            executorService = Executors.newScheduledThreadPool(10);
+            executorService.scheduleAtFixedRate(() -> {
+                try {
+                    printStream.flush();
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }, 0, 1, TimeUnit.MILLISECONDS);
+        }
+
+        private static void destroy() {
+            try {
+                if (executorService != null) {
+                    executorService.shutdownNow();
+                }
+
+                if (printStream != null) {
+                    printStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
     }
 
 }
