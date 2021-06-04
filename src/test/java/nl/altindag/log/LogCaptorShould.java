@@ -17,7 +17,10 @@
 package nl.altindag.log;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.filter.LevelFilter;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.read.ListAppender;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
@@ -46,6 +49,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -369,7 +376,7 @@ class LogCaptorShould {
         Service service = new ServiceWithApacheLog4jAndMdcHeaders();
         service.sayHello();
 
-        assertMdcHeaders(logCaptor, "test-log4j-mdc", "hello-log4j");
+        assertDiagnosticContext(logCaptor, "test-log4j-mdc", "hello-log4j");
     }
 
     @Test
@@ -379,10 +386,49 @@ class LogCaptorShould {
         Service service = new ServiceWithSlf4jAndMdcHeaders();
         service.sayHello();
 
-        assertMdcHeaders(logCaptor, "test-slf4j-mdc", "hello-slf4j");
+        assertDiagnosticContext(logCaptor, "test-slf4j-mdc", "hello-slf4j");
     }
 
-    private static void assertMdcHeaders(LogCaptor logCaptor, String mdcKey, String mdcValue) {
+    @Test
+    void detachAppenderWithCloseMethod() {
+        Logger logger = (Logger) LoggerFactory.getLogger(this.getClass());
+        assertThat(fetchAppenders(logger)).isEmpty();
+
+        logCaptor = LogCaptor.forClass(this.getClass());
+        assertListAppender(logger);
+
+        logCaptor.close();
+        assertThat(fetchAppenders(logger)).isEmpty();
+    }
+
+    @Test
+    void detachAppenderWithAutoClosable() {
+        Logger logger = (Logger) LoggerFactory.getLogger(this.getClass());
+        assertThat(fetchAppenders(logger)).isEmpty();
+
+        try (LogCaptor ignored = LogCaptor.forClass(this.getClass())) {
+            assertListAppender(logger);
+        }
+
+        assertThat(fetchAppenders(logger)).isEmpty();
+    }
+
+    private static void assertListAppender(Logger logger) {
+        assertThat(fetchAppenders(logger))
+                .hasSize(1)
+                .first()
+                .isInstanceOf(ListAppender.class)
+                .extracting(Appender::getName)
+                .isEqualTo("log-captor");
+    }
+
+    private static List<Appender<?>> fetchAppenders(Logger logger) {
+        return StreamSupport
+                .stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
+    }
+
+    private static void assertDiagnosticContext(LogCaptor logCaptor, String mdcKey, String mdcValue) {
         List<LogEvent> logEvents = logCaptor.getLogEvents();
 
         assertThat(logEvents).hasSize(2);

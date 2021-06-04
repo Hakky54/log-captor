@@ -43,7 +43,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 /**
  * @author Hakan Altindag
  */
-public final class LogCaptor {
+public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
@@ -64,6 +64,7 @@ public final class LogCaptor {
 
         logger = (Logger) slf4jLogger;
         listAppender = new ListAppender<>();
+        listAppender.setName("log-captor");
 
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
             LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
@@ -147,7 +148,7 @@ public final class LogCaptor {
         String level = iLoggingEvent.getLevel().toString();
         String loggerName = iLoggingEvent.getLoggerName();
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
-        Map<String, String> mdcProperties = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
+        Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
 
         List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
                 .map(Arrays::asList)
@@ -160,7 +161,7 @@ public final class LogCaptor {
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
-        return new LogEvent(message, formattedMessage, level, loggerName, timeStamp, arguments, throwable, mdcProperties);
+        return new LogEvent(message, formattedMessage, level, loggerName, timeStamp, arguments, throwable, diagnosticContext);
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {
@@ -221,6 +222,12 @@ public final class LogCaptor {
 
     public void clearLogs() {
         listAppender.list.clear();
+    }
+
+    @Override
+    public void close() {
+        listAppender.stop();
+        logger.detachAppender(listAppender);
     }
 
 }
