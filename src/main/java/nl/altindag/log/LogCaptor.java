@@ -21,7 +21,6 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.read.ListAppender;
-import nl.altindag.log.mapper.LogEventMapper;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static nl.altindag.log.util.Mappers.toLogEvent;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 /**
@@ -42,7 +42,6 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
-    private static final LogEventMapper LOG_EVENT_MAPPER = LogEventMapper.getInstance();
 
     private final Logger logger;
     private final ListAppender<ILoggingEvent> listAppender;
@@ -128,7 +127,7 @@ public final class LogCaptor implements AutoCloseable {
 
     public List<LogEvent> getLogEvents() {
         return listAppender.list.stream()
-                .map(LOG_EVENT_MAPPER)
+                .map(toLogEvent())
                 .collect(toList());
     }
 
