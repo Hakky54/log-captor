@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 the original author or authors.
+ * Copyright 2019-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,13 @@ package nl.altindag.log;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.read.ListAppender;
+import nl.altindag.log.mapper.LogEventMapper;
 import nl.altindag.log.model.LogEvent;
+import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,12 +42,13 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
+    private static final LogEventMapper LOG_EVENT_MAPPER = LogEventMapper.getInstance();
 
     private final Logger logger;
     private final ListAppender<ILoggingEvent> listAppender;
 
-    private LogCaptor(String name) {
-        org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(name);
+    private LogCaptor(String loggerName) {
+        org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
         if (!(slf4jLogger instanceof Logger)) {
             throw new IllegalArgumentException(
                     String.format("SLF4J Logger implementation should be of the type [%s] but found [%s]. " +
@@ -65,21 +62,14 @@ public final class LogCaptor implements AutoCloseable {
         logger = (Logger) slf4jLogger;
         listAppender = new ListAppender<>();
         listAppender.setName("log-captor");
+        listAppender.start();
+        logger.addAppender(listAppender);
+
+        JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
 
         if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
             LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
         }
-
-        listAppender.start();
-        logger.addAppender(listAppender);
-
-        if (!SLF4JBridgeHandler.isInstalled()) {
-            SLF4JBridgeHandler.removeHandlersForRootLogger();
-            SLF4JBridgeHandler.install();
-        }
-
-        String loggerNameForJul = ROOT_LOGGER_NAME.equals(name) ? "" : name;
-        java.util.logging.Logger.getLogger(loggerNameForJul).setLevel(java.util.logging.Level.ALL);
     }
 
     /**
@@ -138,30 +128,8 @@ public final class LogCaptor implements AutoCloseable {
 
     public List<LogEvent> getLogEvents() {
         return listAppender.list.stream()
-                .map(LogCaptor::toLogEvent)
+                .map(LOG_EVENT_MAPPER)
                 .collect(toList());
-    }
-
-    private static LogEvent toLogEvent(ILoggingEvent iLoggingEvent) {
-        String message = iLoggingEvent.getMessage();
-        String formattedMessage = iLoggingEvent.getFormattedMessage();
-        String level = iLoggingEvent.getLevel().toString();
-        String loggerName = iLoggingEvent.getLoggerName();
-        ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
-        Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
-
-        List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
-                .map(Arrays::asList)
-                .map(Collections::unmodifiableList)
-                .orElseGet(Collections::emptyList);
-
-        Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
-                .filter(ThrowableProxy.class::isInstance)
-                .map(ThrowableProxy.class::cast)
-                .map(ThrowableProxy::getThrowable)
-                .orElse(null);
-
-        return new LogEvent(message, formattedMessage, level, loggerName, timeStamp, arguments, throwable, diagnosticContext);
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {
