@@ -26,11 +26,11 @@
 ```
 ### Install with Gradle
 ```groovy
-implementation 'io.github.hakky54:logcaptor:2.6.1'
+testImplementation 'io.github.hakky54:logcaptor:2.6.1'
 ```
 ### Install with Scala SBT
 ```
-libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.6.1"
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.6.1" % Test
 ```
 ### Install with Apache Ivy
 ```xml

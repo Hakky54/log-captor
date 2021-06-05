@@ -53,7 +53,7 @@
         <version.logback>1.2.3</version.logback>
         <version.junit>5.7.2</version.junit>
         <version.assertj>3.19.0</version.assertj>
-        <version.mockito>3.10.0</version.mockito>
+        <version.mockito>3.11.0</version.mockito>
         <version.lombok>1.18.20</version.lombok>
         <version.jul-to-slf4j>1.7.30</version.jul-to-slf4j>
         <version.apache.log4j-to-slf4j>2.14.1</version.apache.log4j-to-slf4j>
