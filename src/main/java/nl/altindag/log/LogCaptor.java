@@ -133,7 +133,7 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {
-        this.listAppender.addFilter(filter);
+        listAppender.addFilter(filter);
         filter.start();
     }
 
