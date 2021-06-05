@@ -374,7 +374,7 @@ public class FooServiceShould {
 
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
-        Fervice service = new FooService();
+       FooService service = new FooService();
         service.sayHello();
 
         assertThat(logCaptor.getLogs())
