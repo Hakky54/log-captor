@@ -65,10 +65,7 @@ public final class LogCaptor implements AutoCloseable {
         logger.addAppender(listAppender);
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
-
-        if (!LOG_LEVEL_CONTAINER.containsKey(logger.getName())) {
-            LOG_LEVEL_CONTAINER.put(logger.getName(), logger.getEffectiveLevel());
-        }
+        LOG_LEVEL_CONTAINER.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
     }
 
     /**
