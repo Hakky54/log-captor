@@ -14,7 +14,8 @@
 
 # LogCaptor [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=With%20LogCaptor%20it%20is%20now%20very%20easy%20to%20captor%20and%20test%20your%20log%20message&url=https://github.com/Hakky54/log-captor/&via=hakky541&hashtags=logging,testing,log4j,slf4j,log4j2,jul,lombok,developer,java,scala,kotlin,logcaptor)
 
-# Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
+# Install library with:
+### Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
 ```xml
 <dependency>
     <groupId>io.github.hakky54</groupId>
@@ -23,15 +24,56 @@
     <scope>test</scope>
 </dependency>
 ```
+### Install with Gradle
+```groovy
+implementation 'io.github.hakky54:logcaptor:2.6.1'
+```
+### Install with Scala SBT
+```
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.6.1"
+```
+### Install with Apache Ivy
+```xml
+<dependency org="io.github.hakky54" name="logcaptor" rev="2.6.1" />
+```
+
+## Table of contents
+1. [Introduction](#introduction)
+   - [Advantages](#advantages)
+   - [Supported Java versions](#supported-java-versions)
+   - [Tested Logging libraries](#tested-logging-libraries)
+2. [Usage](#usage)
+   - [Capture logs](#capture-logs)
+   - [Reuse LogCaptor for multiple tests](#initialize-logcaptor-once-and-reuse-it-during-multiple-tests-with-clearlogs-method-within-the-aftereach-method)
+   - [Capture logs for enabled logs only](#class-which-will-log-events-if-specific-log-level-has-been-set)
+   - [Capture exceptions within logs](#class-which-will-also-log-an-exception)
+   - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
+   - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
+   - [Disable all logs](#disable-all-logs)
+3. [Known issues](#known-issues)
+   - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
+4. [Contributing](#contributing)
+5. [License](#license)
+   
 
 # Introduction
 LogCaptor is a library which will enable you to easily capture logging entries for unit testing purposes.
+
+### Advantages
+- No mocking required
+- No custom JUnit extension required
+- Plug & play
+
+### Supported Java versions
+- Java 8
+- Java 11+
 
 ### Tested Logging libraries
  - SLFJ4
  - Logback
  - Java Util Logging  
  - Apache Log4j
+ - Apache Log4j2  
  - Log4j with Lombok
  - Log4j2 with Lombok
  - SLFJ4 with Lombok
@@ -39,17 +81,8 @@ LogCaptor is a library which will enable you to easily capture logging entries f
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
  
-### Supported Java versions
- - Java 8
- - Java 11+
-
-### Advantages
- - No mocking required
- - No custom JUnit extension required
- - Plug & play
- 
 # Usage
-##### Basic example class
+##### Capture logs
 ```java
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,22 +133,34 @@ public class FooServiceShould {
 ```java
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 
 public class FooServiceShould {
 
-    private LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+    private static LogCaptor logCaptor;
     private static final String EXPECTED_INFO_MESSAGE = "Keyboard not responding. Press any key to continue...";
     private static final String EXPECTED_WARN_MESSAGE = "Congratulations, you are pregnant!";
+    
+    @BeforeAll
+    public static setupLogCaptor() {
+        logCaptor = LogCaptor.forClass(FooService.class);
+    }
 
     @AfterEach
     public void clearLogs() {
         logCaptor.clearLogs();
     }
+    
+    @AfterAll
+    public static void tearDown() {
+        logCaptor.close();
+    }
 
     @Test
     public void logInfoAndWarnMessagesAndGetWithEnum() {
-        Service service = new FooService();
+        FooService service = new FooService();
         service.sayHello();
 
         assertThat(logCaptor.getInfoLogs()).containsExactly(EXPECTED_INFO_MESSAGE);
@@ -126,7 +171,7 @@ public class FooServiceShould {
 
     @Test
     public void logInfoAndWarnMessagesAndGetWithString() {
-        Service service = new FooService();
+        FooService service = new FooService();
         service.sayHello();
 
         assertThat(logCaptor.getInfoLogs()).containsExactly(EXPECTED_INFO_MESSAGE);
@@ -224,7 +269,7 @@ public class FooServiceShould {
     void captureLoggingEventsContainingException() {
         LogCaptor logCaptor = LogCaptor.forClass(ZooService.class);
 
-        Fervice service = new FooService();
+        FooService service = new FooService();
         service.sayHello();
 
         List<LogEvent> logEvents = logCaptor.getLogEvents();
@@ -241,6 +286,62 @@ public class FooServiceShould {
     }
 }
 ```
+##### Capture Managed Diagnostic Context (MDC)
+```java
+import nl.altindag.log.service.LogMessage;
+import nl.altindag.log.service.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class FooService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceWithSlf4jAndMdcHeaders.class);
+
+    public void sayHello() {
+        try {
+            MDC.put("my-mdc-key", "my-mdc-value");
+            LOGGER.info(LogMessage.INFO.getMessage());
+        } finally {
+            MDC.clear();
+        }
+
+        LOGGER.info("Hello there!");
+    }
+
+}
+```
+###### Unit test:
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import nl.altindag.log.LogCaptor;
+import nl.altindag.log.model.LogEvent;
+import org.junit.jupiter.api.Test;
+
+public class FooServiceShould {
+
+   @Test
+   void captureLoggingEventsContainingException() {
+      LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+
+      FooService service = new FooService();
+      service.sayHello();
+
+      List<LogEvent> logEvents = logCaptor.getLogEvents();
+
+      assertThat(logEvents).hasSize(2);
+
+      assertThat(logEvents.get(0).getDiagnosticContext())
+              .hasSize(1)
+              .extractingByKey("my-mdc-key")
+              .isEqualTo("my-mdc-value");
+
+      assertThat(logEvents.get(1).getDiagnosticContext()).isEmpty();
+   }
+}
+```
+
 ##### Disable any logs for a specific class
 In some use cases a unit test can generate too many logs by another class. This could be annoying as it will cause noise in your build logs. LogCaptor can disable those log messages with the following snippet:
 
@@ -283,6 +384,15 @@ public class FooServiceShould {
 }
 ```
 
+##### Disable all logs
+Add `logback-test.xml` to your test resources with the following content:
+```xml
+<configuration>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+</configuration>
+```
+
+# Known issues
 ## Using Log Captor alongside with other logging libraries
 When building your maven or gradle project it can complain that you are using multiple SLF4J implementations. Log Captor is using logback as SLF4J implementation and SLF4J doesn't allow you to use multiple implementations, therefore you need to explicitly specify which to use during which build phase.
 You can fix that by excluding your main logging framework during the unit/integration test phase. Below is an example for Maven Failsafe and Maven Surefire:
@@ -319,7 +429,7 @@ configurations {
 }
 ```
 
-## Contributing
+# Contributing
 
 There are plenty of ways to contribute to this project:
 
