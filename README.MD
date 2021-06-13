@@ -109,22 +109,22 @@ public class FooServiceShould {
 
     @Test
     public void logInfoAndWarnMessages() {
-        String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
-        String expectedWarnMessage = "Congratulations, you are pregnant!";
-
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
         FooService fooService = new FooService();
         fooService.sayHello();
 
-        // Option 1 to assert logging entries
-        assertThat(logCaptor.getInfoLogs()).containsExactly(expectedInfoMessage);
-        assertThat(logCaptor.getWarnLogs()).containsExactly(expectedWarnMessage);
+        // Get logs based on level
+        assertThat(logCaptor.getInfoLogs()).containsExactly("Keyboard not responding. Press any key to continue...");
+        assertThat(logCaptor.getWarnLogs()).containsExactly("Congratulations, you are pregnant!");
 
-        // Option 2 to assert logging entries
+        // Get all logs
         assertThat(logCaptor.getLogs())
                 .hasSize(2)
-                .containsExactly(expectedInfoMessage, expectedWarnMessage);
+                .contains(
+                    "Keyboard not responding. Press any key to continue...",
+                    "Congratulations, you are pregnant!"
+                );
     }
 }
 ```
@@ -212,18 +212,15 @@ public class FooServiceShould {
 
     @Test
     public void logInfoAndWarnMessages() {
-        String expectedInfoMessage = "Congratulations, you are pregnant!";
-        String expectedDebugMessage = "Keyboard not responding. Press any key to continue...";
-
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
         logCaptor.setLogLevelToInfo();
 
         FooService fooService = new FooService();
         fooService.sayHello();
 
-        assertThat(logCaptor.getInfoLogs()).containsExactly(expectedInfoMessage);
+        assertThat(logCaptor.getInfoLogs()).contains("Congratulations, you are pregnant!");
         assertThat(logCaptor.getDebugLogs())
-            .doesNotContain(expectedDebugMessage)
+            .doesNotContain("Keyboard not responding. Press any key to continue...")
             .isEmpty();
     }
 }
@@ -322,7 +319,7 @@ import org.junit.jupiter.api.Test;
 public class FooServiceShould {
 
    @Test
-   void captureLoggingEventsContainingException() {
+   void captureLoggingEventsContainingMdc() {
       LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
       FooService service = new FooService();
@@ -368,10 +365,7 @@ public class FooServiceShould {
     }
 
     @Test
-    void captureLoggingEventsContainingException() {
-        String expectedInfoMessage = "Keyboard not responding. Press any key to continue...";
-        String expectedWarnMessage = "Congratulations, you are pregnant!";
-
+    void logInfoAndWarnMessages() {
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
        FooService service = new FooService();
@@ -379,7 +373,10 @@ public class FooServiceShould {
 
         assertThat(logCaptor.getLogs())
                 .hasSize(2)
-                .containsExactly(expectedInfoMessage, expectedWarnMessage);
+                .contains(
+                    "Keyboard not responding. Press any key to continue...",
+                    "Congratulations, you are pregnant!"
+                );
     }
 }
 ```
