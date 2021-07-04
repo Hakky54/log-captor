@@ -455,6 +455,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/AkaZver"><img src="https://avatars.githubusercontent.com/u/40667664?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasiliy Sobolev</b></sub></a><br /><a href="#design-AkaZver" title="Design">🎨</a> <a href="#ideas-AkaZver" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/sleepo581"><img src="https://avatars.githubusercontent.com/u/30793892?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexei Brinza</b></sub></a><br /><a href="#design-sleepo581" title="Design">🎨</a></td>
     <td align="center"><a href="https://dlsrb6342.github.io"><img src="https://avatars.githubusercontent.com/u/19386038?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ingyu Hwang</b></sub></a><br /><a href="https://github.com/Hakky54/log-captor/pulls?q=is%3Apr+reviewed-by%3Adlsrb6342" title="Reviewed Pull Requests">👀</a> <a href="#ideas-dlsrb6342" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/tjuchniewicz"><img src="https://avatars.githubusercontent.com/u/15428166?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tomasz Juchniewicz</b></sub></a><br /><a href="#ideas-tjuchniewicz" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
