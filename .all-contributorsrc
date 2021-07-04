@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "AkaZver",
+      "name": "Vasiliy Sobolev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40667664?v=4",
+      "profile": "https://github.com/AkaZver",
+      "contributions": [
+        "design",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "log-captor",
+  "projectOwner": "Hakky54",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
