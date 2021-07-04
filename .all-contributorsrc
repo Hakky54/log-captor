@@ -23,6 +23,16 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "tjuchniewicz",
+      "name": "Tomasz Juchniewicz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15428166?v=4",
+      "profile": "https://github.com/tjuchniewicz",
+      "contributions": [
+        "ideas",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -454,6 +454,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/AkaZver"><img src="https://avatars.githubusercontent.com/u/40667664?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasiliy Sobolev</b></sub></a><br /><a href="#design-AkaZver" title="Design">🎨</a> <a href="#ideas-AkaZver" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/sleepo581"><img src="https://avatars.githubusercontent.com/u/30793892?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexei Brinza</b></sub></a><br /><a href="#design-sleepo581" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/tjuchniewicz"><img src="https://avatars.githubusercontent.com/u/15428166?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tomasz Juchniewicz</b></sub></a><br /><a href="#ideas-tjuchniewicz" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/Hakky54/log-captor/pulls?q=is%3Apr+reviewed-by%3Atjuchniewicz" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
