@@ -1,4 +1,7 @@
 [![Actions Status](https://github.com/Hakky54/log-captor/workflows/Build/badge.svg)](https://github.com/Hakky54/log-captor/actions)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=alert_status)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=coverage)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
@@ -444,3 +447,23 @@ There are plenty of ways to contribute to this project:
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/AkaZver"><img src="https://avatars.githubusercontent.com/u/40667664?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasiliy Sobolev</b></sub></a><br /><a href="#design-AkaZver" title="Design">🎨</a> <a href="#ideas-AkaZver" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
