@@ -23,6 +23,16 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "lcardito",
+      "name": "Luigi Cardito",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5428750?v=4",
+      "profile": "http://lcardito.me",
+      "contributions": [
+        "ideas",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
