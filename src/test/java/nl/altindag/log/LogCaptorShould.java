@@ -35,11 +35,15 @@ import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.slf4j.Log4jLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,10 +56,12 @@ import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -411,6 +417,70 @@ class LogCaptorShould {
         }
 
         assertThat(fetchAppenders(logger)).isEmpty();
+    }
+
+    @ParameterizedTest(name = "[{index}] Capture no log events with Class.getCanonicalName()")
+    @MethodSource("fetchArgumentsForNoLogEvents")
+    void captureNoLogEventsFromStaticInnerClasses(Runnable staticInnerClassMethod) {
+        try (LogCaptor logCaptor = LogCaptor.forClass(StaticInnerTestClass.class)) {
+            staticInnerClassMethod.run();
+            assertThat(logCaptor.getLogEvents()).isEmpty();
+        }
+    }
+
+    @ParameterizedTest(name = "[{index}] Capture log events with Class.getName()")
+    @MethodSource("fetchArgumentsForLogEvents")
+    void captureLogEventsFromStaticInnerClasses(Runnable staticInnerClassMethod, String expectedMessage) {
+        try (LogCaptor logCaptor = LogCaptor.forClass(StaticInnerTestClass.class)) {
+            staticInnerClassMethod.run();
+
+            assertThat(logCaptor.getInfoLogs())
+                    .hasSize(1)
+                    .first()
+                    .isEqualTo(expectedMessage);
+        }
+    }
+
+    private static class StaticInnerTestClass {
+        static void call(org.apache.logging.log4j.Logger logger) {
+            logger.info("Test message from Log4j2");
+        }
+
+        static void call(org.slf4j.Logger logger) {
+            logger.info("Test message from SLF4J");
+        }
+
+        static void call(java.util.logging.Logger logger) {
+            logger.info("Test message from JUL");
+        }
+    }
+
+    // MethodSource for captureNoLogEventsFromStaticInnerClasses
+    @SuppressWarnings("unused")
+    private static Stream<Arguments> fetchArgumentsForNoLogEvents() {
+        String canonicalName = StaticInnerTestClass.class.getCanonicalName();
+
+        Runnable log4j2 = () -> StaticInnerTestClass.call(LogManager.getLogger(StaticInnerTestClass.class));
+        Runnable slf4j = () -> StaticInnerTestClass.call(LoggerFactory.getLogger(canonicalName));
+        Runnable jul = () -> StaticInnerTestClass.call(java.util.logging.Logger.getLogger(canonicalName));
+
+        return Stream.of(arguments(log4j2), arguments(slf4j), arguments(jul));
+    }
+
+    // MethodSource for captureLogEventsFromStaticInnerClasses
+    @SuppressWarnings("unused")
+    private static Stream<Arguments> fetchArgumentsForLogEvents() {
+        String name = StaticInnerTestClass.class.getName();
+
+        Runnable log4j2 = () -> StaticInnerTestClass.call(LogManager.getLogger(name));
+        Runnable slf4j = () -> StaticInnerTestClass.call(LoggerFactory.getLogger(StaticInnerTestClass.class));
+        Runnable jul = () -> StaticInnerTestClass.call(java.util.logging.Logger.getLogger(name));
+
+        return Stream.of(
+                arguments(log4j2, "Test message from Log4j2"),
+                arguments(slf4j, "Test message from SLF4J"),
+                arguments(jul, "Test message from JUL")
+        );
     }
 
     private static void assertListAppender(Logger logger) {

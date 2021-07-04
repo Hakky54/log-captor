@@ -426,6 +426,12 @@ configurations {
 }
 ```
 
+## Capturing logs of static inner classes
+LogCaptor successfully catches logs of static inner classes with `LogCaptor.forClass(StaticInnerClass.class)` construction 
+when SLF4J or JUL is used. This doesn't apply to Log4j2 because by default it uses `Class.getCanonicalName()` 
+inside instead of `Class.getName()`. You should use `LogCaptor.forName(StaticInnerClass.class.getCanonicalName())` for successful 
+test execution with Log4j2.
+
 # Contributing
 
 There are plenty of ways to contribute to this project:

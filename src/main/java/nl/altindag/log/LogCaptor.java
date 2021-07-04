@@ -70,6 +70,8 @@ public final class LogCaptor implements AutoCloseable {
 
     /**
      * Captures all log messages
+     *
+     * @return LogCaptor instance for the root logger
      */
     public static LogCaptor forRoot() {
         return new LogCaptor(ROOT_LOGGER_NAME);
@@ -77,13 +79,19 @@ public final class LogCaptor implements AutoCloseable {
 
     /**
      * Captures log messages for the provided class
+     *
+     * @param clazz Class for capturing
+     * @return LogCaptor instance for the provided class
      */
-    public static <T> LogCaptor forClass(Class<T> clazz) {
+    public static LogCaptor forClass(Class<?> clazz) {
         return new LogCaptor(clazz.getName());
     }
 
     /**
      * Captures log messages for the provided logger name
+     *
+     * @param name Logger name for capturing
+     * @return LogCaptor instance for the provided logger name
      */
     public static LogCaptor forName(String name) {
         return new LogCaptor(name);
