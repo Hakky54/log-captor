@@ -33,6 +33,23 @@
         "ideas",
         "code"
       ]
+      "login": "dlsrb6342",
+      "name": "Ingyu Hwang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19386038?v=4",
+      "profile": "https://dlsrb6342.github.io",
+      "contributions": [
+        "review",
+        "ideas"
+      ]
+    },
+    {
+      "login": "tjuchniewicz",
+      "name": "Tomasz Juchniewicz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15428166?v=4",
+      "profile": "https://github.com/tjuchniewicz",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
