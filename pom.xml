@@ -50,15 +50,15 @@
 
     <properties>
         <version.java>1.8</version.java>
-        <version.logback>1.2.3</version.logback>
+        <version.logback>1.2.5</version.logback>
         <version.junit>5.7.2</version.junit>
-        <version.assertj>3.19.0</version.assertj>
-        <version.mockito>3.11.0</version.mockito>
+        <version.assertj>3.20.2</version.assertj>
+        <version.mockito>3.11.2</version.mockito>
         <version.lombok>1.18.20</version.lombok>
-        <version.jul-to-slf4j>1.7.30</version.jul-to-slf4j>
+        <version.jul-to-slf4j>1.7.32</version.jul-to-slf4j>
         <version.apache.log4j-to-slf4j>2.14.1</version.apache.log4j-to-slf4j>
         <version.log4j>1.2.17</version.log4j>
-        <version.log4j-over-slf4j>1.7.30</version.log4j-over-slf4j>
+        <version.log4j-over-slf4j>1.7.32</version.log4j-over-slf4j>
         <version.log4j-slf4j-impl>2.14.1</version.log4j-slf4j-impl>
         <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
