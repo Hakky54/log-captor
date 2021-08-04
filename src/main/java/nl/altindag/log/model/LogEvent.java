@@ -31,6 +31,7 @@ public final class LogEvent {
     private final String formattedMessage;
     private final String level;
     private final String loggerName;
+    private final String threadName;
     private final ZonedDateTime timeStamp;
     private final List<Object> arguments;
     private final Throwable throwable;
@@ -40,6 +41,7 @@ public final class LogEvent {
                     String formattedMessage,
                     String level,
                     String loggerName,
+                    String threadName,
                     ZonedDateTime timeStamp,
                     List<Object> arguments,
                     Throwable throwable,
@@ -49,6 +51,7 @@ public final class LogEvent {
         this.formattedMessage = Objects.requireNonNull(formattedMessage);
         this.level = Objects.requireNonNull(level);
         this.loggerName = loggerName;
+        this.threadName = threadName;
         this.timeStamp = Objects.requireNonNull(timeStamp);
         this.throwable = throwable;
         this.arguments = arguments;
@@ -69,6 +72,10 @@ public final class LogEvent {
 
     public String getLoggerName() {
         return loggerName;
+    }
+
+    public String getThreadName() {
+        return threadName;
     }
 
     public ZonedDateTime getTimeStamp() {

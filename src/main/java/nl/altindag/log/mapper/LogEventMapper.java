@@ -45,6 +45,7 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
         String formattedMessage = iLoggingEvent.getFormattedMessage();
         String level = iLoggingEvent.getLevel().toString();
         String loggerName = iLoggingEvent.getLoggerName();
+        String threadName = iLoggingEvent.getThreadName();
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
         Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
 
@@ -64,6 +65,7 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 formattedMessage,
                 level,
                 loggerName,
+                threadName,
                 timeStamp,
                 arguments,
                 throwable,

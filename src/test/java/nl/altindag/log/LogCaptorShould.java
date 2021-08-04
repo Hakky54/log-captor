@@ -227,6 +227,20 @@ class LogCaptorShould {
     }
 
     @Test
+    void captureLoggingEventsContainingThreadName() {
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4j.class);
+
+        Service service = new ServiceWithSlf4j();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getThreadName()).isEqualTo("main");
+    }
+
+    @Test
     void captureLoggingEventsByUsingForNameMethodWithLogCaptor() {
         logCaptor = LogCaptor.forName("nl.altindag.log.service.apache.ServiceWithApacheLog4j");
         logCaptor.setLogLevelToTrace();
