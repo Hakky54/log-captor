@@ -67,4 +67,4 @@ jobs:
         with:
           apikey: ${{ secrets.THUNDRA_API_KEY }}
           project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
-          command: mvn clean install
+          command: mvn clean verify --no-transfer-progress --no-transfer-progress
