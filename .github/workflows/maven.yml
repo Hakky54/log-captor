@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build-with-jdk-8:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -27,7 +26,6 @@ jobs:
         run: mvn clean verify --no-transfer-progress
 
   build-with-jdk-11:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
