@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build and test
-        run: mvn clean verify
+        run: mvn clean verify --no-transfer-progress
 
   build-with-jdk-11:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
         if: github.actor == 'Hakky54'
 
       - name: Build and test
-        run: mvn clean verify --no-transfer-progress --no-transfer-progress
+        run: mvn clean verify --no-transfer-progress
         if: github.actor != 'Hakky54'
 
   build-on-thundra-with-jdk-8:
@@ -67,4 +67,4 @@ jobs:
         with:
           apikey: ${{ secrets.THUNDRA_API_KEY }}
           project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
-          command: mvn clean verify --no-transfer-progress --no-transfer-progress
+          command: mvn clean verify --no-transfer-progress
