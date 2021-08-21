@@ -51,6 +51,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.6.1" % Test
    - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
    - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
    - [Disable all logs](#disable-all-logs)
+   - [Returnable values from LogCaptor](#returnable-values-from-logcaptor)
 3. [Known issues](#known-issues)
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
    - [Capturing logs of static inner classes](#capturing-logs-of-static-inner-classes)
@@ -394,6 +395,46 @@ Add `logback-test.xml` to your test resources with the following content:
 <configuration>
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
+```
+
+##### Returnable values from LogCaptor
+```java
+import nl.altindag.log.LogCaptor;
+import nl.altindag.log.model.LogEvent;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+class FooServiceShould {
+
+   @Test
+   void showCaseAllReturnableValues() {
+        LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+
+        List<String> logs = logCaptor.getLogs();
+        List<String> infoLogs = logCaptor.getInfoLogs();
+        List<String> debugLogs = logCaptor.getDebugLogs();
+        List<String> warnLogs = logCaptor.getWarnLogs();
+        List<String> errorLogs = logCaptor.getErrorLogs();
+        List<String> traceLogs = logCaptor.getTraceLogs();
+
+        LogEvent logEvent = logCaptor.getLogEvents().get(0);
+        String message = logEvent.getMessage();
+        String formattedMessage = logEvent.getFormattedMessage();
+        String level = logEvent.getLevel();
+        List<Object> arguments = logEvent.getArguments();
+        String loggerName = logEvent.getLoggerName();
+        String threadName = logEvent.getThreadName();
+        ZonedDateTime timeStamp = logEvent.getTimeStamp();
+        Map<String, String> diagnosticContext = logEvent.getDiagnosticContext();
+        Optional<Throwable> throwable = logEvent.getThrowable();
+    }
+    
+}
 ```
 
 # Known issues
