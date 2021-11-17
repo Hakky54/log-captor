@@ -19,12 +19,14 @@ package nl.altindag.log;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.read.ListAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,8 @@ public final class LogCaptor implements AutoCloseable {
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
 
     private final Logger logger;
-    private final ListAppender<ILoggingEvent> listAppender;
+    private final Appender<ILoggingEvent> appender;
+    private final List<ILoggingEvent> eventList = Collections.synchronizedList(new ArrayList<>());
 
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
@@ -59,13 +62,19 @@ public final class LogCaptor implements AutoCloseable {
         }
 
         logger = (Logger) slf4jLogger;
-        listAppender = new ListAppender<>();
-        listAppender.setName("log-captor");
-        listAppender.start();
-        logger.addAppender(listAppender);
+        appender = createAppender(eventList);
+        appender.start();
+        logger.addAppender(appender);
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
         LOG_LEVEL_CONTAINER.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
+    }
+
+    private static ListAppender<ILoggingEvent> createAppender(List<ILoggingEvent> dst) {
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.setName("log-captor");
+        listAppender.list = dst;
+        return listAppender;
     }
 
     /**
@@ -98,9 +107,11 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public List<String> getLogs() {
-        return listAppender.list.stream()
-                .map(ILoggingEvent::getFormattedMessage)
-                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+        synchronized (eventList) {
+            return eventList.stream()
+                    .map(ILoggingEvent::getFormattedMessage)
+                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+        }
     }
 
     public List<String> getInfoLogs() {
@@ -124,20 +135,24 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     private List<String> getLogs(Level level) {
-        return listAppender.list.stream()
-                .filter(logEvent -> logEvent.getLevel() == level)
-                .map(ILoggingEvent::getFormattedMessage)
-                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+        synchronized (eventList) {
+            return eventList.stream()
+                    .filter(logEvent -> logEvent.getLevel() == level)
+                    .map(ILoggingEvent::getFormattedMessage)
+                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+        }
     }
 
     public List<LogEvent> getLogEvents() {
-        return listAppender.list.stream()
-                .map(toLogEvent())
-                .collect(toList());
+        synchronized (eventList) {
+            return eventList.stream()
+                    .map(toLogEvent())
+                    .collect(toList());
+        }
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {
-        listAppender.addFilter(filter);
+        appender.addFilter(filter);
         filter.start();
     }
 
@@ -193,13 +208,13 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void clearLogs() {
-        listAppender.list.clear();
+        eventList.clear();
     }
 
     @Override
     public void close() {
-        listAppender.stop();
-        logger.detachAppender(listAppender);
+        logger.detachAppender(appender);
+        appender.stop();
     }
 
 }
