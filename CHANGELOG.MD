@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.7.1
+- Fixed concurrency issue
 ### v2.7.0
 - Added thread name in LogEvent
 ### v2.6.1
