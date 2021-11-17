@@ -147,7 +147,7 @@ public final class LogCaptor implements AutoCloseable {
         synchronized (eventList) {
             return eventList.stream()
                     .map(toLogEvent())
-                    .collect(toList());
+                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
         }
     }
 
