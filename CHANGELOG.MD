@@ -3,8 +3,12 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.7.2
+- Fixed concurrency issue
+- Republished with JDK 1.8 compatibility
 ### v2.7.1
 - Fixed concurrency issue
+- Accidently published JDK 11 compiles classes
 ### v2.7.0
 - Added thread name in LogEvent
 ### v2.6.1
