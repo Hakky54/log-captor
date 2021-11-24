@@ -22,6 +22,7 @@ import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.read.ListAppender;
 import ch.qos.logback.core.spi.FilterReply;
+import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
@@ -507,7 +508,7 @@ class LogCaptorShould {
         assertThat(fetchAppenders(logger))
                 .hasSize(1)
                 .first()
-                .isInstanceOf(ListAppender.class)
+                .isInstanceOf(InMemoryAppender.class)
                 .extracting(Appender::getName)
                 .isEqualTo("log-captor");
     }
