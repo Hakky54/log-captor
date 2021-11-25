@@ -31,6 +31,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
+ * <strong>NOTE:</strong>
+ * Please don't use this class directly as it is part of the internal API. Class name and methods can be changed any time.
+ *
  * @author Hakan Altindag
  */
 public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
