@@ -21,7 +21,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
-import ch.qos.logback.core.read.ListAppender;
+import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public final class LogCaptor implements AutoCloseable {
 
     private final Logger logger;
     private final Appender<ILoggingEvent> appender;
-    private final List<ILoggingEvent> eventList = Collections.synchronizedList(new ArrayList<>());
+    private final List<ILoggingEvent> eventsCollector = Collections.synchronizedList(new ArrayList<>());
 
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
@@ -62,19 +62,12 @@ public final class LogCaptor implements AutoCloseable {
         }
 
         logger = (Logger) slf4jLogger;
-        appender = createAppender(eventList);
+        appender = new InMemoryAppender<>("log-captor", eventsCollector);
         appender.start();
         logger.addAppender(appender);
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
         LOG_LEVEL_CONTAINER.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
-    }
-
-    private static ListAppender<ILoggingEvent> createAppender(List<ILoggingEvent> dst) {
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.setName("log-captor");
-        listAppender.list = dst;
-        return listAppender;
     }
 
     /**
@@ -107,8 +100,8 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public List<String> getLogs() {
-        synchronized (eventList) {
-            return eventList.stream()
+        synchronized (eventsCollector) {
+            return eventsCollector.stream()
                     .map(ILoggingEvent::getFormattedMessage)
                     .collect(collectingAndThen(toList(), Collections::unmodifiableList));
         }
@@ -135,8 +128,8 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     private List<String> getLogs(Level level) {
-        synchronized (eventList) {
-            return eventList.stream()
+        synchronized (eventsCollector) {
+            return eventsCollector.stream()
                     .filter(logEvent -> logEvent.getLevel() == level)
                     .map(ILoggingEvent::getFormattedMessage)
                     .collect(collectingAndThen(toList(), Collections::unmodifiableList));
@@ -144,8 +137,8 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public List<LogEvent> getLogEvents() {
-        synchronized (eventList) {
-            return eventList.stream()
+        synchronized (eventsCollector) {
+            return eventsCollector.stream()
                     .map(toLogEvent())
                     .collect(collectingAndThen(toList(), Collections::unmodifiableList));
         }
@@ -208,7 +201,7 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void clearLogs() {
-        eventList.clear();
+        eventsCollector.clear();
     }
 
     @Override
