@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.7.4
+- Bumped transitive dependencies
 ### v2.7.3
 - Bumped transitive dependencies
 ### v2.7.2
