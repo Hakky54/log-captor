@@ -4,11 +4,11 @@ This list is not intended to be all-encompassing - it will document major and br
 changes with their rationale when appropriate:
 
 ### v2.7.5
-- Bumped transitive dependencies
+- Bumped transitive dependencies (Logback)
 ### v2.7.4
-- Bumped transitive dependencies
+- Bumped transitive dependencies (Log4J)
 ### v2.7.3
-- Bumped transitive dependencies
+- Bumped transitive dependencies (Logback)
 ### v2.7.2
 - Fixed concurrency issue
 - Republished with JDK 1.8 compatibility
