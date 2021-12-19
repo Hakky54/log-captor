@@ -24,6 +24,7 @@ import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
+import nl.altindag.log.util.ValidationUtils;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -51,13 +52,7 @@ public final class LogCaptor implements AutoCloseable {
 
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
-        if (!(slf4jLogger instanceof Logger)) {
-            String wantedLoggerType = Logger.class.getName();
-            String actualLoggerType = slf4jLogger != null ? slf4jLogger.getClass().getName() : "nothing";
-            throw new IllegalArgumentException(
-                    String.format("SLF4J Logger implementation should be of the type [%s] but found [%s].", wantedLoggerType, actualLoggerType)
-            );
-        }
+        ValidationUtils.requireLoggerOfType(slf4jLogger, Logger.class);
 
         logger = (Logger) slf4jLogger;
         appender = new InMemoryAppender<>("log-captor", eventsCollector);
