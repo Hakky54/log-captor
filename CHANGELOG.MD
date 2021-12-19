@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.7.7
+- Bumped transitive dependencies (Logback)
 ### v2.7.6
 - Bumped transitive dependencies (Log4J)
 ### v2.7.5
