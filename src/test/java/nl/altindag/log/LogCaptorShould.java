@@ -20,7 +20,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.read.ListAppender;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
@@ -42,16 +41,15 @@ import nl.altindag.log.service.slfj4.ServiceWithNestedSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
-import org.apache.logging.slf4j.Log4jLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import org.slf4j.impl.SimpleLogger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -426,7 +424,7 @@ class LogCaptorShould {
     }
 
     @Test
-    void throwExceptionWhenLoggerImplementationIsNotLogback() {
+    void throwExceptionWhenLoggerImplementationIsNull() {
         try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
 
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(null);
@@ -434,6 +432,19 @@ class LogCaptorShould {
             assertThatThrownBy(LogCaptor::forRoot)
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [nothing].");
+        }
+    }
+
+    @Test
+    void throwExceptionWhenLoggerImplementationIsNotLogback() {
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+
+            org.slf4j.Logger logger = mock(SimpleLogger.class);
+            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
+
+            assertThatThrownBy(LogCaptor::forRoot)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.impl.SimpleLogger].");
         }
     }
 
