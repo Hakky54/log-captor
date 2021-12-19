@@ -52,12 +52,10 @@ public final class LogCaptor implements AutoCloseable {
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
         if (!(slf4jLogger instanceof Logger)) {
+            String wantedLoggerType = Logger.class.getName();
+            String actualLoggerType = slf4jLogger != null ? slf4jLogger.getClass().getName() : "nothing";
             throw new IllegalArgumentException(
-                    String.format("SLF4J Logger implementation should be of the type [%s] but found [%s]. " +
-                                  "Please remove any other SLF4J implementations during the test phase from your classpath of your project. " +
-                                  "See here for an example configurations: https://github.com/Hakky54/log-captor#using-log-captor-alongside-with-other-logging-libraries",
-                                  Logger.class.getName(), slf4jLogger.getClass().getName()
-                    )
+                    String.format("SLF4J Logger implementation should be of the type [%s] but found [%s].", wantedLoggerType, actualLoggerType)
             );
         }
 

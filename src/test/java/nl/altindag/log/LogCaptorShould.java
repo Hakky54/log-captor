@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
@@ -428,16 +429,11 @@ class LogCaptorShould {
     void throwExceptionWhenLoggerImplementationIsNotLogback() {
         try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
 
-            Log4jLogger logger = mock(Log4jLogger.class);
-            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
+            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(null);
 
             assertThatThrownBy(LogCaptor::forRoot)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(
-                            "SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.apache.logging.slf4j.Log4jLogger]. " +
-                            "Please remove any other SLF4J implementations during the test phase from your classpath of your project. " +
-                            "See here for an example configurations: https://github.com/Hakky54/log-captor#using-log-captor-alongside-with-other-logging-libraries"
-                    );
+                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [nothing].");
         }
     }
 
