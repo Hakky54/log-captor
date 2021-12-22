@@ -28,7 +28,7 @@ public final class ValidationUtils {
 
     private ValidationUtils() {}
 
-    public static <T extends Logger> void requireLoggerOfType(Logger actualLogger, Class<T> requiredLogger) {
+    public static <T extends Logger, U extends Logger> void requireLoggerOfType(T actualLogger, Class<U> requiredLogger) {
         if (!(requiredLogger.isInstance(actualLogger))) {
             String actualLoggerType = actualLogger != null ? actualLogger.getClass().getName() : "nothing";
 
