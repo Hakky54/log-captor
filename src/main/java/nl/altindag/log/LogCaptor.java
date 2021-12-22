@@ -52,7 +52,7 @@ public final class LogCaptor implements AutoCloseable {
 
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
-        ValidationUtils.requireLoggerOfType(slf4jLogger, Logger.class);
+        ValidationUtils.requireLoggerOfType(slf4jLogger, ch.qos.logback.classic.Logger.class);
 
         logger = (Logger) slf4jLogger;
         appender = new InMemoryAppender<>("log-captor", eventsCollector);
