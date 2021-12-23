@@ -480,6 +480,13 @@ when SLF4J, Log4J, JUL is used. This doesn't apply to Log4J2 by default it uses 
 It used `Class.getCanonicalName()` under the covers instead of `Class.getName()`. You should use `LogCaptor.forName(StaticInnerClass.class.getCanonicalName())` for successful 
 test execution with Log4j2.
 
+# Related
+
+Similar projects to this one include:
+
+* [Google Guava Testlib Testing Libraries for Java](https://github.com/google/guava/tree/master/guava-testlib) has a [`TestLogHandler`](https://javadoc.io/doc/com.google.guava/guava-testlib/latest/com/google/common/testing/TestLogHandler.html) (for JUL)
+* [OpenDaylight.org](https://www.opendaylight.org)'s _infrautils_ have a [`LogRule`](https://github.com/opendaylight/infrautils/blob/master/testutils/src/main/java/org/opendaylight/infrautils/testutils/LogRule.java) and a [`LogCaptureRule`](https://github.com/opendaylight/infrautils/blob/master/testutils/src/main/java/org/opendaylight/infrautils/testutils/LogCaptureRule.java) in [`org.opendaylight.infrautils.testutils`](https://github.com/opendaylight/infrautils/tree/master/testutils/src/main/java/org/opendaylight/infrautils/testutils)
+
 # Contributing
 
 There are plenty of ways to contribute to this project:
