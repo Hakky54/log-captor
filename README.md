@@ -152,7 +152,7 @@ public class FooServiceShould {
     private static final String EXPECTED_WARN_MESSAGE = "Congratulations, you are pregnant!";
     
     @BeforeAll
-    public static setupLogCaptor() {
+    public static void setupLogCaptor() {
         logCaptor = LogCaptor.forClass(FooService.class);
     }
 
