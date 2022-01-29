@@ -440,7 +440,18 @@ class FooServiceShould {
 # Known issues
 ## Using Log Captor alongside with other logging libraries
 When building your maven or gradle project it can complain that you are using multiple SLF4J implementations. Log Captor is using logback as SLF4J implementation and SLF4J doesn't allow you to use multiple implementations, therefore you need to explicitly specify which to use during which build phase.
-You can fix that by excluding your main logging framework during the unit/integration test phase. Below is an example for Maven Failsafe and Maven Surefire:
+
+During the test execution it can give you the following warning:
+```
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:~/.m2/repository/org/apache/logging/log4j/log4j-slf4j-impl/2.17.0/log4j-slf4j-impl-2.17.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:~/.m2/repository/ch/qos/logback/logback-classic/1.2.10/logback-classic-1.2.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+```
+
+Because of this dependency issue the test may fail to capture the logs. You can fix that by excluding your main logging framework during the unit/integration test phase.
+Below is an example for Maven Failsafe and Maven Surefire. You can discover which dependency you need to exclude by anaylising the SLF4J warning displayed above.
 ```xml
 <build>
     <plugins>
