@@ -55,8 +55,8 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.7.8" % Test
 3. [Known issues](#known-issues)
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
    - [Capturing logs of static inner classes](#capturing-logs-of-static-inner-classes)
+   - [Mixing up different classloaders](#mixing-up-different-classloaders)
 4. [Contributing](#contributing)
-5. [Contributors](#contributors-)
 5. [License](#license)
    
 
@@ -486,10 +486,95 @@ configurations {
 ```
 
 ## Capturing logs of static inner classes
-LogCaptor successfully catches logs of static inner classes with `LogCaptor.forClass(StaticInnerClass.class)` construction 
-when SLF4J, Log4J, JUL is used. This doesn't apply to Log4J2 by default it uses different method to for initializing the logger. 
-It used `Class.getCanonicalName()` under the covers instead of `Class.getName()`. You should use `LogCaptor.forName(StaticInnerClass.class.getCanonicalName())` for successful 
-test execution with Log4j2.
+LogCaptor successfully captures logs of static inner classes with `LogCaptor.forClass(MyStaticInnerClass.class)` construction 
+when SLF4J, Log4J, JUL is used. This doesn't apply to static inner classes when Log4J2 is used, because it uses different method to for initializing the logger. 
+It used `Class.getCanonicalName()` under the covers instead of `Class.getName()`. You should use `LogCaptor.forName(StaticInnerClass.class.getCanonicalName())` or `LogCaptor.forRoot()`for to be able to capture logs for static inner classes while using Log4J2.
+
+## Mixing up different classloaders
+It may occur that different classloaders are being used during your tests. LogCaptor works with different classloaders, but it will fail to set up if part of it has been created with a different classloader.
+This may occur for example while using `@QuarkusTest` annotation. The logger will be setup by the default JDK classloader `[jdk.internal.loader.ClassLoaders$AppClassLoader]` while LogCaptor will be setup by the other classloader, in this case Quarkus `[io.quarkus.bootstrap.classloading.QuarkusClassLoader]`. 
+LogCaptor will try to cast an object during the preparation, but it will fail as it is not possible to class an object created by a different classloader. You need to make sure the logger is using the same classloader as LogCaptor or the other way around.
+
+There is also an easier alternative solution by sending all of your logs to the console and capture that with ConsoleCaptor.
+Add the following two dependencies to your project:
+```xml
+<dependencies>
+   <dependency>
+      <groupId>io.github.hakky54</groupId>
+      <artifactId>consolecaptor</artifactId>
+      <scope>test</scope>
+   </dependency>
+
+   <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+   </dependency>
+
+</dependencies>
+```
+
+Add the `logback-test.xml` configuration below to your test resources:
+```xml
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="TRACE">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
+```
+
+Your target class:
+```java
+@Path("/hello")
+public class HelloResource {
+    
+    Logger logger = LoggerFactory.getLogger(GreetingResource.class);
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        logger.info("Hello");
+        return "Hello";
+    }
+}
+```
+Your test class:
+```java
+import io.quarkus.test.junit.QuarkusTest;
+import nl.altindag.console.ConsoleCaptor;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@QuarkusTest
+class QuarkusTestTest {
+
+    @Test
+    void captureLogs() {
+        try(ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
+           HelloResource resource = new HelloResource();
+           resource.hello();
+
+           List<String> standardOutput = consoleCaptor.getStandardOutput();
+
+           assertThat(standardOutput)
+                   .hasSize(1)
+                   .contains("Hello");
+        }
+    }
+
+}
+```
 
 # Contributing
 
@@ -499,29 +584,6 @@ There are plenty of ways to contribute to this project:
 * Share it with a [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=With%20LogCaptor%20it%20is%20now%20very%20easy%20to%20captor%20and%20test%20your%20log%20message&url=https://github.com/Hakky54/log-captor/&via=hakky541&hashtags=logging,testing,log4j,slf4j,log4j2,jul,lombok,developer,java,scala,kotlin,logcaptor)
 * Join the [Gitter room](https://gitter.im/hakky54/logcaptor) and leave a feedback or help with answering users questions
 * Submit a PR
-
-# Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/AkaZver"><img src="https://avatars.githubusercontent.com/u/40667664?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vasiliy Sobolev</b></sub></a><br /><a href="#design-AkaZver" title="Design">🎨</a> <a href="#ideas-AkaZver" title="Ideas, Planning, & Feedback">🤔</a><a href="https://github.com/Hakky54/log-captor/commits?author=AkaZver" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/sleepo581"><img src="https://avatars.githubusercontent.com/u/30793892?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alexei Brinza</b></sub></a><br /><a href="#design-sleepo581" title="Design">🎨</a><a href="https://github.com/Hakky54/log-captor/commits?author=sleepo581" title="Code">💻</a></td>
-    <td align="center"><a href="https://dlsrb6342.github.io"><img src="https://avatars.githubusercontent.com/u/19386038?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ingyu Hwang</b></sub></a><br /><a href="https://github.com/Hakky54/log-captor/pulls?q=is%3Apr+reviewed-by%3Adlsrb6342" title="Reviewed Pull Requests">👀</a> <a href="#ideas-dlsrb6342" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/tjuchniewicz"><img src="https://avatars.githubusercontent.com/u/15428166?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tomasz Juchniewicz</b></sub></a><br /><a href="#ideas-tjuchniewicz" title="Ideas, Planning, & Feedback">🤔</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
