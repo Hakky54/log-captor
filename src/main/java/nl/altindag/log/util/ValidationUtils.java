@@ -29,7 +29,7 @@ public final class ValidationUtils {
     private ValidationUtils() {}
 
     public static <T extends Logger, U extends Logger> void requireLoggerOfType(T actualLogger, Class<U> requiredLogger) {
-        if (actualLogger == null || !requiredLogger.getName().equals(actualLogger.getClass().getName())) {
+        if (actualLogger == null || !requiredLogger.getCanonicalName().equals(actualLogger.getClass().getCanonicalName())) {
             String actualLoggerType = actualLogger != null ? actualLogger.getClass().getName() : "nothing";
 
             throw new IllegalArgumentException(
