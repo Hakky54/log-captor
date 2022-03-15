@@ -493,7 +493,7 @@ It used `Class.getCanonicalName()` under the covers instead of `Class.getName()`
 ## Mixing up different classloaders
 It may occur that different classloaders are being used during your tests. LogCaptor works with different classloaders, but it will fail to set up if part of it has been created with a different classloader.
 This may occur for example while using `@QuarkusTest` annotation. The logger will be setup by the default JDK classloader `[jdk.internal.loader.ClassLoaders$AppClassLoader]` while LogCaptor will be setup by the other classloader, in this case Quarkus `[io.quarkus.bootstrap.classloading.QuarkusClassLoader]`. 
-LogCaptor will try to cast an object during the preparation, but it will fail as it is not possible to class an object created by a different classloader. You need to make sure the logger is using the same classloader as LogCaptor or the other way around.
+LogCaptor will try to cast an object during the preparation, but it will fail as it is not possible to cast an object created by a different classloader. You need to make sure the logger is using the same classloader as LogCaptor or the other way around.
 
 There is also an easier alternative solution by sending all of your logs to the console and capture that with ConsoleCaptor.
 Add the following two dependencies to your project:
