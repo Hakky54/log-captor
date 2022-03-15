@@ -18,7 +18,6 @@ package nl.altindag.log;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.FilterReply;
@@ -431,7 +430,7 @@ class LogCaptorShould {
 
     @Test
     void throwExceptionWhenLoggerImplementationIsNull() {
-        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class)) {
 
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(null);
 
@@ -443,7 +442,7 @@ class LogCaptorShould {
 
     @Test
     void throwExceptionWhenLoggerImplementationIsNotLogback() {
-        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class)) {
 
             org.slf4j.Logger logger = mock(SimpleLogger.class);
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
@@ -463,7 +462,7 @@ class LogCaptorShould {
 
         Object logger = loggerConstructor.newInstance(null, null, null);
 
-        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class)) {
 
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
 
