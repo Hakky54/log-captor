@@ -442,6 +442,19 @@ class LogCaptorShould {
     }
 
     @Test
+    void throwExceptionWhenLoggerImplementationIsNotLogback() {
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+
+            org.slf4j.Logger logger = mock(SimpleLogger.class);
+            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
+
+            assertThatThrownBy(LogCaptor::forRoot)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.impl.SimpleLogger].");
+        }
+    }
+
+    @Test
     void throwExceptionWhenLoggerImplementationIsFromAnotherClassloader() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         CustomClassLoader classLoader = new CustomClassLoader();
         Class<?> loggerClass = classLoader.findClass("ch.qos.logback.classic.Logger");
@@ -456,22 +469,9 @@ class LogCaptorShould {
 
             assertThatThrownBy(LogCaptor::forRoot)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Multiple classloaders are being used. The Logging API is created by the following classloader: [nl.altindag.log.LogCaptorShould$CustomClassLoader], " +
-                            "while it should have been created by the following classloader: [jdk.internal.loader.ClassLoaders$AppClassLoader]."
-                    );
-        }
-    }
-
-    @Test
-    void throwExceptionWhenLoggerImplementationIsNotLogback() {
-        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
-
-            org.slf4j.Logger logger = mock(SimpleLogger.class);
-            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
-
-            assertThatThrownBy(LogCaptor::forRoot)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.impl.SimpleLogger].");
+                    .hasMessage(String.format("Multiple classloaders are being used. The Logging API is created by the following classloader: [nl.altindag.log.LogCaptorShould$CustomClassLoader], " +
+                            "while it should have been created by the following classloader: [%s].", this.getClass().getClassLoader().getClass().getName()
+                    ));
         }
     }
 
