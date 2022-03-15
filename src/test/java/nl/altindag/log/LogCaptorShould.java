@@ -18,6 +18,7 @@ package nl.altindag.log;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.FilterReply;
@@ -51,9 +52,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -436,6 +442,27 @@ class LogCaptorShould {
     }
 
     @Test
+    void throwExceptionWhenLoggerImplementationIsFromAnotherClassloader() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        CustomClassLoader classLoader = new CustomClassLoader();
+        Class<?> loggerClass = classLoader.findClass("ch.qos.logback.classic.Logger");
+        Constructor<?> loggerConstructor = loggerClass.getDeclaredConstructors()[0];
+        loggerConstructor.setAccessible(true);
+
+        Object logger = loggerConstructor.newInstance(null, null, null);
+
+        try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
+
+            loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
+
+            assertThatThrownBy(LogCaptor::forRoot)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Multiple classloaders are being used. The Logging API is created by the following classloader: [nl.altindag.log.LogCaptorShould$CustomClassLoader], " +
+                            "while it should have been created by the following classloader: [jdk.internal.loader.ClassLoaders$AppClassLoader]."
+                    );
+        }
+    }
+
+    @Test
     void throwExceptionWhenLoggerImplementationIsNotLogback() {
         try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class, InvocationOnMock::getMock)) {
 
@@ -607,6 +634,29 @@ class LogCaptorShould {
             service.sayHello();
 
             assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.ERROR, LogMessage.DEBUG);
+        }
+
+    }
+
+    private static class CustomClassLoader extends ClassLoader {
+
+        @Override
+        public Class<?> findClass(String name) {
+            try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(name.replace(".", "/")+".class");
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+                Objects.requireNonNull(inputStream);
+
+                int len =0;
+                while((len = inputStream.read()) !=-1 ){
+                    outputStream.write(len);
+                }
+
+                byte[] bytes = outputStream.toByteArray();
+                return defineClass(name, bytes, 0, bytes.length);
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
         }
 
     }

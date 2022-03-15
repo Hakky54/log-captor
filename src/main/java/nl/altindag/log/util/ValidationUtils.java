@@ -29,11 +29,20 @@ public final class ValidationUtils {
     private ValidationUtils() {}
 
     public static <T extends Logger, U extends Logger> void requireLoggerOfType(T actualLogger, Class<U> requiredLogger) {
-        if (!(requiredLogger.isInstance(actualLogger))) {
+        if (actualLogger == null || !requiredLogger.getName().equals(actualLogger.getClass().getName())) {
             String actualLoggerType = actualLogger != null ? actualLogger.getClass().getName() : "nothing";
 
             throw new IllegalArgumentException(
                     String.format("SLF4J Logger implementation should be of the type [%s] but found [%s].", requiredLogger.getName(), actualLoggerType)
+            );
+        } else if (!(requiredLogger.isInstance(actualLogger))) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Multiple classloaders are being used. The Logging API is created by the following classloader: [%s], " +
+                            "while it should have been created by the following classloader: [%s].",
+                            actualLogger.getClass().getClassLoader().getClass().getName(),
+                            requiredLogger.getClassLoader().getClass().getName()
+                    )
             );
         }
     }
