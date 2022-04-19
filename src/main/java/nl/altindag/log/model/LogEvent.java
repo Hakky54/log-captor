@@ -94,4 +94,19 @@ public final class LogEvent {
         return diagnosticContext;
     }
 
+    @Override
+    public String toString() {
+        return "LogEvent{" +
+                "message='" + message + '\'' +
+                ", formattedMessage='" + formattedMessage + '\'' +
+                ", level='" + level + '\'' +
+                ", loggerName='" + loggerName + '\'' +
+                ", threadName='" + threadName + '\'' +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", arguments=" + arguments +
+                ", throwable='" + getThrowable().map(Objects::toString).orElse("none") + '\'' +
+                ", diagnosticContext=" + diagnosticContext +
+                '}';
+    }
+
 }
