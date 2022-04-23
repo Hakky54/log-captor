@@ -104,7 +104,7 @@ public final class LogEvent {
                 ", threadName='" + threadName + '\'' +
                 ", timeStamp='" + timeStamp + '\'' +
                 ", arguments=" + arguments +
-                ", throwable='" + getThrowable().map(Objects::toString).orElse("none") + '\'' +
+                ", throwable='" + getThrowable().map(Objects::toString).orElse("") + '\'' +
                 ", diagnosticContext=" + diagnosticContext +
                 '}';
     }
