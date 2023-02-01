@@ -49,17 +49,23 @@
     </distributionManagement>
 
     <properties>
+        <!--    project properties    -->
         <version.java>1.8</version.java>
-        <version.logback>1.2.11</version.logback>
-        <version.junit>5.8.2</version.junit>
-        <version.assertj>3.22.0</version.assertj>
-        <version.mockito>4.5.1</version.mockito>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--    dependency properties    -->
+        <version.logback>1.3.5</version.logback>
+        <version.log4j>2.19.0</version.log4j>
+
+        <!--    test dependency properties    -->
+        <version.junit>5.9.2</version.junit>
+        <version.assertj>3.24.2</version.assertj>
+        <version.mockito>4.11.0</version.mockito>
         <version.lombok>1.18.24</version.lombok>
-        <version.jul-to-slf4j>1.7.36</version.jul-to-slf4j>
-        <version.slf4j-simple>1.7.36</version.slf4j-simple>
-        <version.apache.log4j-to-slf4j>2.17.2</version.apache.log4j-to-slf4j>
+        <version.slf4j>2.0.6</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
-        <version.log4j-slf4j-impl>2.17.2</version.log4j-slf4j-impl>
+
+        <!--    plugin properties   -->
         <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
         <version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
@@ -70,7 +76,6 @@
         <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
         <version.maven-scm-publish-plugin>3.0.0</version.maven-scm-publish-plugin>
         <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -82,12 +87,12 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-to-slf4j</artifactId>
-            <version>${version.apache.log4j-to-slf4j}</version>
+            <version>${version.log4j}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>${version.jul-to-slf4j}</version>
+            <version>${version.slf4j}</version>
         </dependency>
 
         <dependency>
@@ -118,19 +123,19 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${version.slf4j-simple}</version>
+            <version>${version.slf4j}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>${version.log4j-over-slf4j}</version>
+            <version>${version.slf4j}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${version.log4j-slf4j-impl}</version>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${version.log4j}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -140,6 +145,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

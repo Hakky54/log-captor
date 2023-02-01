@@ -48,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
-import org.slf4j.impl.SimpleLogger;
+import org.slf4j.simple.SimpleLogger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -448,7 +448,7 @@ class LogCaptorShould {
 
             assertThatThrownBy(LogCaptor::forRoot)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.impl.SimpleLogger].");
+                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.simple.SimpleLogger].");
         }
     }
 
