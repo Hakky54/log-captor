@@ -3,6 +3,9 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.8.0
+- Bumped SLF4J to version 2.x.x
+- Bumped transitive dependencies
 ### v2.7.10
 - Bumped transitive dependencies
 - Added toString method for LogEvent
