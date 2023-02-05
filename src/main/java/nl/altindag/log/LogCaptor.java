@@ -24,6 +24,7 @@ import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
+import nl.altindag.log.util.Mappers;
 import nl.altindag.log.util.ValidationUtils;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-import static nl.altindag.log.util.Mappers.toLogEvent;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 /**
@@ -93,11 +94,7 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public List<String> getLogs() {
-        synchronized (eventsCollector) {
-            return eventsCollector.stream()
-                    .map(ILoggingEvent::getFormattedMessage)
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-        }
+        return getLogs(logEvent -> true, ILoggingEvent::getFormattedMessage);
     }
 
     public List<String> getInfoLogs() {
@@ -121,19 +118,19 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     private List<String> getLogs(Level level) {
-        synchronized (eventsCollector) {
-            return eventsCollector.stream()
-                    .filter(logEvent -> logEvent.getLevel() == level)
-                    .map(ILoggingEvent::getFormattedMessage)
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-        }
+        return getLogs(logEvent -> logEvent.getLevel() == level, ILoggingEvent::getFormattedMessage);
     }
 
     public List<LogEvent> getLogEvents() {
+        return getLogs(logEvent -> true, Mappers.toLogEvent());
+    }
+
+    private <T> List<T> getLogs(Predicate<ILoggingEvent> logEventPredicate, Function<ILoggingEvent, T> logEventMapper) {
         synchronized (eventsCollector) {
             return eventsCollector.stream()
-                    .map(toLogEvent())
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+                    .filter(logEventPredicate)
+                    .map(logEventMapper)
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         }
     }
 
