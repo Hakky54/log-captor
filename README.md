@@ -460,6 +460,7 @@ Below is an example for Maven Failsafe and Maven Surefire. You can discover whic
             <configuration>
                 <classpathDependencyExcludes>
                     <classpathDependencyExclude>org.apache.logging.log4j:log4j-slf4j-impl</classpathDependencyExclude>
+                    <classpathDependencyExclude>org.apache.logging.log4j:log4j-slf4j2-impl</classpathDependencyExclude>
                 </classpathDependencyExcludes>
             </configuration>
         </plugin>
@@ -469,6 +470,7 @@ Below is an example for Maven Failsafe and Maven Surefire. You can discover whic
             <configuration>
                 <classpathDependencyExcludes>
                     <classpathDependencyExclude>org.apache.logging.log4j:log4j-slf4j-impl</classpathDependencyExclude>
+                    <classpathDependencyExclude>org.apache.logging.log4j:log4j-slf4j2-impl</classpathDependencyExclude>
                 </classpathDependencyExcludes>
             </configuration>
         </plugin>
