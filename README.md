@@ -481,7 +481,8 @@ And for gradle:
 ```groovy
 configurations {
     testImplementation {
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+        exclude(group = "org.apache.logging.log4j", module = "log4j-slf4j-impl")
+        exclude(group = "org.apache.logging.log4j", module = "log4j-slf4j2-impl")
     }
 }
 ```
