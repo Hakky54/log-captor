@@ -546,7 +546,7 @@ class LogCaptorShould {
         try(ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
             service.sayHello();
             assertThat(logCaptor.getLogs()).hasSizeGreaterThan(0);
-            assertThat(consoleCaptor.getStandardOutput()).hasSize(0);
+            assertThat(consoleCaptor.getStandardOutput()).isEmpty();
 
             logCaptor.enableConsoleOutput();
             logCaptor.clearLogs();
