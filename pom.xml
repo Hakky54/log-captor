@@ -64,6 +64,7 @@
         <version.lombok>1.18.24</version.lombok>
         <version.slf4j>2.0.6</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
+        <version.consolecaptor>1.0.3</version.consolecaptor>
 
         <!--    plugin properties   -->
         <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
@@ -143,6 +144,11 @@
             <artifactId>lombok</artifactId>
             <version>${version.lombok}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hakky54</groupId>
+            <artifactId>consolecaptor</artifactId>
+            <version>${version.consolecaptor}</version>
         </dependency>
     </dependencies>
 

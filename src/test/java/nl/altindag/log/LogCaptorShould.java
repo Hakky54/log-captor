@@ -21,6 +21,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.FilterReply;
+import nl.altindag.console.ConsoleCaptor;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
@@ -534,6 +535,26 @@ class LogCaptorShould {
         }
 
         assertThat(fetchAppenders(logger)).isEmpty();
+    }
+
+    @Test
+    void disableConsoleOutput() {
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
+        logCaptor.disableConsoleOutput();
+
+        Service service = new ServiceWithApacheLog4j();
+        try(ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
+            service.sayHello();
+            assertThat(logCaptor.getLogs()).hasSizeGreaterThan(0);
+            assertThat(consoleCaptor.getStandardOutput()).hasSize(0);
+
+            logCaptor.enableConsoleOutput();
+            logCaptor.clearLogs();
+
+            service.sayHello();
+            assertThat(logCaptor.getLogs()).hasSizeGreaterThan(0);
+            assertThat(consoleCaptor.getStandardOutput()).hasSizeGreaterThan(0);
+        }
     }
 
     private static void assertListAppender(Logger logger) {
