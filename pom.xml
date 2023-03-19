@@ -149,6 +149,7 @@
             <groupId>io.github.hakky54</groupId>
             <artifactId>consolecaptor</artifactId>
             <version>${version.consolecaptor}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
