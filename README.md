@@ -49,7 +49,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.7.10" % Test
    - [Capture exceptions within logs](#class-which-will-also-log-an-exception)
    - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
    - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
-   - [Disable all logs](#disable-all-logs)
+   - [Disable console output](#disable-console-output)
    - [Returnable values from LogCaptor](#returnable-values-from-logcaptor)
 3. [Known issues](#known-issues)
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
@@ -84,7 +84,9 @@ Do you want to capture the console output? Please have a look at [ConsoleCaptor]
  - Log4j with Lombok
  - Log4j2 with Lombok
  - SLFJ4 with Lombok
+ - JBossLog with Lombok
  - Java Util Logging with Lombok
+ - Spring Boot Starter Log4j2
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
  
@@ -375,7 +377,7 @@ public class FooServiceShould {
     void logInfoAndWarnMessages() {
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
-       FooService service = new FooService();
+        FooService service = new FooService();
         service.sayHello();
 
         assertThat(logCaptor.getLogs())
@@ -388,11 +390,15 @@ public class FooServiceShould {
 }
 ```
 
-##### Disable all logs
+##### Disable console output
+The console output can be disabled with 2 different options:
+1. With the `LogCaptor.disableConsoleOutput()` method
+2. With a logback-test.xml file, see below for the details.
+
 Add `logback-test.xml` to your test resources with the following content:
 ```xml
 <configuration>
-    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
 ```
 
