@@ -59,6 +59,9 @@
         <version.slf4j-simple>1.7.36</version.slf4j-simple>
         <version.apache.log4j-to-slf4j>2.17.2</version.apache.log4j-to-slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
+        <version.consolecaptor>1.0.3</version.consolecaptor>
+
+        <!--    plugin properties   -->
         <version.log4j-slf4j-impl>2.17.2</version.log4j-slf4j-impl>
         <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
@@ -137,6 +140,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${version.lombok}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hakky54</groupId>
+            <artifactId>consolecaptor</artifactId>
+            <version>${version.consolecaptor}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
