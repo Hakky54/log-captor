@@ -49,7 +49,6 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.9.0" % Test
    - [Capture exceptions within logs](#class-which-will-also-log-an-exception)
    - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
    - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
-   - [Disable all logs](#disable-all-logs)
    - [Disable console output](#disable-console-output)
    - [Returnable values from LogCaptor](#returnable-values-from-logcaptor)
 3. [Known issues](#known-issues)
@@ -391,36 +390,16 @@ public class FooServiceShould {
 }
 ```
 
-##### Disable all logs
+##### Disable console output
+The console output can be disabled with 2 different options:
+1. With the `LogCaptor.disableConsoleOutput()` method
+2. With a logback-test.xml file, see below for the details.
+
 Add `logback-test.xml` to your test resources with the following content:
 ```xml
 <configuration>
-    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
-```
-
-##### Disable console output
-The `LogCaptor disableConsoleOutput` method will mute/turn off the output to the console while capturing is still available. 
-```java
-import static org.assertj.core.api.Assertions.assertThat;
-
-import nl.altindag.log.LogCaptor;
-import nl.altindag.log.model.LogEvent;
-import org.junit.jupiter.api.Test;
-
-public class FooServiceShould {
-
-   @Test
-   void captureLoggingEventsContainingMdc() {
-      LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
-      logCaptor.disableConsoleOutput();
-
-      FooService service = new FooService();
-      service.sayHello();
-
-      assertThat(logCaptor.getLogs()).hasSize(2);
-   }
-}
 ```
 
 ##### Returnable values from LogCaptor
