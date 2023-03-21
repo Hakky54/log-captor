@@ -187,7 +187,7 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        getConsoleAppender().stop();
+        getConsoleAppender().ifPresent(Appender::stop);
     }
 
     /**
@@ -195,13 +195,15 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        getConsoleAppender().start();
+        getConsoleAppender().ifPresent(Appender::start);
     }
 
-    private Appender<ILoggingEvent> getConsoleAppender() {
-        return logger.getLoggerContext()
+    private Optional<Appender<ILoggingEvent>> getConsoleAppender() {
+        Appender<ILoggingEvent> appender = logger.getLoggerContext()
                 .getLogger(ROOT_LOGGER_NAME)
                 .getAppender(CONSOLE_APPENDER_NAME);
+
+        return Optional.ofNullable(appender);
     }
 
     /**
