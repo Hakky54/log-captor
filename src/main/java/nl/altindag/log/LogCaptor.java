@@ -46,6 +46,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
+    private static final String CONSOLE_APPENDER_NAME = "console";
 
     private final Logger logger;
     private final Appender<ILoggingEvent> appender;
@@ -179,6 +180,28 @@ public final class LogCaptor implements AutoCloseable {
      */
     public void disableLogs() {
         logger.setLevel(Level.OFF);
+    }
+
+    /**
+     * Disables the output of the log entries to the console. To revert this option use {@link LogCaptor#enableConsoleOutput()}.
+     * LogCaptor will still be capturing the log entries.
+     */
+    public void disableConsoleOutput() {
+        getConsoleAppender().stop();
+    }
+
+    /**
+     * The output of the log entries to the console are enabled by default but can be re-enabled if
+     * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
+     */
+    public void enableConsoleOutput() {
+        getConsoleAppender().start();
+    }
+
+    private Appender<ILoggingEvent> getConsoleAppender() {
+        return logger.getLoggerContext()
+                .getLogger(ROOT_LOGGER_NAME)
+                .getAppender(CONSOLE_APPENDER_NAME);
     }
 
     /**
