@@ -20,21 +20,21 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.8.0</version>
+    <version>2.9.0</version>
     <scope>test</scope>
 </dependency>
 ```
 ### Install with Gradle
 ```groovy
-testImplementation 'io.github.hakky54:logcaptor:2.8.0'
+testImplementation 'io.github.hakky54:logcaptor:2.9.0'
 ```
 ### Install with Scala SBT
 ```
-libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.8.0" % Test
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.9.0" % Test
 ```
 ### Install with Apache Ivy
 ```xml
-<dependency org="io.github.hakky54" name="logcaptor" rev="2.8.0" />
+<dependency org="io.github.hakky54" name="logcaptor" rev="2.9.0" />
 ```
 
 ## Table of contents
@@ -50,6 +50,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.8.0" % Test
    - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
    - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
    - [Disable all logs](#disable-all-logs)
+   - [Disable console output](#disable-console-output)
    - [Returnable values from LogCaptor](#returnable-values-from-logcaptor)
 3. [Known issues](#known-issues)
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
@@ -84,7 +85,9 @@ Do you want to capture the console output? Please have a look at [ConsoleCaptor]
  - Log4j with Lombok
  - Log4j2 with Lombok
  - SLFJ4 with Lombok
+ - JBossLog with Lombok
  - Java Util Logging with Lombok
+ - Spring Boot Starter Log4j2
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
  
@@ -375,7 +378,7 @@ public class FooServiceShould {
     void logInfoAndWarnMessages() {
         LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
 
-       FooService service = new FooService();
+        FooService service = new FooService();
         service.sayHello();
 
         assertThat(logCaptor.getLogs())
@@ -394,6 +397,30 @@ Add `logback-test.xml` to your test resources with the following content:
 <configuration>
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
+```
+
+##### Disable console output
+The `LogCaptor disableConsoleOutput` method will mute/turn off the output to the console while capturing is still available. 
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import nl.altindag.log.LogCaptor;
+import nl.altindag.log.model.LogEvent;
+import org.junit.jupiter.api.Test;
+
+public class FooServiceShould {
+
+   @Test
+   void captureLoggingEventsContainingMdc() {
+      LogCaptor logCaptor = LogCaptor.forClass(FooService.class);
+      logCaptor.disableConsoleOutput();
+
+      FooService service = new FooService();
+      service.sayHello();
+
+      assertThat(logCaptor.getLogs()).hasSize(2);
+   }
+}
 ```
 
 ##### Returnable values from LogCaptor
