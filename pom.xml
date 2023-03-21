@@ -7,7 +7,7 @@
     <version>2.9.1-SNAPSHOT</version>
 
     <name>log-captor</name>
-    <description>LogCaptor will enable you to easily capture logging entries for unit testing purposes</description>
+    <description>LogCaptor captures log entries for unit and integration testing purposes</description>
     <url>https://github.com/Hakky54/log-captor</url>
 
     <licenses>
