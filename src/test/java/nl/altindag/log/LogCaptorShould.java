@@ -18,8 +18,11 @@ package nl.altindag.log;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
 import nl.altindag.log.appender.InMemoryAppender;
@@ -537,13 +540,39 @@ class LogCaptorShould {
         assertThat(fetchAppenders(logger)).isEmpty();
     }
 
+    /**
+     * NopStatusListener disables the output of logs to the console. If the listener is present in a configuration file
+     * LogCaptor won't be able to provide the console appender as it does not exist at all. Getting the console appender should also not
+     * throw an exception when the NopStatusListener is present. Having the listener and calling the method {@link LogCaptor#disableConsoleOutput()}
+     * does not make sense as it is already disabled by the listener.
+     */
+    @Test
+    void notProvideConsoleAppenderWhenNopStatusListenerIsPresentAsLogBackConfiguration() throws IOException, JoranException {
+        try (InputStream inputStream = this.getClass().getResourceAsStream("/logback-config-examples/logback-test.xml")) {
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+            loggerContext.reset();
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(loggerContext);
+            configurator.doConfigure(inputStream);
+        }
+
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
+        assertThat(logCaptor.getConsoleAppender()).isEmpty();
+    }
+
+    @Test
+    void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
+        assertThat(logCaptor.getConsoleAppender()).isPresent();
+    }
+
     @Test
     void disableConsoleOutput() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         logCaptor.disableConsoleOutput();
 
         Service service = new ServiceWithApacheLog4j();
-        try(ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
+        try (ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
             service.sayHello();
             assertThat(logCaptor.getLogs()).hasSizeGreaterThan(0);
             assertThat(consoleCaptor.getStandardOutput()).isEmpty();
@@ -661,13 +690,13 @@ class LogCaptorShould {
 
         @Override
         public Class<?> findClass(String name) {
-            try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(name.replace(".", "/")+".class");
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(name.replace(".", "/") + ".class");
+                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
                 Objects.requireNonNull(inputStream);
 
-                int len =0;
-                while((len = inputStream.read()) !=-1 ){
+                int len = 0;
+                while ((len = inputStream.read()) != -1) {
                     outputStream.write(len);
                 }
 
