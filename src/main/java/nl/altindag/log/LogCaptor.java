@@ -198,7 +198,7 @@ public final class LogCaptor implements AutoCloseable {
         getConsoleAppender().ifPresent(Appender::start);
     }
 
-    private Optional<Appender<ILoggingEvent>> getConsoleAppender() {
+    Optional<Appender<ILoggingEvent>> getConsoleAppender() {
         Appender<ILoggingEvent> appender = logger.getLoggerContext()
                 .getLogger(ROOT_LOGGER_NAME)
                 .getAppender(CONSOLE_APPENDER_NAME);
