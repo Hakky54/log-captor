@@ -19,14 +19,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java }}
-
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
 
       - name: Build and test
         run: mvn clean verify --no-transfer-progress
@@ -43,14 +36,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
 
       - name: Build, test and quality scan
         run: mvn clean verify sonar:sonar -Dsonar.organization=hakky54 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --no-transfer-progress
