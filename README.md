@@ -60,7 +60,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.7.10" % Test
    
 
 # Introduction
-Hey, hello there 👋 Welcome, you are ![visitors](https://visitor-badge.glitch.me/badge?page_id=https://github.com/Hakky54/log-captor) I hope you will like this library ❤️
+Hey, hello there 👋 Welcome. I hope you will like this library ❤️
 
 LogCaptor is a library which will enable you to easily capture logging entries for unit and integration testing purposes. 
 
