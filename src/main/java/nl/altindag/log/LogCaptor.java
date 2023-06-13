@@ -28,12 +28,12 @@ import nl.altindag.log.util.Mappers;
 import nl.altindag.log.util.ValidationUtils;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -50,7 +50,7 @@ public final class LogCaptor implements AutoCloseable {
 
     private final Logger logger;
     private final Appender<ILoggingEvent> appender;
-    private final List<ILoggingEvent> eventsCollector = Collections.synchronizedList(new ArrayList<>());
+    private final List<ILoggingEvent> eventsCollector = new CopyOnWriteArrayList<>();
 
     private LogCaptor(String loggerName) {
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
