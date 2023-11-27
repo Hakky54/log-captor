@@ -28,10 +28,12 @@ import nl.altindag.log.util.Mappers;
 import nl.altindag.log.util.ValidationUtils;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
@@ -46,7 +48,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
-    private static final String CONSOLE_APPENDER_NAME = "console";
+    private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
     private final Appender<ILoggingEvent> appender;
@@ -199,11 +201,13 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
-        Appender<ILoggingEvent> consoleAppender = logger.getLoggerContext()
-                .getLogger(ROOT_LOGGER_NAME)
-                .getAppender(CONSOLE_APPENDER_NAME);
+        Logger rootLogger = logger.getLoggerContext()
+                .getLogger(ROOT_LOGGER_NAME);
 
-        return Optional.ofNullable(consoleAppender);
+        return CONSOLE_APPENDER_NAMES.stream()
+                .map(rootLogger::getAppender)
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 
     /**
