@@ -6,7 +6,6 @@ changes with their rationale when appropriate:
 ### v2.9.1
 - Bumped transitive dependencies
 - Made disabling console output NPE safe
-- 
 ### v2.9.0
 - Bumped transitive dependencies
 - Added option to disable console output
