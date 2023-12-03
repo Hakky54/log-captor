@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.9.2
+- Bumped transitive dependencies for resolving CVE-2023-6378 from logback
 ### v2.9.1
 - Bumped transitive dependencies
 - Made disabling console output NPE safe
