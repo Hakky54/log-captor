@@ -54,7 +54,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--    dependency properties    -->
-        <version.logback>1.3.12</version.logback>
+        <version.logback>1.3.14</version.logback>
         <version.log4j>2.22.0</version.log4j>
 
         <!--    test dependency properties    -->
