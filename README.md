@@ -20,21 +20,21 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.7.10</version>
+    <version>2.7.11</version>
     <scope>test</scope>
 </dependency>
 ```
 ### Install with Gradle
 ```groovy
-testImplementation 'io.github.hakky54:logcaptor:2.7.10'
+testImplementation 'io.github.hakky54:logcaptor:2.7.11'
 ```
 ### Install with Scala SBT
 ```
-libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.7.10" % Test
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.7.11" % Test
 ```
 ### Install with Apache Ivy
 ```xml
-<dependency org="io.github.hakky54" name="logcaptor" rev="2.7.10" />
+<dependency org="io.github.hakky54" name="logcaptor" rev="2.7.11" />
 ```
 
 ## Table of contents
