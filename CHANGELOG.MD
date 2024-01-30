@@ -14,6 +14,8 @@ changes with their rationale when appropriate:
 ### v2.8.0
 - Bumped SLF4J to version 2.x.x
 - Bumped transitive dependencies
+### v2.7.11
+- Added option to disable console output (Backport)
 ### v2.7.10
 - Bumped transitive dependencies
 - Added toString method for LogEvent
