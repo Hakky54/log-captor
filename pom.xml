@@ -61,6 +61,7 @@
         <version.junit>5.10.1</version.junit>
         <version.assertj>3.24.2</version.assertj>
         <version.mockito>4.11.0</version.mockito>
+        <version.bytebuddy>1.14.12</version.bytebuddy>
         <version.lombok>1.18.30</version.lombok>
         <version.slf4j>2.0.9</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
@@ -118,6 +119,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${version.bytebuddy}</version>
             <scope>test</scope>
         </dependency>
 
