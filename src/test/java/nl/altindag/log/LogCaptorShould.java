@@ -69,6 +69,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -564,6 +565,36 @@ class LogCaptorShould {
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         assertThat(logCaptor.getConsoleAppender()).isPresent();
+    }
+
+    @Test
+    void assertZeroErrorLogsDoesNotThrowException() {
+        LogCaptor.forName("test.assertZeroErrors.no.exception").assertZeroErrorLogs();
+    }
+
+    @Test
+    void assertZeroErrorLogsThrowsException() {
+        org.slf4j.Logger logger = LoggerFactory.getLogger("test.asserZeroErrors.throws.exception");
+        LogCaptor captor = LogCaptor.forName(logger.getName());
+        logger.error("this is an error message");
+        assertThatIllegalStateException()
+            .isThrownBy(captor::assertZeroErrorLogs)
+            .withMessage("Error log size is greater than 0");
+    }
+
+    @Test
+    void assertZeroWarnLogsDoesNotThrowException() {
+        LogCaptor.forName("test.assertZeroWarns.no.exception").assertZeroWarnLogs();
+    }
+
+    @Test
+    void assertZeroWarnLogsThrowsException() {
+        org.slf4j.Logger logger = LoggerFactory.getLogger("test.asserZeroWarns.throws.exception");
+        LogCaptor captor = LogCaptor.forName(logger.getName());
+        logger.warn("this is a warn message");
+        assertThatIllegalStateException()
+            .isThrownBy(captor::assertZeroWarnLogs)
+            .withMessage("Warn log size is greater than 0");
     }
 
     @Test

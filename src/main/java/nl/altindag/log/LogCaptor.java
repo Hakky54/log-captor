@@ -112,6 +112,18 @@ public final class LogCaptor implements AutoCloseable {
         return getLogs(Level.WARN);
     }
 
+    public void assertZeroErrorLogs() {
+        if (getErrorLogs().size() > 0) {
+            throw new IllegalStateException("Error log size is greater than 0");
+        }
+    }
+
+    public void assertZeroWarnLogs() {
+        if (getWarnLogs().size() > 0) {
+            throw new IllegalStateException("Warn log size is greater than 0");
+        }
+    }
+
     public List<String> getErrorLogs() {
         return getLogs(Level.ERROR);
     }
