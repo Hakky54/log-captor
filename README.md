@@ -3,6 +3,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=coverage)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
 [![JDK Compatibility](https://img.shields.io/badge/JDK_Compatibility-8+-blue.svg)](#)
 [![Kotlin Compatibility](https://img.shields.io/badge/Kotlin_Compatibility-1.5+-blue.svg)](#)
+[![Scala Compatibility](https://img.shields.io/badge/Scala_Compatibility-2.11+-blue.svg)](#)
 [![Android API Compatibility](https://img.shields.io/badge/Android_API_Compatibility-24+-blue.svg)](#)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=io.github.hakky54%3Alogcaptor&metric=security_rating)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
@@ -45,6 +46,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.9.2" % Test
    - [Advantages](#advantages)
    - [Supported Java versions](#supported-java-versions)
    - [Tested Logging libraries](#tested-logging-libraries)
+   - [Compatibility](#compatibility)
 2. [Usage](#usage)
    - [Capture logs](#capture-logs)
    - [Reuse LogCaptor for multiple tests](#initialize-logcaptor-once-and-reuse-it-during-multiple-tests-with-clearlogs-method-within-the-aftereach-method)
@@ -93,7 +95,14 @@ Do you want to capture the console output? Please have a look at [ConsoleCaptor]
  - Google Flogger
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
- 
+
+### Compatibility
+
+|    LogCaptor     |    SLF4J     |    Java     |    Kotlin     | Scala | Android |
+|:----------------:|:------------:|:-----------:|:-------------:|-------|:-------:|
+|      2.9.x       |    2.x.x     |     8+      |     1.5+      | 2.11+ |   24+   |
+|      2.8.x       |    1.x.x     |     8+      |     1.5+      | 2.11+ |   24+   |
+
 # Usage
 ##### Capture logs
 ```java
