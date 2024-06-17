@@ -23,9 +23,8 @@ import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
+import nl.altindag.log.util.LogbackUtils;
 import nl.altindag.log.util.Mappers;
-import nl.altindag.log.util.ValidationUtils;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,10 +53,7 @@ public final class LogCaptor implements AutoCloseable {
     private final List<ILoggingEvent> eventsCollector = new CopyOnWriteArrayList<>();
 
     private LogCaptor(String loggerName) {
-        org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
-        ValidationUtils.requireLoggerOfType(slf4jLogger, ch.qos.logback.classic.Logger.class);
-
-        logger = (Logger) slf4jLogger;
+        logger = LogbackUtils.getLogger(loggerName);
         appender = new InMemoryAppender<>("log-captor", eventsCollector);
         appender.start();
         logger.addAppender(appender);
