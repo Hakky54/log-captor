@@ -25,6 +25,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
 import nl.altindag.log.appender.InMemoryAppender;
+import nl.altindag.log.exception.LogCaptorException;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
@@ -437,7 +438,7 @@ class LogCaptorShould {
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(null);
 
             assertThatThrownBy(LogCaptor::forRoot)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(LogCaptorException.class)
                     .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [nothing].");
         }
     }
@@ -450,7 +451,7 @@ class LogCaptorShould {
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
 
             assertThatThrownBy(LogCaptor::forRoot)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(LogCaptorException.class)
                     .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.simple.SimpleLogger].");
         }
     }
@@ -469,7 +470,7 @@ class LogCaptorShould {
             loggerFactoryMockedStatic.when(() -> LoggerFactory.getLogger(anyString())).thenReturn(logger);
 
             assertThatThrownBy(LogCaptor::forRoot)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(LogCaptorException.class)
                     .hasMessage(String.format("Multiple classloaders are being used. The Logging API is created by the following classloader: [nl.altindag.log.LogCaptorShould$CustomClassLoader], " +
                             "while it should have been created by the following classloader: [%s].", this.getClass().getClassLoader().getClass().getName()
                     ));

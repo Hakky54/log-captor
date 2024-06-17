@@ -21,4 +21,7 @@ public final class LogCaptorException extends RuntimeException {
         super(cause);
     }
 
+    public LogCaptorException(String message) {
+        super(message);
+    }
 }

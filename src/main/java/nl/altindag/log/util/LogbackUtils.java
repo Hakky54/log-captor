@@ -30,16 +30,19 @@ import java.util.concurrent.TimeUnit;
  */
 public final class LogbackUtils {
 
+    private static final int DEFAULT_POLL_COUNTER_LIMIT = 20;
+    private static final int DEFAULT_POLL_DELAY_MILLISECONDS = 100;
+
     private static final int POLL_COUNTER_LIMIT = Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
             .filter(value -> !value.isEmpty())
             .map(String::trim)
             .map(Integer::parseInt)
-            .orElse(20);
+            .orElse(DEFAULT_POLL_COUNTER_LIMIT);
     private static final int POLL_DELAY_MILLISECONDS = Optional.ofNullable(System.getProperty("logcaptor.poll-delay-milliseconds"))
             .filter(value -> !value.isEmpty())
             .map(String::trim)
             .map(Integer::parseInt)
-            .orElse(100);
+            .orElse(DEFAULT_POLL_DELAY_MILLISECONDS);
 
     private LogbackUtils() {}
 
