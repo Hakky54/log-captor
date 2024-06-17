@@ -21,7 +21,7 @@ import org.slf4j.helpers.SubstituteLogger;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
 
 /**
@@ -34,15 +34,15 @@ public final class LogbackUtils {
 
     private static final int DEFAULT_POLL_COUNTER_LIMIT = 10;
     private static final int DEFAULT_POLL_DELAY_MILLISECONDS = 100;
-    private static final Pattern IS_NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
+    private static final Pattern IS_NUMBER_PATTERN = Pattern.compile("^\\d+$");
 
-    private static final Supplier<Integer> POLL_COUNTER_LIMIT = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
+    private static final IntSupplier POLL_COUNTER_LIMIT = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
             .map(String::trim)
             .filter(value -> !value.isEmpty())
             .filter(value -> IS_NUMBER_PATTERN.matcher(value).matches())
             .map(Integer::parseInt)
             .orElse(DEFAULT_POLL_COUNTER_LIMIT);
-    private static final Supplier<Integer> POLL_DELAY_MILLISECONDS = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-delay-milliseconds"))
+    private static final IntSupplier POLL_DELAY_MILLISECONDS = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-delay-milliseconds"))
             .map(String::trim)
             .filter(value -> !value.isEmpty())
             .filter(value -> IS_NUMBER_PATTERN.matcher(value).matches())
@@ -68,13 +68,13 @@ public final class LogbackUtils {
         int retryCounter = 0;
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
 
-        int pollCounterLimit = POLL_COUNTER_LIMIT.get();
-        int pollDelayMilliseconds = POLL_DELAY_MILLISECONDS.get();
+        int pollCounterLimit = POLL_COUNTER_LIMIT.getAsInt();
+        int pollDelayMilliseconds = POLL_DELAY_MILLISECONDS.getAsInt();
 
         while (slf4jLogger instanceof SubstituteLogger && retryCounter++ < pollCounterLimit) {
             try {
                 TimeUnit.MILLISECONDS.sleep(pollDelayMilliseconds);
-                slf4jLogger = LoggerFactory.getLogger(loggerName);;
+                slf4jLogger = LoggerFactory.getLogger(loggerName);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new LogCaptorException(e);
