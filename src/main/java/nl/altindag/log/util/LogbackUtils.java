@@ -68,6 +68,10 @@ public final class LogbackUtils {
         int retryCounter = 0;
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
 
+        if (!(slf4jLogger instanceof SubstituteLogger)) {
+            return slf4jLogger;
+        }
+
         int pollCounterLimit = POLL_COUNTER_LIMIT.getAsInt();
         int pollDelayMilliseconds = POLL_DELAY_MILLISECONDS.getAsInt();
 
