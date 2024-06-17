@@ -34,7 +34,7 @@ public final class LogbackUtils {
 
     private static final int DEFAULT_POLL_COUNTER_LIMIT = 10;
     private static final int DEFAULT_POLL_DELAY_MILLISECONDS = 100;
-    private static final Pattern IS_NUMBER_PATTERN = Pattern.compile(".*\\d.*");
+    private static final Pattern IS_NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
 
     private static final Supplier<Integer> POLL_COUNTER_LIMIT = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
             .map(String::trim)
