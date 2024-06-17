@@ -21,6 +21,7 @@ import org.slf4j.helpers.SubstituteLogger;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * <strong>NOTE:</strong>
@@ -30,17 +31,20 @@ import java.util.concurrent.TimeUnit;
  */
 public final class LogbackUtils {
 
-    private static final int DEFAULT_POLL_COUNTER_LIMIT = 20;
+    private static final int DEFAULT_POLL_COUNTER_LIMIT = 10;
     private static final int DEFAULT_POLL_DELAY_MILLISECONDS = 100;
+    public static final String IS_NUMBER_REGEX = ".*\\d.*";
 
-    private static final int POLL_COUNTER_LIMIT = Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
-            .filter(value -> !value.isEmpty())
+    private static final Supplier<Integer> POLL_COUNTER_LIMIT = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-counter-limit"))
             .map(String::trim)
+            .filter(value -> !value.isEmpty())
+            .filter(value -> value.matches(IS_NUMBER_REGEX))
             .map(Integer::parseInt)
             .orElse(DEFAULT_POLL_COUNTER_LIMIT);
-    private static final int POLL_DELAY_MILLISECONDS = Optional.ofNullable(System.getProperty("logcaptor.poll-delay-milliseconds"))
-            .filter(value -> !value.isEmpty())
+    private static final Supplier<Integer> POLL_DELAY_MILLISECONDS = () -> Optional.ofNullable(System.getProperty("logcaptor.poll-delay-milliseconds"))
             .map(String::trim)
+            .filter(value -> !value.isEmpty())
+            .filter(value -> value.matches(IS_NUMBER_REGEX))
             .map(Integer::parseInt)
             .orElse(DEFAULT_POLL_DELAY_MILLISECONDS);
 
@@ -63,9 +67,12 @@ public final class LogbackUtils {
         int retryCounter = 0;
         org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(loggerName);
 
-        while (slf4jLogger instanceof SubstituteLogger && retryCounter++ < POLL_COUNTER_LIMIT) {
+        int pollCounterLimit = POLL_COUNTER_LIMIT.get();
+        int pollDelayMilliseconds = POLL_DELAY_MILLISECONDS.get();
+
+        while (slf4jLogger instanceof SubstituteLogger && retryCounter++ < pollCounterLimit) {
             try {
-                TimeUnit.MILLISECONDS.sleep(POLL_DELAY_MILLISECONDS);
+                TimeUnit.MILLISECONDS.sleep(pollDelayMilliseconds);
                 slf4jLogger = LoggerFactory.getLogger(loggerName);;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

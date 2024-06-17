@@ -84,4 +84,26 @@ class LogbackUtilsShould {
         }
     }
 
+    @Test
+    void useDefaultRetryMechanismWhenSystemPropertiesAreInvalid() {
+        System.setProperty("logcaptor.poll-counter-limit", "   ");
+        System.setProperty("logcaptor.poll-delay-milliseconds", "    ");
+
+        SubstituteLogger substituteLogger = mock(SubstituteLogger.class);
+
+        try (MockedStatic<LoggerFactory> mockedStatic = mockStatic(LoggerFactory.class)) {
+            mockedStatic.when(() -> LoggerFactory.getLogger("magic-logger"))
+                    .thenReturn(substituteLogger);
+
+            assertThatThrownBy(() -> LogbackUtils.getLogger("magic-logger"))
+                    .isInstanceOf(LogCaptorException.class)
+                    .hasMessage("SLF4J Logger implementation should be of the type [ch.qos.logback.classic.Logger] but found [org.slf4j.helpers.SubstituteLogger].");
+
+            mockedStatic.verify(() -> LoggerFactory.getLogger("magic-logger"), times(11));
+        } finally {
+            System.clearProperty("logcaptor.poll-counter-limit");
+            System.clearProperty("logcaptor.poll-delay-milliseconds");
+        }
+    }
+
 }
