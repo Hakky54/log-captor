@@ -24,11 +24,11 @@ import org.slf4j.Logger;
  *
  * @author Hakan Altindag
  */
-public final class ValidationUtils {
+final class ValidationUtils {
 
     private ValidationUtils() {}
 
-    public static <T extends Logger, U extends Logger> void requireLoggerOfType(T actualLogger, Class<U> requiredLogger) {
+    static <T extends Logger, U extends Logger> void requireLoggerOfType(T actualLogger, Class<U> requiredLogger) {
         if (actualLogger == null || !requiredLogger.getCanonicalName().equals(actualLogger.getClass().getCanonicalName())) {
             String actualLoggerType = actualLogger != null ? actualLogger.getClass().getName() : "nothing";
 
