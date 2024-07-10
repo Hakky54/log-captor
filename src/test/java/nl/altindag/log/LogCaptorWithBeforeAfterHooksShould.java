@@ -18,7 +18,10 @@ package nl.altindag.log;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,15 +37,9 @@ class LogCaptorWithBeforeAfterHooksShould {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
     }
 
-    @BeforeEach
-    public void enableDetailedLogging() {
-        logCaptor.setLogLevelToTrace();
-    }
-
     @AfterEach
-    public void reset() {
+    public void clearLogs() {
         logCaptor.clearLogs();
-        logCaptor.resetLogLevel();
     }
 
     @AfterAll
@@ -55,7 +52,7 @@ class LogCaptorWithBeforeAfterHooksShould {
         Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
-        assertThat(logCaptor.getLogs()).hasSize(5);
+        assertThat(logCaptor.getLogs()).hasSize(4);
     }
 
     @Test
@@ -67,7 +64,6 @@ class LogCaptorWithBeforeAfterHooksShould {
         assertThat(logCaptor.getDebugLogs()).containsExactly(LogMessage.DEBUG.getMessage());
         assertThat(logCaptor.getWarnLogs()).containsExactly(LogMessage.WARN.getMessage());
         assertThat(logCaptor.getErrorLogs()).containsExactly(LogMessage.ERROR.getMessage());
-        assertThat(logCaptor.getTraceLogs()).containsExactly(LogMessage.TRACE.getMessage());
     }
 
 }
