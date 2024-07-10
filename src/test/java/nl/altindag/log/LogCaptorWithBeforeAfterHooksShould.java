@@ -51,7 +51,7 @@ class LogCaptorWithBeforeAfterHooksShould {
     }
 
     @Test
-    public void containsCapturedLogs() {
+    void containsCapturedLogs() {
         Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
@@ -59,7 +59,7 @@ class LogCaptorWithBeforeAfterHooksShould {
     }
 
     @Test
-    public void containsExpectedMessages() {
+    void containsExpectedMessages() {
         Service service = new ServiceWithApacheLog4j();
         service.sayHello();
 
