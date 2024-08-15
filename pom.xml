@@ -63,7 +63,7 @@
         <version.mockito>4.11.0</version.mockito>
         <version.bytebuddy>1.14.18</version.bytebuddy>
         <version.lombok>1.18.34</version.lombok>
-        <version.slf4j>2.0.13</version.slf4j>
+        <version.slf4j>2.0.16</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
         <version.consolecaptor>1.0.3</version.consolecaptor>
 
