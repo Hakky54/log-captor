@@ -58,7 +58,7 @@
         <version.log4j>2.23.1</version.log4j>
 
         <!--    test dependency properties    -->
-        <version.junit>5.10.3</version.junit>
+        <version.junit>5.11.0</version.junit>
         <version.assertj>3.26.3</version.assertj>
         <version.mockito>4.11.0</version.mockito>
         <version.bytebuddy>1.14.18</version.bytebuddy>
