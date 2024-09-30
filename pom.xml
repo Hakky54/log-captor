@@ -55,7 +55,7 @@
 
         <!--    dependency properties    -->
         <version.logback>1.3.14</version.logback>
-        <version.log4j>2.24.0</version.log4j>
+        <version.log4j>2.24.1</version.log4j>
 
         <!--    test dependency properties    -->
         <version.junit>5.11.0</version.junit>
