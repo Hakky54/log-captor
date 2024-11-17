@@ -52,7 +52,7 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
         String threadName = iLoggingEvent.getThreadName();
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
         Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
-        List<Map.Entry<String, Object>> keyValuePairs = iLoggingEvent.getKeyValuePairs().stream()
+        List<Map.Entry<String, Object>> keyValuePairs = iLoggingEvent.getKeyValuePairs() == null ? Collections.emptyList() : iLoggingEvent.getKeyValuePairs().stream()
                 .map(keyValuePair -> new AbstractMap.SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
 
