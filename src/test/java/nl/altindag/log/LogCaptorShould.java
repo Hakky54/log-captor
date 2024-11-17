@@ -45,6 +45,7 @@ import nl.altindag.log.service.slfj4.ServiceWithNestedSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -59,12 +60,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -514,6 +511,26 @@ class LogCaptorShould {
         service.sayHello();
 
         assertDiagnosticContext(logCaptor, "test-slf4j-mdc", "hello-slf4j");
+    }
+
+    @Test
+    void captureLoggingEventsContainingKeyValuePairs() {
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4jWhileUsingKeyValuePairs.class);
+
+        Service service = new ServiceWithSlf4jWhileUsingKeyValuePairs();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getMessage()).isEqualTo("My grocery list");
+
+        List<Map.Entry<String, Object>> keyValuePairs = logEvent.getKeyValuePairs();
+        assertThat(keyValuePairs)
+                .hasSize(2)
+                .contains(new SimpleImmutableEntry<>("fruit", "apple"))
+                .contains(new SimpleImmutableEntry<>("vegetable", "tomato"));
     }
 
     @Test

@@ -35,6 +35,7 @@ public final class LogEvent {
     private final List<Object> arguments;
     private final Throwable throwable;
     private final Map<String, String> diagnosticContext;
+    private final List<Map.Entry<String, Object>> keyValuePairs;
 
     public LogEvent(String message,
                     String formattedMessage,
@@ -44,7 +45,8 @@ public final class LogEvent {
                     ZonedDateTime timeStamp,
                     List<Object> arguments,
                     Throwable throwable,
-                    Map<String, String> diagnosticContext) {
+                    Map<String, String> diagnosticContext,
+                    List<Map.Entry<String, Object>> keyValuePairs) {
 
         this.message = Objects.requireNonNull(message);
         this.formattedMessage = Objects.requireNonNull(formattedMessage);
@@ -55,6 +57,7 @@ public final class LogEvent {
         this.throwable = throwable;
         this.arguments = arguments;
         this.diagnosticContext = diagnosticContext;
+        this.keyValuePairs = keyValuePairs;
     }
 
     public String getMessage() {
@@ -91,6 +94,10 @@ public final class LogEvent {
 
     public Map<String, String> getDiagnosticContext() {
         return diagnosticContext;
+    }
+
+    public List<Map.Entry<String, Object>> getKeyValuePairs() {
+        return keyValuePairs;
     }
 
     @Override
