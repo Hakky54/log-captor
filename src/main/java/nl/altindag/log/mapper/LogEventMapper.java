@@ -22,7 +22,7 @@ import nl.altindag.log.model.LogEvent;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +53,7 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
         Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
         List<Map.Entry<String, Object>> keyValuePairs = iLoggingEvent.getKeyValuePairs() == null ? Collections.emptyList() : iLoggingEvent.getKeyValuePairs().stream()
-                .map(keyValuePair -> new AbstractMap.SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
+                .map(keyValuePair -> new SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
 
         List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
