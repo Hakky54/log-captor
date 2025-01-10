@@ -3,6 +3,10 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.10.1
+- Bumped dependencies
+- Resolved CVE-2024-12798
+- Resolved CVE-2024-12801
 ### v2.10.0
 - Added option to capture key value pairs
 - Bumped dependencies
