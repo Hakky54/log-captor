@@ -81,7 +81,7 @@ Do you want to capture the console output? Please have a look at [ConsoleCaptor]
 - Java 11+
 
 ### Tested Logging libraries
- - SLFJ4
+ - SLF4J
  - Logback
  - Java Util Logging  
  - Apache Log4j
