@@ -61,7 +61,7 @@
         <version.junit>5.12.1</version.junit>
         <version.assertj>3.27.3</version.assertj>
         <version.mockito>4.11.0</version.mockito>
-        <version.bytebuddy>1.17.2</version.bytebuddy>
+        <version.bytebuddy>1.17.4</version.bytebuddy>
         <version.lombok>1.18.36</version.lombok>
         <version.slf4j>2.0.17</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
