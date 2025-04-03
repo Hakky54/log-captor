@@ -224,4 +224,8 @@ public final class LogCaptor implements AutoCloseable {
         appender.stop();
     }
 
+    @Override
+    public String toString() {
+        return "LogCaptor(loggerName=" + logger.getName() + ")";
+    }
 }
