@@ -56,6 +56,10 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 .map(keyValuePair -> new SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
 
+        List<nl.altindag.log.model.Marker> markers = iLoggingEvent.getMarkerList().stream()
+                .map(MarkerMapper.getInstance())
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+
         List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
                 .map(Arrays::asList)
                 .map(Collections::unmodifiableList)
@@ -77,7 +81,8 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 arguments,
                 throwable,
                 diagnosticContext,
-                keyValuePairs
+                keyValuePairs,
+                markers
         );
     }
 
