@@ -31,6 +31,7 @@ import nl.altindag.log.model.Marker;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
+import nl.altindag.log.service.apache.ServiceWithApacheLog4jAndMarkers;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4jAndMdcHeaders;
 import nl.altindag.log.service.apache.ServiceWithNestedApacheLog4j;
 import nl.altindag.log.service.jdk.ServiceWithJavaUtilLogging;
@@ -437,7 +438,7 @@ class LogCaptorShould {
     }
 
     @Test
-    void captureLoggingEventsContainingMarkers() {
+    void captureLoggingEventsContainingMarkersWithSlf4j() {
         logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndMarkers.class);
 
         Service service = new ServiceWithSlf4jAndMarkers();
@@ -474,6 +475,39 @@ class LogCaptorShould {
         assertThat(childOne.getName()).isEqualTo("Michael");
         assertThat(childTwo.getName()).isEqualTo("Jennifer");
         assertThat(childThree.getName()).isEqualTo("Elizabeth");
+    }
+
+    @Test
+    void captureLoggingEventsContainingMarkersWithLog4j() {
+        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4jAndMarkers.class);
+
+        Service service = new ServiceWithApacheLog4jAndMarkers();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getFormattedMessage()).isEqualTo("I haven't spoken to my wife in years. I didn't want to interrupt her.");
+
+        List<Marker> markers = logEvent.getMarkers();
+        assertThat(markers).hasSize(1);
+
+        Marker marker = markers.get(0);
+        assertThat(marker.getName()).isEqualTo("Michael");
+        assertThat(marker.getReferences()).hasSize(1);
+
+        List<Marker> references = marker.getReferences();
+        Marker mother = references.get(0);
+
+        assertThat(mother.getName()).isEqualTo("Mary");
+        assertThat(mother.getReferences()).hasSize(1);
+
+        List<Marker> innerReferences = mother.getReferences();
+        Marker innerMarker = innerReferences.get(0);
+
+        assertThat(innerMarker.getName()).isEqualTo("marriage");
+        assertThat(innerMarker.getReferences()).isEmpty();
     }
 
     @Test
