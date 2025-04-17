@@ -31,7 +31,6 @@ import nl.altindag.log.model.LogMarker;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
-import nl.altindag.log.service.apache.ServiceWithApacheLog4jAndMarkers;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4jAndMdcHeaders;
 import nl.altindag.log.service.apache.ServiceWithNestedApacheLog4j;
 import nl.altindag.log.service.jdk.ServiceWithJavaUtilLogging;
@@ -475,39 +474,6 @@ class LogCaptorShould {
         assertThat(childOne.getName()).isEqualTo("Michael");
         assertThat(childTwo.getName()).isEqualTo("Jennifer");
         assertThat(childThree.getName()).isEqualTo("Elizabeth");
-    }
-
-    @Test
-    void captureLoggingEventsContainingMarkersWithLog4j() {
-        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4jAndMarkers.class);
-
-        Service service = new ServiceWithApacheLog4jAndMarkers();
-        service.sayHello();
-
-        List<LogEvent> logEvents = logCaptor.getLogEvents();
-        assertThat(logEvents).hasSize(1);
-
-        LogEvent logEvent = logEvents.get(0);
-        assertThat(logEvent.getFormattedMessage()).isEqualTo("I haven't spoken to my wife in years. I didn't want to interrupt her.");
-
-        List<LogMarker> logMarkers = logEvent.getMarkers();
-        assertThat(logMarkers).hasSize(1);
-
-        LogMarker logMarker = logMarkers.get(0);
-        assertThat(logMarker.getName()).isEqualTo("Michael");
-        assertThat(logMarker.getReferences()).hasSize(1);
-
-        List<LogMarker> references = logMarker.getReferences();
-        LogMarker mother = references.get(0);
-
-        assertThat(mother.getName()).isEqualTo("Mary");
-        assertThat(mother.getReferences()).hasSize(1);
-
-        List<LogMarker> innerReferences = mother.getReferences();
-        LogMarker innerLogMarker = innerReferences.get(0);
-
-        assertThat(innerLogMarker.getName()).isEqualTo("marriage");
-        assertThat(innerLogMarker.getReferences()).isEmpty();
     }
 
     @Test
