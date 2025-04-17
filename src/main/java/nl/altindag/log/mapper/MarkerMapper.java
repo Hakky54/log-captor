@@ -15,6 +15,7 @@
  */
 package nl.altindag.log.mapper;
 
+import nl.altindag.log.model.LogMarker;
 import org.slf4j.Marker;
 
 import java.util.ArrayList;
@@ -29,26 +30,26 @@ import java.util.function.Function;
  *
  * @author Hakan Altindag
  */
-public final class MarkerMapper implements Function<Marker, nl.altindag.log.model.Marker> {
+public final class MarkerMapper implements Function<Marker, LogMarker> {
 
     private static final MarkerMapper INSTANCE = new MarkerMapper();
 
     private MarkerMapper() {}
 
     @Override
-    public nl.altindag.log.model.Marker apply(Marker marker) {
+    public LogMarker apply(Marker marker) {
         String name = marker.getName();
-        List<nl.altindag.log.model.Marker> innerMarkers = new ArrayList<>();
+        List<LogMarker> innerLogMarkers = new ArrayList<>();
 
         if (marker.hasReferences()) {
             Iterator<Marker> iterator = marker.iterator();
             while (iterator.hasNext()) {
-                nl.altindag.log.model.Marker innerMarker = apply(iterator.next());
-                innerMarkers.add(innerMarker);
+                LogMarker innerLogMarker = apply(iterator.next());
+                innerLogMarkers.add(innerLogMarker);
             }
         }
 
-        return new nl.altindag.log.model.Marker(name, Collections.unmodifiableList(innerMarkers));
+        return new LogMarker(name, Collections.unmodifiableList(innerLogMarkers));
     }
 
     public static MarkerMapper getInstance() {

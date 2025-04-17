@@ -17,12 +17,12 @@ package nl.altindag.log.model;
 
 import java.util.List;
 
-public final class Marker {
+public final class LogMarker {
 
     private final String name;
-    private final List<Marker> references;
+    private final List<LogMarker> references;
 
-    public Marker(String name, List<Marker> references) {
+    public LogMarker(String name, List<LogMarker> references) {
         this.name = name;
         this.references = references;
     }
@@ -31,7 +31,7 @@ public final class Marker {
         return name;
     }
 
-    public List<Marker> getReferences() {
+    public List<LogMarker> getReferences() {
         return references;
     }
 
