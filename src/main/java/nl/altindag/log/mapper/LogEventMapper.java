@@ -18,6 +18,7 @@ package nl.altindag.log.mapper;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import nl.altindag.log.model.LogEvent;
+import nl.altindag.log.model.LogMarker;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -67,6 +68,13 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 .map(ThrowableProxy::getThrowable)
                 .orElse(null);
 
+        List<LogMarker> logMarkers = Collections.emptyList();
+        if (iLoggingEvent.getMarkerList() != null) {
+            logMarkers = iLoggingEvent.getMarkerList().stream()
+                    .map(MarkerMapper.getInstance())
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        }
+
         return new LogEvent(
                 message,
                 formattedMessage,
@@ -77,7 +85,8 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 arguments,
                 throwable,
                 diagnosticContext,
-                keyValuePairs
+                keyValuePairs,
+                logMarkers
         );
     }
 

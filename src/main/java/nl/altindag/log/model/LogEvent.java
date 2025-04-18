@@ -36,6 +36,7 @@ public final class LogEvent {
     private final Throwable throwable;
     private final Map<String, String> diagnosticContext;
     private final List<Map.Entry<String, Object>> keyValuePairs;
+    private final List<LogMarker> logMarkers;
 
     public LogEvent(String message,
                     String formattedMessage,
@@ -46,7 +47,8 @@ public final class LogEvent {
                     List<Object> arguments,
                     Throwable throwable,
                     Map<String, String> diagnosticContext,
-                    List<Map.Entry<String, Object>> keyValuePairs) {
+                    List<Map.Entry<String, Object>> keyValuePairs,
+                    List<LogMarker> logMarkers) {
 
         this.message = Objects.requireNonNull(message);
         this.formattedMessage = Objects.requireNonNull(formattedMessage);
@@ -58,6 +60,7 @@ public final class LogEvent {
         this.arguments = arguments;
         this.diagnosticContext = diagnosticContext;
         this.keyValuePairs = keyValuePairs;
+        this.logMarkers = logMarkers;
     }
 
     public String getMessage() {
@@ -100,6 +103,10 @@ public final class LogEvent {
         return keyValuePairs;
     }
 
+    public List<LogMarker> getMarkers() {
+        return logMarkers;
+    }
+
     @Override
     public String toString() {
         return "LogEvent{" +
@@ -112,6 +119,8 @@ public final class LogEvent {
                 ", arguments=" + arguments +
                 ", throwable='" + getThrowable().map(Objects::toString).orElse("") + '\'' +
                 ", diagnosticContext=" + diagnosticContext +
+                ", keyValuePairs=" + keyValuePairs +
+                ", markers=" + logMarkers +
                 '}';
     }
 

@@ -27,6 +27,7 @@ import nl.altindag.console.ConsoleCaptor;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.exception.LogCaptorException;
 import nl.altindag.log.model.LogEvent;
+import nl.altindag.log.model.LogMarker;
 import nl.altindag.log.service.LogMessage;
 import nl.altindag.log.service.Service;
 import nl.altindag.log.service.apache.ServiceWithApacheLog4j;
@@ -44,6 +45,7 @@ import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithNestedSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
 import org.junit.jupiter.api.AfterEach;
@@ -432,6 +434,46 @@ class LogCaptorShould {
 
         assertThat(logEvents).hasSize(4);
         assertThat(logEvents.get(0).getLoggerName()).isEqualTo(ServiceWithApacheLog4j.class.getName());
+    }
+
+    @Test
+    void captureLoggingEventsContainingMarkersWithSlf4j() {
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4jAndMarkers.class);
+
+        Service service = new ServiceWithSlf4jAndMarkers();
+        service.sayHello();
+
+        List<LogEvent> logEvents = logCaptor.getLogEvents();
+        assertThat(logEvents).hasSize(1);
+
+        LogEvent logEvent = logEvents.get(0);
+        assertThat(logEvent.getFormattedMessage()).isEqualTo("I haven't spoken to my wife in years. I didn't want to interrupt her.");
+
+        List<LogMarker> logMarkers = logEvent.getMarkers();
+        assertThat(logMarkers).hasSize(1);
+
+        LogMarker logMarker = logMarkers.get(0);
+        assertThat(logMarker.getName()).isEqualTo("marriage");
+        assertThat(logMarker.getReferences()).hasSize(2);
+
+        List<LogMarker> references = logMarker.getReferences();
+        LogMarker husband = references.get(0);
+        LogMarker wife = references.get(1);
+
+        assertThat(husband.getName()).isEqualTo("James");
+        assertThat(husband.getReferences()).isEmpty();
+
+        assertThat(wife.getName()).isEqualTo("Mary");
+        assertThat(wife.getReferences()).hasSize(3);
+
+        List<LogMarker> innerReferences = wife.getReferences();
+        LogMarker childOne = innerReferences.get(0);
+        LogMarker childTwo = innerReferences.get(1);
+        LogMarker childThree = innerReferences.get(2);
+
+        assertThat(childOne.getName()).isEqualTo("Michael");
+        assertThat(childTwo.getName()).isEqualTo("Jennifer");
+        assertThat(childThree.getName()).isEqualTo("Elizabeth");
     }
 
     @Test
