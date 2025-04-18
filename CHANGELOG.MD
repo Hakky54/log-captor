@@ -3,6 +3,9 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.11.0
+- Added option to capture Markers
+- Bumped dependencies
 ### v2.10.2
 - Added toString method to LogCaptor
 - Bumped dependencies
