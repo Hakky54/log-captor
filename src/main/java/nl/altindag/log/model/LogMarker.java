@@ -35,4 +35,11 @@ public final class LogMarker {
         return references;
     }
 
+    @Override
+    public String toString() {
+        return "LogMarker{" +
+                "name='" + name + '\'' +
+                ", references=" + references +
+                '}';
+    }
 }
