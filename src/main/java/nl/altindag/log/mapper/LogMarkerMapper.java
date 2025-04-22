@@ -30,11 +30,11 @@ import java.util.function.Function;
  *
  * @author Hakan Altindag
  */
-public final class MarkerMapper implements Function<Marker, LogMarker> {
+public final class LogMarkerMapper implements Function<Marker, LogMarker> {
 
-    private static final MarkerMapper INSTANCE = new MarkerMapper();
+    private static final LogMarkerMapper INSTANCE = new LogMarkerMapper();
 
-    private MarkerMapper() {}
+    private LogMarkerMapper() {}
 
     @Override
     public LogMarker apply(Marker marker) {
@@ -52,7 +52,7 @@ public final class MarkerMapper implements Function<Marker, LogMarker> {
         return new LogMarker(name, Collections.unmodifiableList(innerLogMarkers));
     }
 
-    public static MarkerMapper getInstance() {
+    public static LogMarkerMapper getInstance() {
         return INSTANCE;
     }
 }
