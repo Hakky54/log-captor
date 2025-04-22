@@ -124,4 +124,26 @@ public final class LogEvent {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LogEvent)) return false;
+        LogEvent logEvent = (LogEvent) o;
+        return Objects.equals(message, logEvent.message)
+                && Objects.equals(formattedMessage, logEvent.formattedMessage)
+                && Objects.equals(level, logEvent.level)
+                && Objects.equals(loggerName, logEvent.loggerName)
+                && Objects.equals(threadName, logEvent.threadName)
+                && Objects.equals(timeStamp, logEvent.timeStamp)
+                && Objects.equals(arguments, logEvent.arguments)
+                && Objects.equals(throwable, logEvent.throwable)
+                && Objects.equals(diagnosticContext, logEvent.diagnosticContext)
+                && Objects.equals(keyValuePairs, logEvent.keyValuePairs)
+                && Objects.equals(logMarkers, logEvent.logMarkers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, formattedMessage, level, loggerName, threadName,
+                timeStamp, arguments, throwable, diagnosticContext, keyValuePairs, logMarkers);
+    }
 }
