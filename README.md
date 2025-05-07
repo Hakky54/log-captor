@@ -65,9 +65,12 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.11.0" % Test
    
 
 # Introduction
-Hey, hello there 👋 Welcome. I hope you will like this library ❤️
+Hey, hello there 👋 Welcome. I hope you will like this library
 
 LogCaptor is a library which will enable you to easily capture logging entries for unit and integration testing purposes. 
+
+I have created this library with ❤️ and passion, mostly during evening and night hours. If you use my library and want to appreciate the work I have done, please consider to sponsor this project as a way to contribute back to the community.
+There are 3 options available to pick from: [GitHub](https://github.com/sponsors/Hakky54), [Ko-fi](https://ko-fi.com/hakky54) and [Open Collective](https://opencollective.com/hakky54)
 
 Do you want to capture the console output? Please have a look at [ConsoleCaptor](https://github.com/Hakky54/console-captor).
 
