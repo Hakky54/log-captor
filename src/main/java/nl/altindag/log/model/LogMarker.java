@@ -16,6 +16,7 @@
 package nl.altindag.log.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class LogMarker {
 
@@ -41,5 +42,18 @@ public final class LogMarker {
                 "name='" + name + '\'' +
                 ", references=" + references +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LogMarker)) return false;
+        LogMarker logMarker = (LogMarker) o;
+        return Objects.equals(name, logMarker.name)
+                && Objects.equals(references, logMarker.references);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, references);
     }
 }

@@ -71,7 +71,7 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
         List<LogMarker> logMarkers = Collections.emptyList();
         if (iLoggingEvent.getMarkerList() != null) {
             logMarkers = iLoggingEvent.getMarkerList().stream()
-                    .map(MarkerMapper.getInstance())
+                    .map(LogMarkerMapper.getInstance())
                     .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         }
 
