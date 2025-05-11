@@ -126,8 +126,10 @@ public final class LogEvent {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof LogEvent)) return false;
         LogEvent logEvent = (LogEvent) o;
+
         return Objects.equals(message, logEvent.message)
                 && Objects.equals(formattedMessage, logEvent.formattedMessage)
                 && Objects.equals(level, logEvent.level)
@@ -135,15 +137,32 @@ public final class LogEvent {
                 && Objects.equals(threadName, logEvent.threadName)
                 && Objects.equals(timeStamp, logEvent.timeStamp)
                 && Objects.equals(arguments, logEvent.arguments)
-                && Objects.equals(throwable, logEvent.throwable)
+                && equalsThrowable(throwable, logEvent.throwable)
                 && Objects.equals(diagnosticContext, logEvent.diagnosticContext)
                 && Objects.equals(keyValuePairs, logEvent.keyValuePairs)
                 && Objects.equals(logMarkers, logEvent.logMarkers);
     }
 
+    private boolean equalsThrowable(Throwable t1, Throwable t2) {
+        if (t1 == t2) return true;
+        if (t1 == null || t2 == null) return false;
+        return t1.getClass().equals(t2.getClass())
+                && Objects.equals(t1.getMessage(), t2.getMessage());
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(message, formattedMessage, level, loggerName, threadName,
-                timeStamp, arguments, throwable, diagnosticContext, keyValuePairs, logMarkers);
+                timeStamp, arguments, throwableClass(throwable), throwableMessage(throwable),
+                diagnosticContext, keyValuePairs, logMarkers);
     }
+
+    private Class<?> throwableClass(Throwable t) {
+        return t != null ? t.getClass() : null;
+    }
+
+    private String throwableMessage(Throwable t) {
+        return t != null ? t.getMessage() : null;
+    }
+
 }
