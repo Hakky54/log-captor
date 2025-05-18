@@ -13,10 +13,16 @@
 [![javadoc](https://javadoc.io/badge2/io.github.hakky54/logcaptor/javadoc.svg)](https://javadoc.io/doc/io.github.hakky54/logcaptor)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_shield)
 [![Join the chat at https://gitter.im/hakky54/logcaptor](https://badges.gitter.im/hakky54/logcaptor.svg)](https://gitter.im/hakky54/logcaptor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Sponsor](https://img.shields.io/badge/sponsor-%F0%9F%92%96-pink)](https://github.com/sponsors/Hakky54)
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=io.github.hakky54%3Alogcaptor)
 
 # LogCaptor [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=With%20LogCaptor%20it%20is%20now%20very%20easy%20to%20captor%20and%20test%20your%20log%20message&url=https://github.com/Hakky54/log-captor/&via=hakky541&hashtags=logging,testing,log4j,slf4j,log4j2,jul,lombok,developer,java,scala,kotlin,logcaptor)
+
+Hey, hello there 👋 Welcome. I hope you will like this library
+
+I have created this library with ❤️ and passion, mostly during evening and night hours. If you use my library and want to appreciate the work I have done, please consider to sponsor this project as a way to contribute back to the community.
+There are 3 options available to pick from: [GitHub](https://github.com/sponsors/Hakky54), [Ko-fi](https://ko-fi.com/hakky54) and [Open Collective](https://opencollective.com/hakky54)
 
 # Install library with:
 ### Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
@@ -65,12 +71,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.11.0" % Test
    
 
 # Introduction
-Hey, hello there 👋 Welcome. I hope you will like this library
-
 LogCaptor is a library which will enable you to easily capture logging entries for unit and integration testing purposes. 
-
-I have created this library with ❤️ and passion, mostly during evening and night hours. If you use my library and want to appreciate the work I have done, please consider to sponsor this project as a way to contribute back to the community.
-There are 3 options available to pick from: [GitHub](https://github.com/sponsors/Hakky54), [Ko-fi](https://ko-fi.com/hakky54) and [Open Collective](https://opencollective.com/hakky54)
 
 Do you want to capture the console output? Please have a look at [ConsoleCaptor](https://github.com/Hakky54/console-captor).
 
