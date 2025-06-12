@@ -102,10 +102,10 @@ See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShoul
 
 ### Compatibility
 
-|    LogCaptor     |    SLF4J     |    Java     |    Kotlin     | Scala | Android |
-|:----------------:|:------------:|:-----------:|:-------------:|-------|:-------:|
-|      2.9.x       |    2.x.x     |     8+      |     1.5+      | 2.11+ |   24+   |
-|      2.8.x       |    1.x.x     |     8+      |     1.5+      | 2.11+ |   24+   |
+| LogCaptor | SLF4J | Log4J  | Java | Kotlin | Scala | Android |
+|:---------:|:-----:|:------:|:----:|:------:|-------|:-------:|
+|   2.8.x   | 2.x.x | 2.22.x |  8+  |  1.5+  | 2.11+ |   24+   |
+|   2.7.x   | 1.x.x | 2.21.x |  8+  |  1.5+  | 2.11+ |   24+   |
 
 # Usage
 ##### Capture logs
