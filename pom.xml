@@ -65,7 +65,7 @@
         <version.lombok>1.18.38</version.lombok>
         <version.slf4j>2.0.17</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
-        <version.consolecaptor>1.0.3</version.consolecaptor>
+        <version.consolecaptor>1.0.4</version.consolecaptor>
 
         <!--    plugin properties   -->
         <version.jacoco-maven-plugin>0.8.13</version.jacoco-maven-plugin>
