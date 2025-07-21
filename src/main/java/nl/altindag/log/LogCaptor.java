@@ -132,6 +132,35 @@ public final class LogCaptor implements AutoCloseable {
         }
     }
 
+    public boolean hasMessage(String message) {
+        return getLogs().stream().anyMatch(log -> log.contains(message));
+    }
+
+    public boolean hasInfoMessage(String message) {
+        return hasMessage(Level.INFO, message);
+    }
+
+    public boolean hasDebugMessage(String message) {
+        return hasMessage(Level.DEBUG, message);
+    }
+
+    public boolean hasWarnMessage(String message) {
+        return hasMessage(Level.WARN, message);
+    }
+
+    public boolean hasErrorMessage(String message) {
+        return hasMessage(Level.ERROR, message);
+    }
+
+    public boolean hasTraceMessage(String message) {
+        return hasMessage(Level.TRACE, message);
+    }
+
+    private boolean hasMessage(Level level, String message) {
+        return getLogs(logEvent -> logEvent.getLevel() == level, ILoggingEvent::getFormattedMessage).stream()
+                .anyMatch(log -> log.contains(message));
+    }
+
     public void addFilter(Filter<ILoggingEvent> filter) {
         appender.addFilter(filter);
         filter.start();
