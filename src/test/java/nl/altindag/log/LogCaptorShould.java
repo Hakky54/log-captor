@@ -44,6 +44,7 @@ import nl.altindag.log.service.lombok.ServiceWithLombokAndNestedLog4j2;
 import nl.altindag.log.service.lombok.ServiceWithLombokAndSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithNestedSlf4j;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4j;
+import nl.altindag.log.service.slfj4.ServiceWithSlf4jAllLogLevels;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
@@ -478,10 +479,10 @@ class LogCaptorShould {
 
     @Test
     void haveHasMessageMethodsForMessages() {
-        logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
+        logCaptor = LogCaptor.forClass(ServiceWithSlf4jAllLogLevels.class);
         logCaptor.setLogLevelToTrace();
 
-        Service service = new ServiceWithApacheLog4j();
+        Service service = new ServiceWithSlf4jAllLogLevels();
         service.sayHello();
 
         assertThat(logCaptor.hasMessage(LogMessage.INFO.getMessage())).isTrue();
