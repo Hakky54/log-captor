@@ -477,6 +477,43 @@ class LogCaptorShould {
     }
 
     @Test
+    void haveHasMessageMethodsForMessages() {
+        logCaptor = LogCaptor.forClass(ServiceWithJavaUtilLogging.class);
+        logCaptor.setLogLevelToTrace();
+
+        Service service = new ServiceWithJavaUtilLogging();
+        service.sayHello();
+
+        assertThat(logCaptor.hasMessage(LogMessage.INFO.getMessage())).isTrue();
+        assertThat(logCaptor.hasMessage(LogMessage.ERROR.getMessage())).isTrue();
+        assertThat(logCaptor.hasMessage(LogMessage.DEBUG.getMessage())).isTrue();
+        assertThat(logCaptor.hasMessage(LogMessage.TRACE.getMessage())).isTrue();
+
+        assertThat(logCaptor.hasInfoMessage(LogMessage.INFO.getMessage())).isTrue();
+        assertThat(logCaptor.hasErrorMessage(LogMessage.ERROR.getMessage())).isTrue();
+        assertThat(logCaptor.hasDebugMessage(LogMessage.DEBUG.getMessage())).isTrue();
+        assertThat(logCaptor.hasTraceMessage(LogMessage.TRACE.getMessage())).isTrue();
+
+        assertThat(logCaptor.hasInfoMessage(LogMessage.ERROR.getMessage())).isFalse();
+        assertThat(logCaptor.hasInfoMessage(LogMessage.DEBUG.getMessage())).isFalse();
+        assertThat(logCaptor.hasInfoMessage(LogMessage.TRACE.getMessage())).isFalse();
+
+        assertThat(logCaptor.hasErrorMessage(LogMessage.INFO.getMessage())).isFalse();
+        assertThat(logCaptor.hasErrorMessage(LogMessage.DEBUG.getMessage())).isFalse();
+        assertThat(logCaptor.hasErrorMessage(LogMessage.TRACE.getMessage())).isFalse();
+
+        assertThat(logCaptor.hasDebugMessage(LogMessage.INFO.getMessage())).isFalse();
+        assertThat(logCaptor.hasDebugMessage(LogMessage.ERROR.getMessage())).isFalse();
+        assertThat(logCaptor.hasDebugMessage(LogMessage.TRACE.getMessage())).isFalse();
+
+        assertThat(logCaptor.hasTraceMessage(LogMessage.INFO.getMessage())).isFalse();
+        assertThat(logCaptor.hasTraceMessage(LogMessage.ERROR.getMessage())).isFalse();
+        assertThat(logCaptor.hasTraceMessage(LogMessage.DEBUG.getMessage())).isFalse();
+
+        assertThat(logCaptor.hasMessage("This message is expected to be not expected")).isFalse();
+    }
+
+    @Test
     void throwExceptionWhenLoggerImplementationIsNull() {
         try (MockedStatic<LoggerFactory> loggerFactoryMockedStatic = mockStatic(LoggerFactory.class)) {
 
