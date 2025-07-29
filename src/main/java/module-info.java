@@ -22,4 +22,8 @@ module nl.altindag.logcaptor {
     requires transitive java.logging;
     requires transitive org.apache.logging.log4j.to.slf4j;
 
+    exports nl.altindag.log;
+    exports nl.altindag.log.exception;
+    exports nl.altindag.log.model;
+
 }
