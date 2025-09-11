@@ -49,7 +49,7 @@
         <version.assertj>3.27.4</version.assertj>
         <version.mockito>4.11.0</version.mockito>
         <version.bytebuddy>1.17.7</version.bytebuddy>
-        <version.lombok>1.18.38</version.lombok>
+        <version.lombok>1.18.40</version.lombok>
         <version.slf4j>2.0.17</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
         <version.consolecaptor>1.0.4</version.consolecaptor>
