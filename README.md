@@ -30,21 +30,21 @@ There are 3 options available to pick from: [GitHub](https://github.com/sponsors
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.12.0</version>
+    <version>2.12.1</version>
     <scope>test</scope>
 </dependency>
 ```
 ### Install with Gradle
 ```groovy
-testImplementation 'io.github.hakky54:logcaptor:2.12.0'
+testImplementation 'io.github.hakky54:logcaptor:2.12.1'
 ```
 ### Install with Scala SBT
 ```
-libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.0" % Test
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.1" % Test
 ```
 ### Install with Apache Ivy
 ```xml
-<dependency org="io.github.hakky54" name="logcaptor" rev="2.12.0" />
+<dependency org="io.github.hakky54" name="logcaptor" rev="2.12.1" />
 ```
 
 ## Table of contents

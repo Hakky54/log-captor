@@ -3,6 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.12.1
+- Corrected module-info file
 ### v2.12.0
 - Added support for Java Modules
 - Added helper methods for checking individual messages
