@@ -97,6 +97,7 @@ Do you want to capture the console output? Please have a look at [ConsoleCaptor]
  - Java Util Logging with Lombok
  - Spring Boot Starter Log4j2
  - Google Flogger
+ - [Sude](https://github.com/Hakky54/sude)
 
 See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShould.java) for all the scenario's or checkout this project [Java Tutorials](https://github.com/Hakky54/java-tutorials) which contains more isolated examples of the individual logging frameworks
 
