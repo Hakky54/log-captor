@@ -71,6 +71,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${version.logback}</version>
@@ -197,7 +202,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>io.github.hakky54.logcaptor</Automatic-Module-Name>
+                            <Automatic-Module-Name>nl.altindag.logcaptor</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -253,9 +258,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${version.maven-javadoc-plugin}</version>
-                <configuration>
-                    <source>${version.java}</source>
-                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
