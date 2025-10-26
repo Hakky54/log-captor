@@ -61,6 +61,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.1" % Test
    - [Capture Managed Diagnostic Context (MDC)](#capture-managed-diagnostic-context-mdc)  
    - [Disable any logs for specific class](#disable-any-logs-for-a-specific-class)   
    - [Disable console output](#disable-console-output)
+   - [Capturing logs across different threads](#capturing-logs-across-different-threads)
    - [Returnable values from LogCaptor](#returnable-values-from-logcaptor)
 3. [Known issues](#known-issues)
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
@@ -419,6 +420,9 @@ Add `logback-test.xml` to your test resources with the following content:
    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>
 ```
+
+##### Capturing logs across different threads
+LogCaptor is able to capture logs which are being logged from different threads. The main requirement to correctly capture those logs is to make sure the LogCaptor instance is created within the test method, so basically as a local variable and not as an instance or static variable.
 
 ##### Returnable values from LogCaptor
 ```java
