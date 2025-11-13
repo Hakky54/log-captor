@@ -50,6 +50,7 @@ import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,6 +87,7 @@ import static org.mockito.Mockito.mockStatic;
 @ExtendWith(MockitoExtension.class)
 class LogCaptorShould {
 
+    @AutoClose
     private LogCaptor logCaptor;
 
     @AfterEach

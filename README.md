@@ -375,11 +375,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class FooServiceShould {
 
+    @AutoClose
     private static LogCaptor logCaptorForSomeOtherService = LogCaptor.forClass(SomeService.class);
 
     @BeforeAll
