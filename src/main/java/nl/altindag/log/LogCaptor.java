@@ -229,7 +229,7 @@ public final class LogCaptor implements AutoCloseable {
      */
     public void enableConsoleOutput() {
         Logger rootLogger = getRootLogger();
-        rootLogger.detachAppender(NOPAppender.NAME);
+        rootLogger.detachAppender(NOPAppender.APPENDER_NAME);
         CONSOLE_APPENDER_CONTAINER.get(logger.getName()).ifPresent(rootLogger::addAppender);
     }
 

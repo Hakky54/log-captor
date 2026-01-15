@@ -20,10 +20,10 @@ import ch.qos.logback.core.Context;
 
 public final class NOPAppender <T> extends AppenderBase<T> {
 
-    public static final String NAME = "log-captor-nop-Appender";
+    public static final String APPENDER_NAME = "log-captor-nop-Appender";
 
     public NOPAppender(Context context) {
-        setName(NAME);
+        setName(APPENDER_NAME);
         setContext(context);
     }
 
