@@ -28,8 +28,6 @@ public final class NOPAppender <T> extends AppenderBase<T> {
     }
 
     @Override
-    protected void append(T t) {
-        // ignore events
-    }
+    protected void append(T t) {}
 
 }
