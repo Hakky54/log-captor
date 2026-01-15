@@ -3,6 +3,10 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
+### v2.12.2
+- Improve disabling console output
+- Renamed module name
+- Bumped dependencies
 ### v2.12.1
 - Corrected module-info file
 ### v2.12.0
