@@ -21,6 +21,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
+import nl.altindag.log.appender.NOPAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import nl.altindag.log.util.LogbackUtils;
@@ -46,6 +47,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
+    private static final Map<String, Optional<Appender<ILoggingEvent>>> CONSOLE_APPENDER_CONTAINER = new HashMap<>();
     private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
@@ -213,7 +215,12 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        getConsoleAppender().ifPresent(Appender::stop);
+        getConsoleAppender().ifPresent(consoleAppender -> {
+            Logger rootLogger = getRootLogger();
+            rootLogger.detachAppender(consoleAppender);
+            CONSOLE_APPENDER_CONTAINER.put(logger.getName(), Optional.of(consoleAppender));
+            rootLogger.addAppender(new NOPAppender<>(logger.getLoggerContext()));
+        });
     }
 
     /**
@@ -221,17 +228,21 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        getConsoleAppender().ifPresent(Appender::start);
+        Logger rootLogger = getRootLogger();
+        rootLogger.detachAppender(NOPAppender.NAME);
+        CONSOLE_APPENDER_CONTAINER.get(logger.getName()).ifPresent(rootLogger::addAppender);
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
-        Logger rootLogger = logger.getLoggerContext()
-                .getLogger(ROOT_LOGGER_NAME);
-
+        Logger rootLogger = getRootLogger();
         return CONSOLE_APPENDER_NAMES.stream()
                 .map(rootLogger::getAppender)
                 .filter(Objects::nonNull)
                 .findFirst();
+    }
+
+    private Logger getRootLogger() {
+        return logger.getLoggerContext().getLogger(ROOT_LOGGER_NAME);
     }
 
     /**
