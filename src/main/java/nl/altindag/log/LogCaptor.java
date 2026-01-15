@@ -225,7 +225,7 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        CONSOLE_APPENDER_CONTAINER.get(logger.getName()).ifPresent(getRootLogger()::addAppender);
+        CONSOLE_APPENDER_CONTAINER.getOrDefault(logger.getName(), Optional.empty()).ifPresent(getRootLogger()::addAppender);
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
