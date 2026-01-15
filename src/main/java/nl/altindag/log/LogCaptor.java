@@ -46,7 +46,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
-    private static final Map<String, Optional<Appender<ILoggingEvent>>> CONSOLE_APPENDER_CONTAINER = new HashMap<>();
+    private static final Map<String, Appender<ILoggingEvent>> CONSOLE_APPENDER_CONTAINER = new HashMap<>();
     private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
@@ -216,7 +216,7 @@ public final class LogCaptor implements AutoCloseable {
     public void disableConsoleOutput() {
         getConsoleAppender().ifPresent(consoleAppender -> {
             getRootLogger().detachAppender(consoleAppender);
-            CONSOLE_APPENDER_CONTAINER.put(logger.getName(), Optional.of(consoleAppender));
+            CONSOLE_APPENDER_CONTAINER.put(logger.getName(), consoleAppender);
         });
     }
 
@@ -225,7 +225,7 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        CONSOLE_APPENDER_CONTAINER.getOrDefault(logger.getName(), Optional.empty()).ifPresent(getRootLogger()::addAppender);
+        Optional.ofNullable(CONSOLE_APPENDER_CONTAINER.remove(logger.getName())).ifPresent(getRootLogger()::addAppender);
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
