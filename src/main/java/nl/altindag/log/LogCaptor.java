@@ -45,8 +45,8 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
  */
 public final class LogCaptor implements AutoCloseable {
 
-    private static final Map<String, Level> LOG_LEVEL_CONTAINER = new HashMap<>();
-    private static final Map<String, Appender<ILoggingEvent>> CONSOLE_APPENDER_CONTAINER = new HashMap<>();
+    private static final Map<String, Level> logLevelContainer = new HashMap<>();
+    private static final Map<String, Appender<ILoggingEvent>> consoleAppenderContainer = new HashMap<>();
     private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
@@ -60,7 +60,7 @@ public final class LogCaptor implements AutoCloseable {
         logger.addAppender(appender);
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
-        LOG_LEVEL_CONTAINER.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
+        logLevelContainer.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
     }
 
     /**
@@ -216,7 +216,7 @@ public final class LogCaptor implements AutoCloseable {
     public void disableConsoleOutput() {
         getConsoleAppender().ifPresent(consoleAppender -> {
             getRootLogger().detachAppender(consoleAppender);
-            CONSOLE_APPENDER_CONTAINER.put(logger.getName(), consoleAppender);
+            consoleAppenderContainer.put(logger.getName(), consoleAppender);
         });
     }
 
@@ -225,7 +225,7 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        Optional.ofNullable(CONSOLE_APPENDER_CONTAINER.remove(logger.getName())).ifPresent(getRootLogger()::addAppender);
+        Optional.ofNullable(consoleAppenderContainer.remove(logger.getName())).ifPresent(getRootLogger()::addAppender);
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
@@ -245,7 +245,7 @@ public final class LogCaptor implements AutoCloseable {
      * changing it with {@link LogCaptor#setLogLevelToInfo()}, {@link LogCaptor#setLogLevelToDebug()} or with {@link LogCaptor#setLogLevelToTrace()}
      */
     public void resetLogLevel() {
-        Optional.ofNullable(LOG_LEVEL_CONTAINER.get(logger.getName()))
+        Optional.ofNullable(logLevelContainer.get(logger.getName()))
                 .ifPresent(logger::setLevel);
     }
 
