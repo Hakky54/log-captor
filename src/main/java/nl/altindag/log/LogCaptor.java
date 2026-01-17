@@ -21,6 +21,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
+import nl.altindag.log.appender.NOPAppender;
 import nl.altindag.log.model.LogEvent;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import nl.altindag.log.util.LogbackUtils;
@@ -215,8 +216,13 @@ public final class LogCaptor implements AutoCloseable {
      */
     public void disableConsoleOutput() {
         getConsoleAppender().ifPresent(consoleAppender -> {
-            getRootLogger().detachAppender(consoleAppender);
+            Logger rootLogger = getRootLogger();
+            rootLogger.detachAppender(consoleAppender);
             consoleAppenderContainer.put(logger.getName(), consoleAppender);
+
+            if (!rootLogger.iteratorForAppenders().hasNext()) {
+                rootLogger.addAppender(new NOPAppender<>(rootLogger.getLoggerContext()));
+            }
         });
     }
 
@@ -225,7 +231,9 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        Optional.ofNullable(consoleAppenderContainer.remove(logger.getName())).ifPresent(getRootLogger()::addAppender);
+        Logger rootLogger = getRootLogger();
+        rootLogger.detachAppender(NOPAppender.APPENDER_NAME);
+        Optional.ofNullable(consoleAppenderContainer.remove(logger.getName())).ifPresent(rootLogger::addAppender);
     }
 
     Optional<Appender<ILoggingEvent>> getConsoleAppender() {
