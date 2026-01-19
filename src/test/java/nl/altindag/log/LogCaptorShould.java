@@ -673,13 +673,14 @@ class LogCaptorShould {
         }
 
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender()).isEmpty();
+        assertThat(logCaptor.getConsoleAppender(logCaptor.getLogger())).isEmpty();
+        assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isEmpty();
     }
 
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender()).isPresent();
+        assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isPresent();
     }
 
     @Test

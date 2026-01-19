@@ -47,7 +47,6 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> logLevelContainer = new HashMap<>();
-    private static final Map<String, Appender<ILoggingEvent>> consoleAppenderContainer = new HashMap<>();
     private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
@@ -215,15 +214,8 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        getConsoleAppender().ifPresent(consoleAppender -> {
-            Logger rootLogger = getRootLogger();
-            rootLogger.detachAppender(consoleAppender);
-            consoleAppenderContainer.put(logger.getName(), consoleAppender);
-
-            if (!rootLogger.iteratorForAppenders().hasNext()) {
-                rootLogger.addAppender(new NOPAppender<>(rootLogger.getLoggerContext()));
-            }
-        });
+        logger.setAdditive(false);
+        logger.addAppender(new NOPAppender<>(logger.getLoggerContext()));
     }
 
     /**
@@ -231,21 +223,23 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        Logger rootLogger = getRootLogger();
-        rootLogger.detachAppender(NOPAppender.APPENDER_NAME);
-        Optional.ofNullable(consoleAppenderContainer.remove(logger.getName())).ifPresent(rootLogger::addAppender);
+        logger.setAdditive(true);
+        logger.detachAppender(NOPAppender.APPENDER_NAME);
     }
 
-    Optional<Appender<ILoggingEvent>> getConsoleAppender() {
-        Logger rootLogger = getRootLogger();
+    Optional<Appender<ILoggingEvent>> getConsoleAppender(Logger logger) {
         return CONSOLE_APPENDER_NAMES.stream()
-                .map(rootLogger::getAppender)
+                .map(logger::getAppender)
                 .filter(Objects::nonNull)
                 .findFirst();
     }
 
-    private Logger getRootLogger() {
+    Logger getRootLogger() {
         return logger.getLoggerContext().getLogger(ROOT_LOGGER_NAME);
+    }
+
+    Logger getLogger() {
+        return logger;
     }
 
     /**
