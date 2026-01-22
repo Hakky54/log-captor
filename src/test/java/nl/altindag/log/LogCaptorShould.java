@@ -15,12 +15,14 @@
  */
 package nl.altindag.log;
 
+import ch.qos.logback.classic.BasicConfigurator;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
@@ -50,7 +52,6 @@ import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,13 +88,15 @@ import static org.mockito.Mockito.mockStatic;
 @ExtendWith(MockitoExtension.class)
 class LogCaptorShould {
 
-    @AutoClose
     private LogCaptor logCaptor;
 
     @AfterEach
     void resetProperties() {
         Optional.ofNullable(logCaptor)
-                .ifPresent(LogCaptor::resetLogLevel);
+                .ifPresent(lc -> {
+                    lc.resetLogLevel();
+                    lc.close();
+                });
     }
 
     @Test
@@ -664,8 +667,8 @@ class LogCaptorShould {
      */
     @Test
     void notProvideConsoleAppenderWhenNopStatusListenerIsPresentAsLogBackConfiguration() throws IOException, JoranException {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         try (InputStream inputStream = this.getClass().getResourceAsStream("/logback-config-examples/logback-test.xml")) {
-            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
             loggerContext.reset();
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(loggerContext);
@@ -675,11 +678,19 @@ class LogCaptorShould {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
         assertThat(logCaptor.getConsoleAppender(logCaptor.getLogger())).isEmpty();
         assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isEmpty();
+
+        new BasicConfigurator().configure(loggerContext); // Reset to default configuration logback configuration.
     }
 
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
+        assertThat(logCaptor.getConsoleAppender(logCaptor.getLogger())).isPresent();
+    }
+
+    @Test
+    void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfigurationForRootLogCaptor() {
+        logCaptor = LogCaptor.forRoot();
         assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isPresent();
     }
 
@@ -704,12 +715,17 @@ class LogCaptorShould {
     }
 
     private static void assertListAppender(Logger logger) {
-        assertThat(fetchAppenders(logger))
-                .hasSize(1)
-                .first()
+        List<Appender<?>> appenders = fetchAppenders(logger);
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.get(0))
                 .isInstanceOf(InMemoryAppender.class)
                 .extracting(Appender::getName)
                 .isEqualTo("log-captor");
+
+        assertThat(appenders.get(1))
+                .isInstanceOf(ConsoleAppender.class)
+                .extracting(Appender::getName)
+                .isEqualTo("console");
     }
 
     private static List<Appender<?>> fetchAppenders(Logger logger) {
