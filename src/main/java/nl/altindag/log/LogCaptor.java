@@ -240,7 +240,7 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        Optional.ofNullable(consoleAppender).ifPresent(logger::detachAppender);
+        logger.detachAppender(consoleAppender);
         if (!ROOT_LOGGER_NAME.equals(logger.getName())) {
             logger.setAdditive(false);
         }
