@@ -270,12 +270,8 @@ public final class LogCaptor implements AutoCloseable {
             logger.setAdditive(false);
         }
 
-        if (logger.getAppender(AppenderUtils.IN_MEMORY_APPENDER_NAME) == null) {
-            logger.addAppender(inMemoryAppender);
-            if (!inMemoryAppender.isStarted()) {
-                inMemoryAppender.start();
-            }
-        }
+        logger.addAppender(inMemoryAppender);
+        inMemoryAppender.start();
     }
 
     /**
@@ -291,10 +287,8 @@ public final class LogCaptor implements AutoCloseable {
         consoleAppender.start();
         logger.addAppender(consoleAppender);
 
-        if (logger.getAppender(AppenderUtils.IN_MEMORY_APPENDER_NAME) == null) {
-            logger.addAppender(inMemoryAppender);
-            inMemoryAppender.start();
-        }
+        logger.addAppender(inMemoryAppender);
+        inMemoryAppender.start();
     }
 
     Logger getRootLogger() {
