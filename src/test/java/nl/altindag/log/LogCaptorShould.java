@@ -686,13 +686,13 @@ class LogCaptorShould {
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isPresent();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isNotEmpty();
     }
 
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfigurationForRootLogCaptor() {
         logCaptor = LogCaptor.forRoot();
-        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isPresent();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isNotEmpty();
     }
 
     @Test
@@ -721,7 +721,7 @@ class LogCaptorShould {
         assertThat(appenders.get(0))
                 .isInstanceOf(InMemoryAppender.class)
                 .extracting(Appender::getName)
-                .isEqualTo("log-captor");
+                .isEqualTo("logcaptor-in-memory-appender");
 
         assertThat(appenders.get(1))
                 .isInstanceOf(ConsoleAppender.class)
