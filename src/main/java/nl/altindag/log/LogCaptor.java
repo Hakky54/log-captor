@@ -249,6 +249,9 @@ public final class LogCaptor implements AutoCloseable {
      */
     public void disableConsoleOutput() {
         Optional.ofNullable(consoleAppender).ifPresent(logger::detachAppender);
+        if (!ROOT_LOGGER_NAME.equals(logger.getName())) {
+            logger.setAdditive(false);
+        }
         if (!logger.iteratorForAppenders().hasNext()) {
             logger.addAppender(AppenderUtils.createNopAppender(logger.getLoggerContext()));
         }
