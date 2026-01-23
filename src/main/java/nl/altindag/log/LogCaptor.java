@@ -20,6 +20,8 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.ConsoleAppender;
+import ch.qos.logback.core.OutputStreamAppender;
+import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
@@ -28,13 +30,11 @@ import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import nl.altindag.log.util.LogbackUtils;
 import nl.altindag.log.util.Mappers;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
@@ -49,7 +49,6 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> logLevelContainer = new HashMap<>();
-    private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
     private final InMemoryAppender<ILoggingEvent> inMemoryAppender;
@@ -71,10 +70,10 @@ public final class LogCaptor implements AutoCloseable {
         Optional<ConsoleAppender<ILoggingEvent>> consoleAppender;
         if (ROOT_LOGGER_NAME.equals(loggerName)) {
             Logger rootLogger = getRootLogger();
-            consoleAppender = getConsoleAppender(rootLogger);
+            consoleAppender = AppenderUtils.getConsoleAppender(rootLogger);
         } else {
             logger.setAdditive(false); // prevent log messages to be propagated to the root logger
-            consoleAppender = getConsoleAppender(logger);
+            consoleAppender = AppenderUtils.getConsoleAppender(logger);
         }
 
         if (!consoleAppender.isPresent()) {
@@ -265,15 +264,6 @@ public final class LogCaptor implements AutoCloseable {
         if (!consoleAppender.isStarted()) {
             consoleAppender.start();
         }
-    }
-
-    Optional<ConsoleAppender<ILoggingEvent>> getConsoleAppender(Logger logger) {
-        return CONSOLE_APPENDER_NAMES.stream()
-                .map(logger::getAppender)
-                .filter(Objects::nonNull)
-                .filter(ConsoleAppender.class::isInstance)
-                .map(consoleAppender -> (ConsoleAppender<ILoggingEvent>) consoleAppender)
-                .findFirst();
     }
 
     Logger getRootLogger() {

@@ -51,6 +51,7 @@ import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
+import nl.altindag.log.util.AppenderUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -676,8 +677,8 @@ class LogCaptorShould {
         }
 
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender(logCaptor.getLogger())).isEmpty();
-        assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isEmpty();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isEmpty();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isEmpty();
 
         new BasicConfigurator().configure(loggerContext); // Reset to default configuration logback configuration.
     }
@@ -685,13 +686,13 @@ class LogCaptorShould {
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender(logCaptor.getLogger())).isPresent();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isPresent();
     }
 
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfigurationForRootLogCaptor() {
         logCaptor = LogCaptor.forRoot();
-        assertThat(logCaptor.getConsoleAppender(logCaptor.getRootLogger())).isPresent();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isPresent();
     }
 
     @Test
