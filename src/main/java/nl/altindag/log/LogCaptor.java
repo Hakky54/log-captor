@@ -52,21 +52,25 @@ public final class LogCaptor implements AutoCloseable {
     private static final Map<String, Level> logLevelContainer = new HashMap<>();
 
     private final Logger logger;
-    private final InMemoryAppender<ILoggingEvent> inMemoryAppender;
+    private InMemoryAppender<ILoggingEvent> inMemoryAppender;
     private ConsoleAppender<ILoggingEvent> consoleAppender;
     private final List<ILoggingEvent> eventsCollector = new CopyOnWriteArrayList<>();
 
     private LogCaptor(String loggerName) {
         logger = LogbackUtils.getLogger(loggerName);
-        inMemoryAppender = new InMemoryAppender<>(AppenderUtils.IN_MEMORY_APPENDER_NAME, eventsCollector);
-        inMemoryAppender.setContext(logger.getLoggerContext());
-        inMemoryAppender.start();
-        logger.addAppender(inMemoryAppender);
+        configureInMemoryAppender();
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
         logLevelContainer.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
 
         configureConsoleAppender(loggerName);
+    }
+
+    private void configureInMemoryAppender() {
+        inMemoryAppender = new InMemoryAppender<>(AppenderUtils.IN_MEMORY_APPENDER_NAME, eventsCollector);
+        inMemoryAppender.setContext(logger.getLoggerContext());
+        inMemoryAppender.start();
+        logger.addAppender(inMemoryAppender);
     }
 
     private void configureConsoleAppender(String loggerName) {
