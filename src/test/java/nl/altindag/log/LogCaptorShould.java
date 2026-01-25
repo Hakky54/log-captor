@@ -369,6 +369,12 @@ class LogCaptorShould {
     }
 
     @Test
+    void provideLoggerNameInToStringMethod() {
+        logCaptor = LogCaptor.forRoot();
+        assertThat(logCaptor.toString()).isEqualTo("LogCaptor(loggerName=ROOT)");
+    }
+
+    @Test
     void captureLoggingEventsWithLogLevelInfoWhereLombokLog4jIsUsed() {
         logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j.class);
         logCaptor.setLogLevelToInfo();
