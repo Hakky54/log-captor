@@ -395,6 +395,24 @@ class LogCaptorShould {
     }
 
     @Test
+    void reconfigureRootLogger() {
+        logCaptor = LogCaptor.forRoot();
+        Logger logger = logCaptor.getLogger();
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        long amountOfAppenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false).count();
+        assertThat(amountOfAppenders).isZero();
+
+        logCaptor.reconfigure();
+        List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.stream().filter(ConsoleAppender.class::isInstance).findAny()).isPresent();
+        assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
+    }
+
+    @Test
     void captureLoggingEventsWithLogLevelInfoWhereLombokLog4jIsUsed() {
         logCaptor = LogCaptor.forClass(ServiceWithLombokAndLog4j.class);
         logCaptor.setLogLevelToInfo();

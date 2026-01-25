@@ -91,9 +91,10 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     private ConsoleAppender<ILoggingEvent> createConsoleAppender() {
-        return AppenderUtils.getConsoleAppender(getRootLogger())
+        return Optional.ofNullable(consoleAppender)
+                .orElseGet(() -> AppenderUtils.getConsoleAppender(getRootLogger())
                 .orElseGet(() -> AppenderUtils.getConsoleAppender(logger)
-                .orElseGet(() -> AppenderUtils.createConsoleAppender(logger.getLoggerContext())));
+                .orElseGet(() -> AppenderUtils.createConsoleAppender(logger.getLoggerContext()))));
     }
 
     /**
