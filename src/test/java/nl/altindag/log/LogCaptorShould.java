@@ -21,11 +21,13 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
+import nl.altindag.log.ConsoleOutputShould.Foo;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.exception.LogCaptorException;
 import nl.altindag.log.model.LogEvent;
@@ -372,6 +374,24 @@ class LogCaptorShould {
     void provideLoggerNameInToStringMethod() {
         logCaptor = LogCaptor.forRoot();
         assertThat(logCaptor.toString()).isEqualTo("LogCaptor(loggerName=ROOT)");
+    }
+
+    @Test
+    void reconfigureLogger() {
+        logCaptor = LogCaptor.forClass(Foo.class);
+        Logger logger = logCaptor.getLogger();
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        long amountOfAppenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false).count();
+        assertThat(amountOfAppenders).isZero();
+
+        logCaptor.reconfigure();
+        List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.stream().filter(ConsoleAppender.class::isInstance).findAny()).isPresent();
+        assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
     }
 
     @Test

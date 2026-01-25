@@ -96,19 +96,6 @@ public final class LogCaptor implements AutoCloseable {
                 .orElseGet(() -> AppenderUtils.createConsoleAppender(logger.getLoggerContext())));
     }
 
-    public void reconfigure() {
-        Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
-        while (appenders.hasNext()) {
-            logger.detachAppender(appenders.next());
-        }
-
-        configureConsoleAppender(logger.getName());
-        logger.addAppender(inMemoryAppender);
-        logger.addAppender(consoleAppender);
-        inMemoryAppender.start();
-        consoleAppender.start();
-    }
-
     /**
      * Captures all log messages
      *
@@ -310,6 +297,19 @@ public final class LogCaptor implements AutoCloseable {
 
     public void clearLogs() {
         eventsCollector.clear();
+    }
+
+    public void reconfigure() {
+        Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
+        while (appenders.hasNext()) {
+            logger.detachAppender(appenders.next());
+        }
+
+        configureConsoleAppender(logger.getName());
+        logger.addAppender(inMemoryAppender);
+        logger.addAppender(consoleAppender);
+        inMemoryAppender.start();
+        consoleAppender.start();
     }
 
     @Override
