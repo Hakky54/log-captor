@@ -300,10 +300,8 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void reconfigure() {
-        Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
-        while (appenders.hasNext()) {
-            logger.detachAppender(appenders.next());
-        }
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
 
         configureConsoleAppender(logger.getName());
         logger.addAppender(inMemoryAppender);
