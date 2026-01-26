@@ -252,18 +252,8 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        AppenderUtils.getConsoleAppender(logger)
-                .ifPresent(appender -> {
-                    consoleAppender = appender;
-                    logger.detachAppender(appender);
-                });
-
-        if (!ROOT_LOGGER_NAME.equals(logger.getName())) {
-            logger.setAdditive(false);
-        }
-
-        logger.addAppender(inMemoryAppender);
-        inMemoryAppender.start();
+        reconfigure();
+        logger.detachAppender(consoleAppender);
     }
 
     /**
@@ -271,16 +261,7 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
-                .filter(ConsoleAppender.class::isInstance)
-                .forEach(logger::detachAppender);
-
-        consoleAppender = createConsoleAppender();
-        consoleAppender.start();
-        logger.addAppender(consoleAppender);
-
-        logger.addAppender(inMemoryAppender);
-        inMemoryAppender.start();
+        reconfigure();
     }
 
     Logger getRootLogger() {
