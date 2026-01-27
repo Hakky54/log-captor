@@ -19,24 +19,28 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.filter.Filter;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.model.LogEvent;
+import nl.altindag.log.util.AppenderUtils;
 import nl.altindag.log.util.JavaUtilLoggingLoggerUtils;
 import nl.altindag.log.util.LogbackUtils;
 import nl.altindag.log.util.Mappers;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -46,21 +50,55 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public final class LogCaptor implements AutoCloseable {
 
     private static final Map<String, Level> logLevelContainer = new HashMap<>();
-    private static final Map<String, Appender<ILoggingEvent>> consoleAppenderContainer = new HashMap<>();
-    private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private final Logger logger;
-    private final Appender<ILoggingEvent> appender;
+    private InMemoryAppender<ILoggingEvent> inMemoryAppender;
+    private ConsoleAppender<ILoggingEvent> consoleAppender;
     private final List<ILoggingEvent> eventsCollector = new CopyOnWriteArrayList<>();
 
     private LogCaptor(String loggerName) {
         logger = LogbackUtils.getLogger(loggerName);
-        appender = new InMemoryAppender<>("log-captor", eventsCollector);
-        appender.start();
-        logger.addAppender(appender);
+        configureInMemoryAppender();
 
         JavaUtilLoggingLoggerUtils.redirectToSlf4j(loggerName);
         logLevelContainer.putIfAbsent(logger.getName(), logger.getEffectiveLevel());
+
+        configureConsoleAppender(loggerName);
+    }
+
+    private void configureInMemoryAppender() {
+        inMemoryAppender = new InMemoryAppender<>(AppenderUtils.IN_MEMORY_APPENDER_NAME, eventsCollector);
+        inMemoryAppender.setContext(logger.getLoggerContext());
+        inMemoryAppender.start();
+        logger.addAppender(inMemoryAppender);
+    }
+
+    private void configureConsoleAppender(String loggerName) {
+        if (!ROOT_LOGGER_NAME.equals(loggerName)) {
+            logger.setAdditive(false);
+        }
+
+        consoleAppender = createConsoleAppender();
+        if (!ROOT_LOGGER_NAME.equals(loggerName)) {
+            boolean containsRootConsoleAppender = false;
+            Iterator<Appender<ILoggingEvent>> rootAppenders = getRootLogger().iteratorForAppenders();
+            while (rootAppenders.hasNext()) {
+                if (rootAppenders.next() instanceof ConsoleAppender) {
+                    containsRootConsoleAppender = true;
+                }
+            }
+
+            if (containsRootConsoleAppender) {
+                logger.addAppender(consoleAppender);
+            }
+        }
+    }
+
+    private ConsoleAppender<ILoggingEvent> createConsoleAppender() {
+        return Optional.ofNullable(consoleAppender)
+                .orElseGet(() -> AppenderUtils.getConsoleAppender(getRootLogger())
+                .orElseGet(() -> AppenderUtils.getConsoleAppender(logger)
+                .orElseGet(() -> AppenderUtils.createConsoleAppender(logger.getLoggerContext()))));
     }
 
     /**
@@ -163,7 +201,7 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void addFilter(Filter<ILoggingEvent> filter) {
-        appender.addFilter(filter);
+        inMemoryAppender.addFilter(filter);
         filter.start();
     }
 
@@ -214,10 +252,8 @@ public final class LogCaptor implements AutoCloseable {
      * LogCaptor will still be capturing the log entries.
      */
     public void disableConsoleOutput() {
-        getConsoleAppender().ifPresent(consoleAppender -> {
-            getRootLogger().detachAppender(consoleAppender);
-            consoleAppenderContainer.put(logger.getName(), consoleAppender);
-        });
+        reconfigure();
+        logger.detachAppender(consoleAppender);
     }
 
     /**
@@ -225,19 +261,15 @@ public final class LogCaptor implements AutoCloseable {
      * they are disabled earlier by {@link LogCaptor#disableConsoleOutput()}
      */
     public void enableConsoleOutput() {
-        Optional.ofNullable(consoleAppenderContainer.remove(logger.getName())).ifPresent(getRootLogger()::addAppender);
+        reconfigure();
     }
 
-    Optional<Appender<ILoggingEvent>> getConsoleAppender() {
-        Logger rootLogger = getRootLogger();
-        return CONSOLE_APPENDER_NAMES.stream()
-                .map(rootLogger::getAppender)
-                .filter(Objects::nonNull)
-                .findFirst();
-    }
-
-    private Logger getRootLogger() {
+    Logger getRootLogger() {
         return logger.getLoggerContext().getLogger(ROOT_LOGGER_NAME);
+    }
+
+    Logger getLogger() {
+        return logger;
     }
 
     /**
@@ -253,10 +285,25 @@ public final class LogCaptor implements AutoCloseable {
         eventsCollector.clear();
     }
 
+    public void reconfigure() {
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        configureConsoleAppender(logger.getName());
+        logger.addAppender(inMemoryAppender);
+        logger.addAppender(consoleAppender);
+        inMemoryAppender.start();
+        consoleAppender.start();
+    }
+
     @Override
     public void close() {
-        logger.detachAppender(appender);
-        appender.stop();
+        logger.detachAppender(inMemoryAppender);
+        inMemoryAppender.stop();
+        if (!ROOT_LOGGER_NAME.equals(logger.getName())) {
+            logger.setAdditive(true);
+            logger.detachAppender(consoleAppender);
+        }
     }
 
     @Override
