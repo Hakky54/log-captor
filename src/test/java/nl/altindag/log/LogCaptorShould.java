@@ -15,15 +15,19 @@
  */
 package nl.altindag.log;
 
+import ch.qos.logback.classic.BasicConfigurator;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.filter.LevelFilter;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
+import nl.altindag.log.ConsoleOutputShould.Foo;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.exception.LogCaptorException;
 import nl.altindag.log.model.LogEvent;
@@ -49,8 +53,8 @@ import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndCustomException;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMarkers;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jAndMdcHeaders;
 import nl.altindag.log.service.slfj4.ServiceWithSlf4jWhileUsingKeyValuePairs;
+import nl.altindag.log.util.AppenderUtils;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,13 +91,15 @@ import static org.mockito.Mockito.mockStatic;
 @ExtendWith(MockitoExtension.class)
 class LogCaptorShould {
 
-    @AutoClose
     private LogCaptor logCaptor;
 
     @AfterEach
     void resetProperties() {
         Optional.ofNullable(logCaptor)
-                .ifPresent(LogCaptor::resetLogLevel);
+                .ifPresent(lc -> {
+                    lc.resetLogLevel();
+                    lc.close();
+                });
     }
 
     @Test
@@ -362,6 +368,48 @@ class LogCaptorShould {
         service.sayHello();
 
         assertLogMessages(logCaptor, LogMessage.INFO, LogMessage.WARN, LogMessage.DEBUG);
+    }
+
+    @Test
+    void provideLoggerNameInToStringMethod() {
+        logCaptor = LogCaptor.forRoot();
+        assertThat(logCaptor).hasToString("LogCaptor(loggerName=ROOT)");
+    }
+
+    @Test
+    void reconfigureLogger() {
+        logCaptor = LogCaptor.forClass(Foo.class);
+        Logger logger = logCaptor.getLogger();
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        long amountOfAppenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false).count();
+        assertThat(amountOfAppenders).isZero();
+
+        logCaptor.reconfigure();
+        List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.stream().filter(ConsoleAppender.class::isInstance).findAny()).isPresent();
+        assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
+    }
+
+    @Test
+    void reconfigureRootLogger() {
+        logCaptor = LogCaptor.forRoot();
+        Logger logger = logCaptor.getLogger();
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        long amountOfAppenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false).count();
+        assertThat(amountOfAppenders).isZero();
+
+        logCaptor.reconfigure();
+        List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.stream().filter(ConsoleAppender.class::isInstance).findAny()).isPresent();
+        assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
     }
 
     @Test
@@ -664,8 +712,8 @@ class LogCaptorShould {
      */
     @Test
     void notProvideConsoleAppenderWhenNopStatusListenerIsPresentAsLogBackConfiguration() throws IOException, JoranException {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         try (InputStream inputStream = this.getClass().getResourceAsStream("/logback-config-examples/logback-test.xml")) {
-            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
             loggerContext.reset();
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(loggerContext);
@@ -673,13 +721,22 @@ class LogCaptorShould {
         }
 
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender()).isEmpty();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isEmpty();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isEmpty();
+
+        new BasicConfigurator().configure(loggerContext); // Reset to default configuration logback configuration.
     }
 
     @Test
     void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfiguration() {
         logCaptor = LogCaptor.forClass(ServiceWithApacheLog4j.class);
-        assertThat(logCaptor.getConsoleAppender()).isPresent();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getLogger())).isNotEmpty();
+    }
+
+    @Test
+    void provideConsoleAppenderWhenNoNopStatusListenerIsPresentAsLogBackConfigurationForRootLogCaptor() {
+        logCaptor = LogCaptor.forRoot();
+        assertThat(AppenderUtils.getConsoleAppender(logCaptor.getRootLogger())).isNotEmpty();
     }
 
     @Test
@@ -703,12 +760,17 @@ class LogCaptorShould {
     }
 
     private static void assertListAppender(Logger logger) {
-        assertThat(fetchAppenders(logger))
-                .hasSize(1)
-                .first()
+        List<Appender<?>> appenders = fetchAppenders(logger);
+        assertThat(appenders).hasSize(2);
+        assertThat(appenders.get(0))
                 .isInstanceOf(InMemoryAppender.class)
                 .extracting(Appender::getName)
-                .isEqualTo("log-captor");
+                .isEqualTo("logcaptor-in-memory-appender");
+
+        assertThat(appenders.get(1))
+                .isInstanceOf(ConsoleAppender.class)
+                .extracting(Appender::getName)
+                .isEqualTo("console");
     }
 
     private static List<Appender<?>> fetchAppenders(Logger logger) {
