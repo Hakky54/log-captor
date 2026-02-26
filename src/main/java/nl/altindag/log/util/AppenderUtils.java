@@ -32,6 +32,9 @@ import java.util.Optional;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
+/**
+ * @author Hakan Altindag
+ */
 public final class AppenderUtils {
 
     public static final String CONSOLE_APPENDER_NAME = "console";
