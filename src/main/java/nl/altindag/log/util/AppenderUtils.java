@@ -21,6 +21,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.Encoder;
+import nl.altindag.log.appender.InMemoryAppender;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +63,14 @@ public final class AppenderUtils {
                 .filter(ConsoleAppender.class::isInstance)
                 .map(consoleAppender -> (ConsoleAppender<ILoggingEvent>) consoleAppender)
                 .findFirst();
+    }
+
+    public static InMemoryAppender<ILoggingEvent> configureInMemoryAppender(Logger logger, List<ILoggingEvent> eventsCollector) {
+        InMemoryAppender<ILoggingEvent> inMemoryAppender = new InMemoryAppender<>(AppenderUtils.IN_MEMORY_APPENDER_NAME, eventsCollector);
+        inMemoryAppender.setContext(logger.getLoggerContext());
+        inMemoryAppender.start();
+        logger.addAppender(inMemoryAppender);
+        return inMemoryAppender;
     }
 
 }
