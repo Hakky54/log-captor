@@ -96,7 +96,7 @@ class ConsoleOutputShould {
 
     static class Foo {
 
-        private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Foo.class);
+        private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Foo.class);
 
         void foo() {
             LOGGER.info("Inside foo");
@@ -106,7 +106,7 @@ class ConsoleOutputShould {
 
     static class Bar {
 
-        private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Bar.class);
+        private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Bar.class);
 
         void bar() {
             LOGGER.info("Inside bar");

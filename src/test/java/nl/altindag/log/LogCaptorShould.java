@@ -373,7 +373,7 @@ class LogCaptorShould {
     @Test
     void provideLoggerNameInToStringMethod() {
         logCaptor = LogCaptor.forRoot();
-        assertThat(logCaptor.toString()).isEqualTo("LogCaptor(loggerName=ROOT)");
+        assertThat(logCaptor).hasToString("LogCaptor(loggerName=ROOT)");
     }
 
     @Test
