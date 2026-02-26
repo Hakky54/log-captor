@@ -86,10 +86,6 @@ public final class AppenderUtils {
 
     public static ConsoleAppender<ILoggingEvent> configureConsoleAppender(Logger logger, ConsoleAppender<ILoggingEvent> appender) {
         String loggerName = logger.getName();
-        if (!ROOT_LOGGER_NAME.equals(loggerName)) {
-            logger.setAdditive(false);
-        }
-
         ConsoleAppender<ILoggingEvent> consoleAppender = createConsoleAppender(logger, appender);
         if (!ROOT_LOGGER_NAME.equals(loggerName)) {
             boolean containsRootConsoleAppender = false;
