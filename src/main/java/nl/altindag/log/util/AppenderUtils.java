@@ -47,6 +47,14 @@ public final class AppenderUtils {
         return consoleAppender;
     }
 
+    public static Encoder<ILoggingEvent> createEncoder(LoggerContext loggerContext) {
+        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        encoder.setContext(loggerContext);
+        encoder.setPattern(DEFAULT_LOG_PATTERN);
+        encoder.start();
+        return encoder;
+    }
+
     public static Optional<ConsoleAppender<ILoggingEvent>> getConsoleAppender(Logger logger) {
         return CONSOLE_APPENDER_NAMES.stream()
                 .map(logger::getAppender)
@@ -54,14 +62,6 @@ public final class AppenderUtils {
                 .filter(ConsoleAppender.class::isInstance)
                 .map(consoleAppender -> (ConsoleAppender<ILoggingEvent>) consoleAppender)
                 .findFirst();
-    }
-
-    public static Encoder<ILoggingEvent> createEncoder(LoggerContext loggerContext) {
-        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-        encoder.setContext(loggerContext);
-        encoder.setPattern(DEFAULT_LOG_PATTERN);
-        encoder.start();
-        return encoder;
     }
 
 }
