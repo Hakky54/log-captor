@@ -19,13 +19,11 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.Encoder;
 import nl.altindag.log.appender.InMemoryAppender;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -80,26 +78,7 @@ public final class AppenderUtils {
         return inMemoryAppender;
     }
 
-    public static ConsoleAppender<ILoggingEvent> configureConsoleAppender(Logger logger, ConsoleAppender<ILoggingEvent> appender) {
-        String loggerName = logger.getName();
-        ConsoleAppender<ILoggingEvent> consoleAppender = createConsoleAppender(logger, appender);
-        if (!ROOT_LOGGER_NAME.equals(loggerName)) {
-            boolean containsRootConsoleAppender = false;
-            Iterator<Appender<ILoggingEvent>> rootAppenders = getRootLogger(logger).iteratorForAppenders();
-            while (rootAppenders.hasNext()) {
-                if (rootAppenders.next() instanceof ConsoleAppender) {
-                    containsRootConsoleAppender = true;
-                }
-            }
-
-            if (containsRootConsoleAppender) {
-                logger.addAppender(consoleAppender);
-            }
-        }
-        return consoleAppender;
-    }
-
-    private static ConsoleAppender<ILoggingEvent> createConsoleAppender(Logger logger, ConsoleAppender<ILoggingEvent> consoleAppender) {
+    public static ConsoleAppender<ILoggingEvent> createConsoleAppender(Logger logger, ConsoleAppender<ILoggingEvent> consoleAppender) {
         return Optional.ofNullable(consoleAppender)
                 .orElseGet(() -> AppenderUtils.getConsoleAppender(getRootLogger(logger))
                 .orElseGet(() -> AppenderUtils.getConsoleAppender(logger)

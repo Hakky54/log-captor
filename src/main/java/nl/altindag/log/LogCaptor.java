@@ -257,7 +257,7 @@ public final class LogCaptor implements AutoCloseable {
                 .filter(appender -> appender instanceof ConsoleAppender || appender instanceof InMemoryAppender)
                 .forEach(logger::detachAppender);
 
-        consoleAppender = AppenderUtils.configureConsoleAppender(logger, consoleAppender);
+        consoleAppender = AppenderUtils.createConsoleAppender(logger, consoleAppender);
         logger.addAppender(inMemoryAppender);
         logger.addAppender(consoleAppender);
         logger.setAdditive(true);
