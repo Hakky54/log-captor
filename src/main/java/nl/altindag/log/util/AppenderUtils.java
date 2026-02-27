@@ -80,10 +80,6 @@ public final class AppenderUtils {
         return inMemoryAppender;
     }
 
-    public static ConsoleAppender<ILoggingEvent> configureConsoleAppender(Logger logger) {
-        return configureConsoleAppender(logger, null);
-    }
-
     public static ConsoleAppender<ILoggingEvent> configureConsoleAppender(Logger logger, ConsoleAppender<ILoggingEvent> appender) {
         String loggerName = logger.getName();
         ConsoleAppender<ILoggingEvent> consoleAppender = createConsoleAppender(logger, appender);
