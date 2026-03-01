@@ -226,9 +226,6 @@ public final class LogCaptor implements AutoCloseable {
      */
     public void enableConsoleOutput() {
         reconfigure();
-        if (!ROOT_LOGGER_NAME.equals(logger.getName())) {
-            logger.setAdditive(false);
-        }
     }
 
     Logger getRootLogger() {
@@ -253,14 +250,25 @@ public final class LogCaptor implements AutoCloseable {
     }
 
     public void reconfigure() {
+        consoleAppender = AppenderUtils.createConsoleAppender(logger, consoleAppender);
+
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
                 .filter(appender -> appender instanceof ConsoleAppender || appender instanceof InMemoryAppender)
                 .forEach(logger::detachAppender);
 
-        consoleAppender = AppenderUtils.createConsoleAppender(logger, consoleAppender);
         logger.addAppender(inMemoryAppender);
-        logger.addAppender(consoleAppender);
-        logger.setAdditive(true);
+        if (!ROOT_LOGGER_NAME.equals(logger.getName()) && AppenderUtils.getConsoleAppender(getRootLogger()).isPresent()) {
+            logger.setAdditive(true);
+        }
+
+        if (!ROOT_LOGGER_NAME.equals(logger.getName()) && !AppenderUtils.getConsoleAppender(getRootLogger()).isPresent()) {
+            logger.addAppender(consoleAppender);
+        }
+
+        if (ROOT_LOGGER_NAME.equals(logger.getName())) {
+            logger.addAppender(consoleAppender);
+        }
+
         inMemoryAppender.start();
         consoleAppender.start();
     }

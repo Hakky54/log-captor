@@ -27,7 +27,7 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.FilterReply;
 import nl.altindag.console.ConsoleCaptor;
-import nl.altindag.log.ConsoleOutputShould.Foo;
+import nl.altindag.log.service.slfj4.Foo;
 import nl.altindag.log.appender.InMemoryAppender;
 import nl.altindag.log.exception.LogCaptorException;
 import nl.altindag.log.model.LogEvent;
@@ -389,9 +389,32 @@ class LogCaptorShould {
         logCaptor.reconfigure();
         List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
                 .collect(Collectors.toList());
+        assertThat(appenders).hasSize(1);
+        assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
+    }
+
+    @Test
+    void reconfigureLoggerWithoutRootLoggerHavingConsoleOutput() {
+        LogCaptor rootLogCaptor = LogCaptor.forRoot();
+        rootLogCaptor.disableConsoleOutput();
+
+        logCaptor = LogCaptor.forClass(Foo.class);
+        Logger logger = logCaptor.getLogger();
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .forEach(logger::detachAppender);
+
+        long amountOfAppenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false).count();
+        assertThat(amountOfAppenders).isZero();
+
+        logCaptor.reconfigure();
+        List<Appender<ILoggingEvent>> appenders = StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .collect(Collectors.toList());
         assertThat(appenders).hasSize(2);
         assertThat(appenders.stream().filter(ConsoleAppender.class::isInstance).findAny()).isPresent();
         assertThat(appenders.stream().filter(InMemoryAppender.class::isInstance).findAny()).isPresent();
+
+        rootLogCaptor.reconfigure();
+        rootLogCaptor.close();
     }
 
     @Test

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.altindag.log;
+package nl.altindag.log.spring;
 
 import nl.altindag.console.ConsoleCaptor;
+import nl.altindag.log.LogCaptor;
 import nl.altindag.log.service.slfj4.Bar;
 import nl.altindag.log.service.slfj4.Foo;
 import org.junit.jupiter.api.AfterAll;
@@ -23,10 +24,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class ConsoleOutputShould {
+
+    static {
+        System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleOutputShould.class);
 
