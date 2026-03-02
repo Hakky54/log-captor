@@ -53,27 +53,10 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
         String threadName = iLoggingEvent.getThreadName();
         ZonedDateTime timeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iLoggingEvent.getTimeStamp()), ZoneOffset.UTC);
         Map<String, String> diagnosticContext = Collections.unmodifiableMap(iLoggingEvent.getMDCPropertyMap());
-        List<Map.Entry<String, Object>> keyValuePairs = iLoggingEvent.getKeyValuePairs() == null ? Collections.emptyList() : iLoggingEvent.getKeyValuePairs().stream()
-                .map(keyValuePair -> new SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
-
-        List<Object> arguments = Optional.ofNullable(iLoggingEvent.getArgumentArray())
-                .map(Arrays::asList)
-                .map(Collections::unmodifiableList)
-                .orElseGet(Collections::emptyList);
-
-        Throwable throwable = Optional.ofNullable(iLoggingEvent.getThrowableProxy())
-                .filter(ThrowableProxy.class::isInstance)
-                .map(ThrowableProxy.class::cast)
-                .map(ThrowableProxy::getThrowable)
-                .orElse(null);
-
-        List<LogMarker> logMarkers = Collections.emptyList();
-        if (iLoggingEvent.getMarkerList() != null) {
-            logMarkers = iLoggingEvent.getMarkerList().stream()
-                    .map(MarkerMapper.getInstance())
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
-        }
+        List<Map.Entry<String, Object>> keyValuePairs = mapKeyValuePairs(iLoggingEvent);
+        List<Object> arguments = mapArguments(iLoggingEvent);
+        Throwable throwable = mapThrowable(iLoggingEvent);
+        List<LogMarker> logMarkers = mapMarkers(iLoggingEvent);
 
         return new LogEvent(
                 message,
@@ -88,6 +71,41 @@ public final class LogEventMapper implements Function<ILoggingEvent, LogEvent> {
                 keyValuePairs,
                 logMarkers
         );
+    }
+
+    private static List<Map.Entry<String, Object>> mapKeyValuePairs(ILoggingEvent iLoggingEvent) {
+        if (iLoggingEvent.getKeyValuePairs() == null) {
+            return Collections.emptyList();
+        }
+
+        return iLoggingEvent.getKeyValuePairs().stream()
+                .map(keyValuePair -> new SimpleImmutableEntry<>(keyValuePair.key, keyValuePair.value))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+    }
+
+    private static Throwable mapThrowable(ILoggingEvent iLoggingEvent) {
+        return Optional.ofNullable(iLoggingEvent.getThrowableProxy())
+                .filter(ThrowableProxy.class::isInstance)
+                .map(ThrowableProxy.class::cast)
+                .map(ThrowableProxy::getThrowable)
+                .orElse(null);
+    }
+
+    private static List<Object> mapArguments(ILoggingEvent iLoggingEvent) {
+        return Optional.ofNullable(iLoggingEvent.getArgumentArray())
+                .map(Arrays::asList)
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+    }
+
+    private static List<LogMarker> mapMarkers(ILoggingEvent iLoggingEvent) {
+        if (iLoggingEvent.getMarkerList() == null) {
+            return Collections.emptyList();
+        }
+
+        return iLoggingEvent.getMarkerList().stream()
+                .map(MarkerMapper.getInstance())
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     public static LogEventMapper getInstance() {

@@ -28,12 +28,12 @@ import nl.altindag.log.util.LogbackUtils;
 import nl.altindag.log.util.Mappers;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -47,7 +47,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
  */
 public final class LogCaptor implements AutoCloseable {
 
-    private static final Map<String, Level> logLevelContainer = new HashMap<>();
+    private static final Map<String, Level> logLevelContainer = new ConcurrentHashMap<>();
 
     private final Logger logger;
     private final InMemoryAppender<ILoggingEvent> inMemoryAppender;
@@ -257,15 +257,18 @@ public final class LogCaptor implements AutoCloseable {
                 .forEach(logger::detachAppender);
 
         logger.addAppender(inMemoryAppender);
-        if (!ROOT_LOGGER_NAME.equals(logger.getName()) && AppenderUtils.getConsoleAppender(getRootLogger()).isPresent()) {
+
+        boolean isRootLogger = ROOT_LOGGER_NAME.equals(logger.getName());
+        Optional<ConsoleAppender<ILoggingEvent>> rootConsoleAppender = AppenderUtils.getConsoleAppender(getRootLogger());
+        if (!isRootLogger && rootConsoleAppender.isPresent()) {
             logger.setAdditive(true);
         }
 
-        if (!ROOT_LOGGER_NAME.equals(logger.getName()) && !AppenderUtils.getConsoleAppender(getRootLogger()).isPresent()) {
+        if (!isRootLogger && !rootConsoleAppender.isPresent()) {
             logger.addAppender(consoleAppender);
         }
 
-        if (ROOT_LOGGER_NAME.equals(logger.getName())) {
+        if (isRootLogger) {
             logger.addAppender(consoleAppender);
         }
 

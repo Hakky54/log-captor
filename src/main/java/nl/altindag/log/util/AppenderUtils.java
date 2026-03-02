@@ -23,10 +23,11 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.Encoder;
 import nl.altindag.log.appender.InMemoryAppender;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -38,7 +39,6 @@ public final class AppenderUtils {
     public static final String CONSOLE_APPENDER_NAME = "console";
     public static final String IN_MEMORY_APPENDER_NAME = "logcaptor-in-memory-appender";
     private static final String DEFAULT_LOG_PATTERN = "%d{yyyy-MM-dd HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n";
-    private static final List<String> CONSOLE_APPENDER_NAMES = Arrays.asList("console", "CONSOLE");
 
     private AppenderUtils() {}
 
@@ -62,10 +62,8 @@ public final class AppenderUtils {
     }
 
     public static Optional<ConsoleAppender<ILoggingEvent>> getConsoleAppender(Logger logger) {
-        return CONSOLE_APPENDER_NAMES.stream()
-                .map(logger::getAppender)
-                .filter(Objects::nonNull)
-                .filter(ConsoleAppender.class::isInstance)
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(logger.iteratorForAppenders(), Spliterator.ORDERED), false)
+                .filter(appender -> appender instanceof ConsoleAppender)
                 .map(consoleAppender -> (ConsoleAppender<ILoggingEvent>) consoleAppender)
                 .findFirst();
     }
