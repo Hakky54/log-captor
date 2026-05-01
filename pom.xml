@@ -53,7 +53,7 @@
         <version.slf4j>2.0.17</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
         <version.consolecaptor>1.0.4</version.consolecaptor>
-        <version.spring>2.7.18</version.spring>
+        <version.spring>3.5.14</version.spring>
 
         <!--    plugin properties   -->
         <version.jacoco-maven-plugin>0.8.14</version.jacoco-maven-plugin>
