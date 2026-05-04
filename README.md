@@ -19,11 +19,6 @@
 
 # LogCaptor [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=With%20LogCaptor%20it%20is%20now%20very%20easy%20to%20captor%20and%20test%20your%20log%20message&url=https://github.com/Hakky54/log-captor/&via=hakky541&hashtags=logging,testing,log4j,slf4j,log4j2,jul,lombok,developer,java,scala,kotlin,logcaptor)
 
-Hey, hello there 👋 Welcome. I hope you will like this library
-
-I have created this library with ❤️ and passion, mostly during evening and night hours. If you use my library and want to appreciate the work I have done, please consider to sponsor this project as a way to contribute back to the community.
-There are 3 options available to pick from: [GitHub](https://github.com/sponsors/Hakky54), [Ko-fi](https://ko-fi.com/hakky54) and [Open Collective](https://opencollective.com/hakky54)
-
 # Install library with:
 ### Install with [maven](https://mvnrepository.com/artifact/io.github.hakky54/logcaptor)
 ```xml
@@ -72,7 +67,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.6" % Test
    
 
 # Introduction
-LogCaptor is a library which will enable you to easily capture logging entries for unit and integration testing purposes. 
+LogCaptor is a library which will enable you to easily capture logging entries for unit and integration testing purposes without the need of any custom Junit extentions, mocking or any other complex setup. It is plug & play, so you can start using it right away.
 
 Do you want to capture the console output? Please have a look at [ConsoleCaptor](https://github.com/Hakky54/console-captor).
 
@@ -608,15 +603,15 @@ class QuarkusTestTest {
 }
 ```
 
-# Contributing
+## Support
 
-There are plenty of ways to contribute to this project:
+LogCaptor needs your help!
 
-* Give it a star
-* Make a donation through [GitHub](https://github.com/sponsors/Hakky54) or [open collective](https://opencollective.com/hakky54)
-* Share it with a [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=With%20LogCaptor%20it%20is%20now%20very%20easy%20to%20captor%20and%20test%20your%20log%20message&url=https://github.com/Hakky54/log-captor/&via=hakky541&hashtags=logging,testing,log4j,slf4j,log4j2,jul,lombok,developer,java,scala,kotlin,logcaptor)
-* Join the [Gitter room](https://gitter.im/hakky54/logcaptor) and leave a feedback or help with answering users questions
-* Submit a PR
+If you can, please consider sponsoring LogCaptor. Even a small donation would help us offset the recurring maintenance costs. With enough sponsors we would be able to make LogCaptor grow faster and stronger! You can sponsor it at [GitHub](https://github.com/sponsors/Hakky54), [Ko-fi](https://ko-fi.com/hakky54) or [open collective](https://opencollective.com/hakky54).
+
+If you are an industry user of LogCaptor and want to make sure it can keep growing and being maintained, please reach out!
+
+In any case, please star it on GitHub and share the word about it!
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHakky54%2Flog-captor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHakky54%2Flog-captor?ref=badge_large)
