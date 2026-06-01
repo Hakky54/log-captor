@@ -50,7 +50,7 @@
         <version.mockito>4.11.0</version.mockito>
         <version.bytebuddy>1.18.8</version.bytebuddy>
         <version.lombok>1.18.46</version.lombok>
-        <version.slf4j>2.0.17</version.slf4j>
+        <version.slf4j>2.0.18</version.slf4j>
         <version.log4j-over-slf4j>1.7.36</version.log4j-over-slf4j>
         <version.consolecaptor>1.0.4</version.consolecaptor>
         <version.spring>2.7.18</version.spring>
