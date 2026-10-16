@@ -30,6 +30,8 @@ jobs:
         with:
           # Options: low, moderate, high, critical
           fail-on-severity: 'high'
+          base-ref: ${{ github.event.before }}
+          head-ref: ${{ github.sha }}
 
       - name: Build and test
         run: mvn clean verify --no-transfer-progress
