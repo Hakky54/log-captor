@@ -25,14 +25,6 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'maven'
 
-      - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v4
-        with:
-          # Options: low, moderate, high, critical
-          fail-on-severity: 'high'
-          base-ref: ${{ github.event.before }}
-          head-ref: ${{ github.sha }}
-
       - name: Build and test
         run: mvn clean verify --no-transfer-progress
 
@@ -54,3 +46,24 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=hakky54 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login="$SONAR_TOKEN" --no-transfer-progress
+
+  dependency-review-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'maven'
+          
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v4
+        with:
+          # Options: low, moderate, high, critical
+          fail-on-severity: 'high'
+          base-ref: ${{ github.event.before }}
+          head-ref: ${{ github.sha }}
