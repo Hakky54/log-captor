@@ -26,7 +26,7 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-    <version>2.12.7</version>
+   <version>2.12.8</version>
     <scope>test</scope>
 </dependency>
 ```
