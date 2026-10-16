@@ -63,7 +63,7 @@ libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.7" % Test
    - [Using Log Captor alongside with other logging libraries](#using-log-captor-alongside-with-other-logging-libraries)
    - [Capturing logs of static inner classes](#capturing-logs-of-static-inner-classes)
    - [Mixing up different classloaders](#mixing-up-different-classloaders)
-4. [Contributing](#contributing)
+4. [Contributing](#support)
 5. [License](#license)
    
 
