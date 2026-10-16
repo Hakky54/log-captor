@@ -181,19 +181,6 @@
                     <execution>
                         <id>default-compile</id>
                     </execution>
-                    <execution>
-                        <id>java8-compile</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <!-- recompile everything with Java 8 except the module-info.java -->
-                        <configuration>
-                            <release>8</release>
-                            <excludes>
-                                <exclude>module-info.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
                 </executions>
                 <configuration>
                     <release>11</release>
