@@ -25,6 +25,12 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'maven'
 
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v4
+        with:
+          # Options: low, moderate, high, critical
+          fail-on-severity: 'high'
+
       - name: Build and test
         run: mvn clean verify --no-transfer-progress
 
@@ -41,12 +47,6 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'maven'
-
-      - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v4
-        with:
-          # Options: low, moderate, high, critical
-          fail-on-severity: 'high'
 
       - name: Build, test and quality scan
         env:
