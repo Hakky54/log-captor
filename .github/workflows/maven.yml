@@ -26,6 +26,7 @@ jobs:
           cache: 'maven'
 
       - name: 'Dependency Review'
+        if: github.event_name == 'pull_request'
         uses: actions/dependency-review-action@v4
         with:
           # Options: low, moderate, high, critical
