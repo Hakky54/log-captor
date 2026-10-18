@@ -25,21 +25,21 @@
 <dependency>
     <groupId>io.github.hakky54</groupId>
     <artifactId>logcaptor</artifactId>
-   <version>3.0.0</version>
+   <version>2.13.0</version>
     <scope>test</scope>
 </dependency>
 ```
 ### Install with Gradle
 ```groovy
-testImplementation 'io.github.hakky54:logcaptor:2.12.7'
+testImplementation 'io.github.hakky54:logcaptor:2.13.0'
 ```
 ### Install with Scala SBT
 ```
-libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.12.7" % Test
+libraryDependencies += "io.github.hakky54" % "logcaptor" % "2.13.0" % Test
 ```
 ### Install with Apache Ivy
 ```xml
-<dependency org="io.github.hakky54" name="logcaptor" rev="2.12.7" />
+<dependency org="io.github.hakky54" name="logcaptor" rev="2.13.0" />
 ```
 
 ## Table of contents
@@ -99,10 +99,11 @@ See the unit test [LogCaptorShould](src/test/java/nl/altindag/log/LogCaptorShoul
 
 ### Compatibility
 
-| LogCaptor | SLF4J | Log4J  | Java | Kotlin | Scala | Android |
-|:---------:|:-----:|:------:|:----:|:------:|-------|:-------:|
-|   2.8.x   | 2.x.x | 2.22.x |  8+  |  1.5+  | 2.11+ |   24+   |
-|   2.7.x   | 1.x.x | 2.21.x |  8+  |  1.5+  | 2.11+ |   24+   |
+| LogCaptor | SLF4J | Log4J  | Java | Kotlin | Scala   | Android |
+|:---------:|:-----:|:------:|:----:|:------:|---------|:-------:|
+|  2.13.x   | 2.x.x | 2.26.x | 11+  |  1.5+  | 2.12.4+ |   24+   |
+|   2.8.x   | 2.x.x | 2.22.x |  8+  |  1.5+  | 2.11+   |   24+   |
+|   2.7.x   | 1.x.x | 2.21.x |  8+  |  1.5+  | 2.11+   |   24+   |
 
 # Usage
 ##### Capture logs

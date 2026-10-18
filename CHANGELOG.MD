@@ -3,8 +3,8 @@
 This list is not intended to be all-encompassing - it will document major and breaking API 
 changes with their rationale when appropriate:
 
-### v3.0.0
-- Bumped dependencies - logback-classic
+### v2.13.0
+- Bumped dependencies - logback-classic and fixed CVE-2026-104721
 - Added a dependency-review CI step
 - Minimum Java version is now 11
 ### v2.12.7
